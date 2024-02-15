@@ -28,7 +28,7 @@ Minibiografía: <br><br>
 
 # Entregables
 Diagrama de casos de uso inicial<br>
-[![image.png]([Imagen-de-Diagrama-de-Casos-de-Uso.jpg](https://postimg.cc/bd3Mbr69))<br><br>
+[![Imagen-de-Diagrama-de-Casos-de-Uso.jpg](https://i.postimg.cc/TY6XzWgF/Imagen-de-Diagrama-de-Casos-de-Uso.jpg)](https://postimg.cc/bd3Mbr69)<br><br>
 
 
 Diagrama de clases inicial<br>
