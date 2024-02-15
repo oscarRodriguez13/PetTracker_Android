@@ -12,7 +12,7 @@ Oscar Alejandro Rodriguez Gómez<br>
   <tr>
     <td>
       <a href="https://postimg.cc/qzkhgtfQ">
-        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="300" alt="Descripción de la imagen">
+        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="350" alt="Descripción de la imagen">
       </a>
     </td>
     <td>
