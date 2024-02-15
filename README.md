@@ -16,7 +16,7 @@ Oscar Alejandro Rodriguez Gómez<br>
       </a>
     </td>
     <td>
-      Soy estudiante de quinto semestre de ingeniería de sistemas de la Pontificia Universidad Javeriana, me gustan los videojuegos, el fútbol y sobretodo seguir adquiriendo nuevos conocimientos. <br><br>
+      Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, donde disfruto explorar los videojuegos y seguir de cerca el fútbol. Mi compromiso con el aprendizaje continuo me impulsa constantemente a adquirir nuevos conocimientos y habilidades. <br><br>
     </td>
   </tr>
 </table>
