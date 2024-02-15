@@ -16,10 +16,14 @@ Oscar Alejandro Rodriguez Gómez<br>
       </a>
     </td>
     <td style="text-align: center;">
-      <div style="font-size: 9px;">Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol. Además disfruto mucho ver películas y series (menos de terror).</div> <br><br>
+      <div style="font-size: 9px;">
+        <small>Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol. Además disfruto mucho ver películas y series (menos de terror).</small>
+      </div>
+      <br><br>
     </td>
   </tr>
 </table>
+
 
 
 
