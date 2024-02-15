@@ -18,7 +18,11 @@ Minibiografía: <br><br>
 
 # Entregables
 Diagrama de casos de uso inicial<br>
-[![image.png](https://i.postimg.cc/7Yzgs7Kv/image.png)](https://postimg.cc/qzkhgtfQ)<br><br>
+<p align="center">
+  <a href="https://postimg.cc/qzkhgtfQ">
+    <img src="https://i.postimg.cc/7Yzgs7Kv/image.png" width="400" alt="Descripción de la imagen">
+  </a>
+</p>
 
 
 Diagrama de clases inicial<br>
