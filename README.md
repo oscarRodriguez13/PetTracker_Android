@@ -16,7 +16,7 @@ Oscar Alejandro Rodriguez Gómez<br>
       </a>
     </td>
     <td>
-      Soy estudiante de quinto semestre de ingeniería de sistemas de la Universidad Javeriana.... <br><br>
+      Soy estudiante de quinto semestre de ingeniería de sistemas de la Universidad Javeriana.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa... <br><br>
     </td>
   </tr>
 </table>
