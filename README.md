@@ -8,12 +8,18 @@ Minibiografía: aa<br><br>
 
 
 Oscar Alejandro Rodriguez Gómez<br>
-<p align="center">
-  <a href="https://postimg.cc/qzkhgtfQ">
-    <img src="https://i.postimg.cc/wj1hYf83/image.png" width="400" alt="Descripción de la imagen">
-  </a>
-</p>
-Soy estudiante de quinto semestre de ingeniería de sistemas de la Universidad Javeriana.... <br><br>
+<table>
+  <tr>
+    <td>
+      <a href="https://postimg.cc/qzkhgtfQ">
+        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="300" alt="Descripción de la imagen">
+      </a>
+    </td>
+    <td>
+      Soy estudiante de quinto semestre de ingeniería de sistemas de la Universidad Javeriana.... <br><br>
+    </td>
+  </tr>
+</table>
 
 
 Leonardo Velazquez Colina<br>
