@@ -9,7 +9,7 @@ Minibiografía: aa<br><br>
 
 Oscar Alejandro Rodriguez Gómez<br>
 
-Minibiografía:<br><br>
+Soy estudiante de quinto semestre de ingeniería de sistemas de la Universidad Javeriana.... <br><br>
 
 
 Leonardo Velazquez Colina<br>
@@ -18,11 +18,7 @@ Minibiografía: <br><br>
 
 # Entregables
 Diagrama de casos de uso inicial<br>
-<p align="center">
-  <a href="https://postimg.cc/qzkhgtfQ">
-    <img src="https://i.postimg.cc/7Yzgs7Kv/image.png" width="400" alt="Descripción de la imagen">
-  </a>
-</p>
+[![image.png](https://i.postimg.cc/7Yzgs7Kv/image.png)](https://postimg.cc/qzkhgtfQ)<br><br>
 
 
 Diagrama de clases inicial<br>
