@@ -2,19 +2,19 @@
 [![Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg](https://i.postimg.cc/59L0D3Wm/Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg)](https://postimg.cc/MXZqQ1Tc)
 
 # Integrantes
-Pablo Javier Escobar
-Foto: 
-Minibiografía: aa
+Pablo Javier Escobar <br>
+
+Minibiografía: aa<br><br>
 
 
-Oscar Alejandro Rodriguez Gómez
-Foto:
-Minibiografía:
+Oscar Alejandro Rodriguez Gómez<br>
+
+Minibiografía:<br><br>
 
 
-Leonardo Velazquez Colina
-Foto:
-Minibiografía: 
+Leonardo Velazquez Colina<br>
+
+Minibiografía: <br><br>
 
 # Entregables
 Diagrama de casos de uso inicial
