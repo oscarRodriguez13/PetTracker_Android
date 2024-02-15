@@ -17,9 +17,9 @@ Leonardo Velazquez Colina<br>
 Minibiografía: <br><br>
 
 # Entregables
-Diagrama de casos de uso inicial
-[![image.png](https://i.postimg.cc/7Yzgs7Kv/image.png)](https://postimg.cc/qzkhgtfQ)
+Diagrama de casos de uso inicial<br>
+[![image.png](https://i.postimg.cc/7Yzgs7Kv/image.png)](https://postimg.cc/qzkhgtfQ)<br><br>
 
 
-Diagrama de clases inicial
-[![image.png](https://i.postimg.cc/DzxsJcwG/image.png)](https://postimg.cc/McjXgVRZ)
+Diagrama de clases inicial<br>
+[![image.png](https://i.postimg.cc/DzxsJcwG/image.png)](https://postimg.cc/McjXgVRZ)<br><br>
