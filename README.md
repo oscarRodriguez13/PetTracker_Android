@@ -69,8 +69,6 @@ El objetivo principal de PetTracker es proporcionar a los dueños de mascotas un
 [![Pantalla1.jpg](https://i.postimg.cc/506qx3Q3/Pantalla1.jpg)](https://postimg.cc/ftQ0CYKt)<br><br>
 **Tipos de cuenta - Registrar**<br>
 [![2.jpg](https://i.postimg.cc/13d3krPP/2.jpg)](https://postimg.cc/87hGWWjn)<br><br>
-**Tipos de cuenta - Login**<br>
-[![3.jpg](https://i.postimg.cc/3rL5fJ3Q/3.jpg)](https://postimg.cc/z3RcVNLx)<br><br>
 **Registro Dueño**<br>
 [![4.jpg](https://i.postimg.cc/4x9D36VX/4.jpg)](https://postimg.cc/PCd338S7)<br><br>
 **Registro Paseador**<br>
