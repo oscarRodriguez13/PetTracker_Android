@@ -39,7 +39,7 @@ Pablo Javier Escobar Gómez
   <tr>
     <td>
       <a href="[https://postimg.cc/qzkhgtfQ](https://postimg.cc/bd3Mbr69)">
-        <img src="[![Whats-App-Image-2024-02-14-at-10-39-46-PM.jpg](https://i.postimg.cc/MpRMhtGq/Whats-App-Image-2024-02-14-at-10-39-46-PM.jpg)](https://postimg.cc/G4LmDFY5)">
+        <img src="https://i.postimg.cc/MpRMhtGq/Whats-App-Image-2024-02-14-at-10-39-46-PM.jpg">
       </a>
     </td>
     <td>
