@@ -16,7 +16,7 @@ Oscar Alejandro Rodriguez Gómez<br>
       </a>
     </td>
     <td>
-      <p style="font-size: 10px;">Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol.</p> <br><br>
+      <p style="font-size: 10px;">Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol. Además disfruto mucho ver peliculas y series (menos de terror). </p> <br><br>
     </td>
   </tr>
 </table>
@@ -34,3 +34,5 @@ Diagrama de casos de uso inicial<br>
 
 Diagrama de clases inicial<br>
 [![image.png](https://i.postimg.cc/DzxsJcwG/image.png)](https://postimg.cc/McjXgVRZ)<br><br>
+
+
