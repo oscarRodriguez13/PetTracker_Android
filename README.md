@@ -11,7 +11,7 @@ Oscar Alejandro Rodriguez Gómez<br>
 <table>
   <tr>
     <td>
-      <a href="https://postimg.cc/qzkhgtfQ">
+      <a href="[https://postimg.cc/qzkhgtfQ](https://postimg.cc/bd3Mbr69)">
         <img src="https://i.postimg.cc/wj1hYf83/image.png" width="350" alt="Descripción de la imagen">
       </a>
     </td>
@@ -26,12 +26,12 @@ Leonardo Velazquez Colin<br>
 <table>
   <tr>
     <td>
-      <a href="https://postimg.cc/qzkhgtfQ">
-        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="350" alt="Descripción de la imagen">
+      <a href="[https://postimg.cc/qzkhgtfQ](https://postimg.cc/bd3Mbr69)">
+        <img src="https://i.postimg.cc/kXBhhJhz/Imagen23.jpg" width="650" alt="Descripción de la imagen">
       </a>
     </td>
     <td>
-      Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. En mi tiempo libre me gusta leer mientras escucho musica, tambien me encanat ver peliculas y ver series. Mi genero favorito es el terror, tanto en libros como en peliculas. Me interesa mucho el munto de la programcion, donde he hecho algunos cursos de programcion en distintos ide y lenguajes (como node.js, javascript, prosseciong, etc). Tambien formo parte del semillero y grupo estidiantil RAS, donde soy miembro Senior.<br><br>
+      Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. En mi tiempo libre me gusta leer mientras escucho musica, tambien me encanta ver peliculas y ver series. Mi genero favorito es el terror, tanto en libros como en peliculas. Me interesa mucho el mundo de la programcion, donde he hecho algunos cursos de programcion en distintos ide's y lenguajes (como node.js, javascript, prossecing, etc). Tambien formo parte del semillero y grupo estidiantil RAS, donde soy miembro Senior.<br><br>
     </td>
   </tr>
 </table>
