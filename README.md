@@ -12,19 +12,14 @@ Oscar Alejandro Rodriguez Gómez<br>
   <tr>
     <td>
       <a href="https://postimg.cc/qzkhgtfQ">
-        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="160" alt="Descripción de la imagen">
+        <img src="https://i.postimg.cc/wj1hYf83/image.png" width="300" alt="Descripción de la imagen">
       </a>
     </td>
-    <td style="text-align: center;">
-      <div style="font-size: 9px;">
-        <small>Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol. Además disfruto mucho ver películas y series (menos de terror).</small>
-      </div>
-      <br><br>
+    <td>
+      Soy estudiante de quinto semestre de Ingeniería de Sistemas en la Pontificia Universidad Javeriana. Mi interés por el mundo de la tecnología se refleja tanto en mis estudios como en mis pasatiempos, disfruto de los videojuegos y me gusta el fútbol. Además disfruto mucho ver películas y series (menos de terror). <br><br>
     </td>
   </tr>
 </table>
-
-
 
 
 Leonardo Velazquez Colina<br>
