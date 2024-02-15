@@ -1,10 +1,18 @@
 # Grupo: CopyPaste
 # Proyecto: PetTracker
-[![Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg](https://i.postimg.cc/59L0D3Wm/Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg)](https://postimg.cc/MXZqQ1Tc)
+
+### Descripción del Proyecto
+
+PetTracker es una aplicación para dispositivos móviles que simplifica y mejora la experiencia de paseo de mascotas al conectar a dueños de mascotas ocupados con paseadores de perros confiables. La aplicación busca crear un espacio seguro y dinámico donde haya variedad de perfiles que ofrezcan el servicio, con el fin hacer la elección en base a la calificación, la descripción de cada paseador y el rango de precios que ofrezca por su servicio, donde finalmente, el dueño pueda escoger al  paseador que se amolde a sus preferencias y presupuesto. Además permitiendo a los dueños de mascotas proporcionar información detallada sobre sus animales, incluyendo preferencias, necesidades especiales y detalles médicos relevantes se puede personalizar de manera más efectiva el servicio y ofrecer una mejor experiencia de usuario.
+<br>
+### Objetivo del Proyecto
+El objetivo principal de PetTracker es proporcionar a los dueños de mascotas una solución conveniente, confiable y segura para garantizar que sus mascotas reciban el ejercicio físico necesario, incluso cuando tienen agendas apretadas.<br>
+### Logo
+[![Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg](https://i.postimg.cc/59L0D3Wm/Whats-App-Image-2024-02-12-at-8-15-44-PM.jpg)](https://postimg.cc/MXZqQ1Tc)<br>
 
 # Integrantes
 
-Oscar Alejandro Rodriguez Gómez<br>
+**Oscar Alejandro Rodriguez Gómez**<br>
 <table>
   <tr>
     <td>
@@ -19,7 +27,7 @@ Oscar Alejandro Rodriguez Gómez<br>
 </table>
 
 
-Leonardo Velazquez Colin<br>
+**Leonardo Velázquez Colin**<br>
 <table>
   <tr>
     <td>
@@ -34,7 +42,7 @@ Leonardo Velazquez Colin<br>
 </table>
 
 
-Pablo Javier Escobar Gómez
+**Pablo Javier Escobar Gómez**
 <table>
   <tr>
     <td>
@@ -49,32 +57,32 @@ Pablo Javier Escobar Gómez
 </table>
 
 # Entregables
-Diagrama de casos de uso inicial<br>
+### Diagrama de casos de uso inicial<br>
 [![Imagen-de-Diagrama-de-Casos-de-Uso.jpg](https://i.postimg.cc/TY6XzWgF/Imagen-de-Diagrama-de-Casos-de-Uso.jpg)](https://postimg.cc/bd3Mbr69)<br><br>
 
 
-Diagrama de clases inicial<br>
+### Diagrama de clases inicial<br>
 [![image.png](https://i.postimg.cc/DzxsJcwG/image.png)](https://postimg.cc/McjXgVRZ)<br><br>
 
-Pantallas Principales<br><br>
-Home<br>
+### Pantallas Principales
+**Home**<br>
 [![Pantalla1.jpg](https://i.postimg.cc/506qx3Q3/Pantalla1.jpg)](https://postimg.cc/ftQ0CYKt)<br><br>
-Tipos de cuenta - Registrar<br>
+**Tipos de cuenta - Registrar**<br>
 [![2.jpg](https://i.postimg.cc/13d3krPP/2.jpg)](https://postimg.cc/87hGWWjn)<br><br>
-Tipos de cuenta - Login<br>
+**Tipos de cuenta - Login**<br>
 [![3.jpg](https://i.postimg.cc/3rL5fJ3Q/3.jpg)](https://postimg.cc/z3RcVNLx)<br><br>
-Registro Dueño<br>
+**Registro Dueño**<br>
 [![4.jpg](https://i.postimg.cc/4x9D36VX/4.jpg)](https://postimg.cc/PCd338S7)<br><br>
-Registro Paseador<br>
+**Registro Paseador**<br>
 [![5.jpg](https://i.postimg.cc/k5PkR2vK/5.jpg)](https://postimg.cc/21THP8JS)<br><br>
-Busqueda de paseadores<br>
+**Busqueda de paseadores**<br>
 [![6.jpg](https://i.postimg.cc/C1FXJ9tK/6.jpg)](https://postimg.cc/94nLQgc3)<br><br>
-Pantalla del paseo<br>
+**Pantalla del paseo**<br>
 [![7.jpg](https://i.postimg.cc/XqPPjqvZ/7.jpg)](https://postimg.cc/30g19Km7)<br><br>
-Encontrar a mi perro<br>
+**Encontrar a mi perro**<br>
 [![8.jpg](https://i.postimg.cc/sDtLbM8q/8.jpg)](https://postimg.cc/rKNgrwqN)<br><br>
-Perfil Paseador<br>
+**Perfil Paseador**<br>
 [![9.jpg](https://i.postimg.cc/YSxy4b9B/9.jpg)](https://postimg.cc/GBHjVPGX)<br><br>
-Solicitud de paseo<br>
+**Solicitud de paseo**<br>
 [![10.jpg](https://i.postimg.cc/xjZpbk08/10.jpg)](https://postimg.cc/nMvGyh9f)<br><br>
 
