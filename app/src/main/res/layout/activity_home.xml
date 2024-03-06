@@ -6,7 +6,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="12dp"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:textColor="@android:color/black">
 
     <ImageView
         android:id="@+id/imageView"
@@ -73,36 +74,38 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="Perfil"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginBottom="5dp"
-            android:layout_alignRight="@id/Aceptar"
+            android:layout_alignEnd="@id/Aceptar"
             android:layout_marginTop="14dp"
-            ></Button>
+            />
+
         <Button
             android:id="@+id/Aceptar"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:text="Aceptar"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@id/perfil_paseador"
-            ></Button>
+            android:textSize="14sp"/>
 
         <ImageView
             android:id="@+id/foto_perfil_paseador"
             android:layout_width="125dp"
             android:layout_height="125dp"
             app:srcCompat="@drawable/perfil_hombre_vivo__1_"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="5dp"
             />
 
         <TextView
             android:id="@+id/nombre_paseador"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="142dp"
+            android:layout_marginStart="142dp"
             android:text="Juan Esteban Muñoz"
-            android:textColor="@color/black"></TextView>
+            android:textColor="@color/black"
+            />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -120,7 +123,7 @@
             android:layout_height="wrap_content"
             android:text="40 minutos"
             android:layout_below="@id/nombre_paseador"
-            android:layout_marginLeft="189dp"
+            android:layout_marginStart="189dp"
             android:layout_marginTop="18dp"
 
             />
@@ -131,7 +134,7 @@
             android:layout_height="40dp"
             android:layout_below="@id/tiempo_paseo"
             android:layout_marginTop="14dp"
-            android:layout_marginLeft="142dp"
+            android:layout_marginStart="142dp"
             app:srcCompat="@drawable/coin_png_image_5a3a896a20e7b3_87186704151378570613487780_removebg_preview" />
 
         <TextView
@@ -139,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tiempo_paseo"
-            android:layout_marginLeft="189dp"
+            android:layout_marginStart="189dp"
             android:layout_marginTop="22dp"
             android:text="$40.000 COP" />
 
