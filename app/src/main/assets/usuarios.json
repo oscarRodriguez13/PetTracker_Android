@@ -3,7 +3,7 @@
     {
       "nombre": "Juan Perez",
       "email": "juanperez@example.com",
-      "password": "contraseñaSegura123",
+      "password": "123",
       "mascotas": [
         {
           "nombre": "Fido",
