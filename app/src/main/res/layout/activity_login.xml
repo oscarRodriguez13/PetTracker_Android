@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:padding="32dp">
+
+    <!-- App logo -->
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/app_logo"
+        android:scaleType="centerCrop"
+        android:layout_marginBottom="40dp"
+        android:layout_above="@id/email_input"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@mipmap/logo_foreground"
+        />
+
+    <!-- Email input -->
+    <EditText
+        android:id="@+id/email_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/password_input"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress" />
+
+    <!-- Password input -->
+    <EditText
+        android:id="@+id/password_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:inputType="textPassword" />
+
+    <TextView
+        android:id="@+id/tv_passwordRecover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿Olvidaste tu contraseña?"
+        android:layout_below="@id/password_input"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Login button -->
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:layout_below="@id/tv_passwordRecover"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+
+    <TextView
+        android:id="@+id/tv_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_member"
+        android:layout_below="@id/login_button"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="130dp"/>
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register"
+        android:layout_below="@id/login_button"
+        android:layout_marginTop="119dp"
+        android:layout_marginStart="200dp"/>
+
+</RelativeLayout>

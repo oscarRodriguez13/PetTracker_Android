@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PetTracker</string>
+    <string name="app_logo" />
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Iniciar  Sesión</string>
+    <string name="no_member">¿Aun no eres miembro?</string>
+    <string name="register">Registrarse</string>
+</resources>
