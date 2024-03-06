@@ -28,7 +28,8 @@
         android:layout_below="@+id/tvCurrentPet"
         android:inputType="textPersonName"
         android:padding="12dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/etSpecies"
@@ -37,7 +38,8 @@
         android:layout_below="@id/etPetName"
         android:hint="Especie"
         android:inputType="textPersonName"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/etBreed"
@@ -46,7 +48,8 @@
         android:layout_below="@id/etSpecies"
         android:hint="Raza"
         android:inputType="textPersonName"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:textColor="@color/black"/>
 
     <EditText
         android:id="@+id/etAge"
@@ -64,7 +67,8 @@
         android:layout_below="@id/etAge"
         android:hint="Descripcion"
         android:inputType="textMultiLine"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tvAddImage"

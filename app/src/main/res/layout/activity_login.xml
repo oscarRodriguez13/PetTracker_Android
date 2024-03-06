@@ -26,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/password_input"
         android:hint="@string/email"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="@color/black"/>
 
     <!-- Password input -->
     <EditText
@@ -36,7 +37,8 @@
         android:hint="@string/password"
         android:layout_centerInParent="true"
         android:layout_marginTop="16dp"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/tv_passwordRecover"
@@ -45,7 +47,8 @@
         android:text="¿Olvidaste tu contraseña?"
         android:layout_below="@id/password_input"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:textColor="@color/black"/>
 
     <!-- Login button -->
     <Button
@@ -65,7 +68,8 @@
         android:text="@string/no_member"
         android:layout_below="@id/login_button"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="130dp"/>
+        android:layout_marginTop="130dp"
+        android:textColor="@color/black"/>
 
     <Button
         android:id="@+id/register_button"
