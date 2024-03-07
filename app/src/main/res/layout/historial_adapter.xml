@@ -29,7 +29,9 @@
             android:layout_height="0dp"
             android:layout_weight="0.1"
             android:text=""
-            android:gravity="center_vertical|center_horizontal" />
+            android:gravity="center_vertical|center_horizontal"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
     </LinearLayout>
 
     <!-- Los demás TextView permanecen en el LinearLayout principal horizontal -->
@@ -38,27 +40,39 @@
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="0.2"
-        android:text="" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text=""
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/idPaseador"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="0.2"
-        android:text="" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text=""
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/idDuracion"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="0.2"
-        android:text="" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text=""
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
     <TextView
         android:id="@+id/idPrecio"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_weight="0.2"
-        android:text="" />
+        android:gravity="center_vertical|center_horizontal"
+        android:text=""
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 </LinearLayout>
