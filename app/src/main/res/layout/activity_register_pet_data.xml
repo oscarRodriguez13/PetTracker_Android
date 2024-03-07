@@ -9,15 +9,7 @@
     tools:context=".RegisterPetDataActivity"
     android:textColor="@android:color/black">
 
-    <TextView
-        android:id="@+id/tvCurrentPet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:layout_centerHorizontal="true"
-        android:textColor="@android:color/black"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp" />
+
 
 
     <EditText
@@ -25,9 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nombre de la mascota"
-        android:layout_below="@+id/tvCurrentPet"
+        android:layout_below="@+id/titulo_registro"
         android:inputType="textPersonName"
         android:padding="12dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
         android:textColor="@color/black"/>
 
@@ -37,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/etPetName"
         android:hint="Especie"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:inputType="textPersonName"
         android:padding="12dp"
         android:textColor="@color/black"/>
@@ -47,6 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/etSpecies"
         android:hint="Raza"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:inputType="textPersonName"
         android:padding="12dp"
         android:textColor="@color/black"/>
@@ -57,6 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/etBreed"
         android:hint="Edad en años"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:inputType="number"
         android:padding="12dp" />
 
@@ -66,9 +66,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/etAge"
         android:hint="Descripcion"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:inputType="textMultiLine"
         android:padding="12dp"
         android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvCurrentPet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/black"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp" />
 
     <TextView
         android:id="@+id/tvAddImage"
@@ -99,5 +111,25 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:text="Siguiente" />
+
+    <ImageView
+        android:id="@+id/icon_mascotas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="103dp"
+        app:srcCompat="@drawable/mascotas_icon" />
+
+    <TextView
+        android:id="@+id/titulo_registro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon_mascotas"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="REGISTRO DE MASCOTAS"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
 
 </RelativeLayout>

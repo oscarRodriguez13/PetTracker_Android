@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,6 +16,8 @@
         android:hint="Nombre"
         android:inputType="textCapWords"
         android:padding="12dp"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/titulo_registro"
         android:textColor="@color/black"/>
 
     <EditText
@@ -56,5 +59,21 @@
         android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp" />
+
+    <ImageView
+        android:id="@+id/icon_paseador"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        app:srcCompat="@drawable/icon_paseador" />
+    <TextView
+        android:id="@+id/titulo_registro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon_paseador"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:text="REGISTRO DE MASCOTAS"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
