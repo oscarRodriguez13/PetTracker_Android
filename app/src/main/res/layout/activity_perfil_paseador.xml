@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="56dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="8dp"
+            android:src="@mipmap/loguito_foreground" />
+
+        <Button
+            android:id="@+id/buttonOption1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imageView"
+            android:layout_alignBaseline="@id/imageView"
+            android:text="Paseos"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/buttonOption2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/buttonOption1"
+            android:layout_alignBaseline="@id/buttonOption1"
+            android:text="Historial"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/buttonOption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/buttonOption2"
+            android:layout_alignBaseline="@id/buttonOption2"
+            android:text="Ajustes"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/buttonOption2"
+            android:layout_marginTop="12dp"/>
+
+
+        <ImageView
+            android:id="@+id/foto_perfil_paseador"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/line2"
+            app:srcCompat="@drawable/perfil_hombre_vivo__1_" />
+
+        <TextView
+            android:id="@+id/titulo_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="23dp"
+            android:text="Información"
+            android:textColor="@color/gray"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:layout_below="@id/titulo_info"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/nombre_paseador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Juan Esteban Muñoz"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/foto_perfil_paseador"/>
+
+        <TextView
+            android:id="@+id/titulo_experiencia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nombre_paseador"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Experiencia"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/titulo_experiencia"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/descripcion1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estudiante de veterinaria"
+            android:layout_below="@id/line3"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/descripcion2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voluntario de la veterinaria San Jose"
+            android:layout_below="@id/descripcion1"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/descripcion3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Paseador de PetTracker por 2 años"
+            android:layout_below="@id/descripcion2"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/titulo_calificaciones"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descripcion3"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Calificaciones"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/titulo_calificaciones"
+            android:layout_marginTop="12dp"/>
+
+
+        <ImageView
+            android:id="@+id/calificacion_paseador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line4"
+            android:layout_marginTop="5dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/calificacion_perfil" />
+
+        <TextView
+            android:id="@+id/titulo_comentarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/calificacion_paseador"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Comentarios"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/titulo_comentarios"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/comentarios"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line5"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="No parece haber nada por aqui..."
+            android:textSize="17dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/gray"
+            />
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
