@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -13,7 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.pettracker.domain.Datos
+import com.example.pettracker.domain.Datos.Companion.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -33,6 +37,8 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private var currentPetIndex = 1
     private var totalPets = 0
     private val petsList = mutableListOf<JSONObject>()
+
+
 
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -57,6 +63,17 @@ class RegisterPetDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet_data)
 
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // Si el permiso no ha sido otorgado, solicítalo
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
+        }else{
+            setup()
+        }
+
+    }
+
+    private fun setup(){
         // Inicializar vistas
         etPetName = findViewById(R.id.etPetName)
         etSpecies = findViewById(R.id.etSpecies)
@@ -107,6 +124,19 @@ class RegisterPetDataActivity : AppCompatActivity() {
         val camerai = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         takePictureLauncher.launch(camerai)
     }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                setup()
+            }else {
+                Toast.makeText(this, "Funcionalidad limitada: permiso denegado", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
+
 
     private fun validatePetData(): Boolean {
         // Validar que todos los campos estén llenos antes de pasar a la siguiente mascota
@@ -171,8 +201,10 @@ class RegisterPetDataActivity : AppCompatActivity() {
                 JSONArray()
             }
 
+            // Agregar el objeto de usuario al arreglo JSON
             jsonArray.put(usuarioObject)
 
+            // Escribir el arreglo JSON actualizado en el archivo
             val outputStream = FileOutputStream(file)
             outputStream.use {
                 it.write(jsonArray.toString().toByteArray())
@@ -188,6 +220,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
             showToast("Error al guardar usuario")
         }
     }
+
 
     private fun showToast(message: String) {
         // Muestra un Toast con el mensaje proporcionado
