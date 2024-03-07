@@ -22,6 +22,9 @@
         android:theme="@style/Theme.PetTracker"
         tools:targetApi="31">
         <activity
+            android:name=".RegisterWalkerActivity"
+            android:exported="false" />
+        <activity
             android:name=".BuscarMascotaActivity"
             android:exported="false" />
         <activity

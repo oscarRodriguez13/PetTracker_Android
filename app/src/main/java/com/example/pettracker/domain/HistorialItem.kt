@@ -1,4 +1,4 @@
-package com.example.pettracker
+package com.example.pettracker.domain
 
 data class HistorialItem(
     val nombreMascota: String,

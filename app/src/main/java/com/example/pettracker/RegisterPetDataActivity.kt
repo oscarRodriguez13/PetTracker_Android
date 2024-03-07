@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.pettracker.Datos.Companion.MY_PERMISSION_REQUEST_CAMERA
+import com.example.pettracker.domain.Datos.Companion.MY_PERMISSION_REQUEST_CAMERA
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*

@@ -3,6 +3,8 @@ package com.example.pettracker
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ListView
+import com.example.pettracker.domain.HistorialAdapter
+import com.example.pettracker.domain.HistorialItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.IOException

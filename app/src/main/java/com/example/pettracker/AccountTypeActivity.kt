@@ -18,5 +18,14 @@ class AccountTypeActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
+
+        val accountTypeWalker = findViewById<ImageButton>(R.id.dogWalkerButton)
+        accountTypeWalker.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                RegisterWalkerActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 }
