@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -19,7 +20,8 @@ import com.google.android.gms.location.LocationServices
 class SolicitarPaseoActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-
+    private lateinit var etPrecioPaseo: EditText
+    private lateinit var etDuracionPaseo: EditText
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,15 @@ class SolicitarPaseoActivity : AppCompatActivity() {
             val intent = Intent(
                 applicationContext,
                 PaginaPaseoActivity::class.java
+            )
+            startActivity(intent)
+        }
+
+        val rechazarButton = findViewById<Button>(R.id.Rechazar)
+        rechazarButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                HomeActivity::class.java
             )
             startActivity(intent)
         }

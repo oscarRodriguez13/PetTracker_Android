@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -33,13 +35,28 @@ class HomeActivity : AppCompatActivity() {
             obtenerUbicacionActual()
         }
 
-        val paseoButton = findViewById<Button>(R.id.Aceptar)
-        paseoButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                PaginaPaseoActivity::class.java
-            )
-            startActivity(intent)
+        val etPrecioPaseo = findViewById<EditText>(R.id.etPrecioPaseo)
+        val etDuracionPaseo = findViewById<EditText>(R.id.etDuracionPaseo)
+        val btn_solicitud_paseo = findViewById<Button>(R.id.btn_solicitud_paseo)
+
+        btn_solicitud_paseo.setOnClickListener {
+            if (verificarCamposLlenos(etPrecioPaseo,etDuracionPaseo)) {
+                // Cambia a la siguiente pantalla
+                val intent = Intent(this, SolicitarPaseoActivity::class.java)
+                val bundle = Bundle().apply {
+                    putString("precio", etPrecioPaseo.text.toString().trim())
+                    putString("duracion", etDuracionPaseo.text.toString().trim())
+                }
+
+                // Añadir el Bundle al Intent
+                intent.putExtras(bundle)
+
+                // Iniciar la actividad con el Intent que tiene el Bundle
+                startActivity(intent)
+            } else {
+                // Muestra un mensaje de error o indicación
+                Toast.makeText(this, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
+            }
         }
 
         val historialButton = findViewById<Button>(R.id.buttonOption2)
@@ -79,5 +96,8 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun verificarCamposLlenos(vararg campos: EditText): Boolean =
+        campos.all { it.text.toString().trim().isNotEmpty() }
 
 }

@@ -77,79 +77,41 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_alignParentBottom="true"
+        android:paddingHorizontal="20dp"
         android:layout_marginTop="12dp">
 
-        <Button
-            android:id="@+id/perfil_paseador"
-            android:layout_width="100dp"
+
+        <EditText
+            android:id="@+id/etPrecioPaseo"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Perfil"
-            android:layout_alignParentRight="true"
+            android:hint="Precio"
+            android:inputType="textCapWords"
+            android:padding="8dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/etDuracionPaseo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etPrecioPaseo"
+            android:hint="Duracion paseo"
+            android:inputType="textEmailAddress"
+            android:padding="8dp"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/btn_solicitud_paseo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/etDuracionPaseo"
+            android:text="Solicitar Paseo"
+            android:textSize="15dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="5dp" />
 
-        <Button
-            android:id="@+id/Aceptar"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Aceptar"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/perfil_paseador" />
-
-        <ImageView
-            android:id="@+id/foto_perfil_paseador"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            app:srcCompat="@drawable/perfil_hombre_vivo__1_" />
-
-        <TextView
-            android:id="@+id/nombre_paseador"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            android:layout_marginStart="8dp"
-            android:text="Juan Esteban Muñoz"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/nombre_paseador"
-            android:layout_marginLeft="8dp"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            app:srcCompat="@drawable/pngtree_big_wall_clock_icon_simple_style_png_image_1921191__1__removebg_preview" />
-
-        <TextView
-            android:id="@+id/tiempo_paseo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nombre_paseador"
-            android:layout_marginTop="18dp"
-            android:layout_toEndOf="@id/imageView3"
-            android:text="40 minutos" />
-
-        <ImageView
-            android:id="@+id/costo_paseo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/tiempo_paseo"
-            android:layout_marginTop="14dp"
-            android:layout_marginLeft="8dp"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            app:srcCompat="@drawable/coin_png_image_5a3a896a20e7b3_87186704151378570613487780_removebg_preview" />
-
-        <TextView
-            android:id="@+id/costo_paseo_texto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tiempo_paseo"
-            android:layout_marginTop="22dp"
-            android:layout_toEndOf="@id/imageView3"
-            android:text="$40.000 COP" />
-
     </RelativeLayout>
+
 
 </RelativeLayout>
