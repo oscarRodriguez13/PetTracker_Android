@@ -37,6 +37,9 @@
             android:name=".PasswordRecoveryActivity"
             android:exported="false" />
         <activity
+            android:name=".PaginaPaseoActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
