@@ -14,7 +14,7 @@ class AccountTypeActivity : AppCompatActivity() {
         accountTypeUser.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                RegisterActivityUser::class.java
+                RegisterUserActivity::class.java
             )
             startActivity(intent)
         }
