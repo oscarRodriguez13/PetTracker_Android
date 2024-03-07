@@ -16,61 +16,37 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val tvPasswordRecover = findViewById<TextView>(R.id.tv_passwordRecover)
-        tvPasswordRecover.setOnClickListener {
-            val intent = Intent(applicationContext, PasswordRecoveryActivity::class.java)
-            startActivity(intent)
+        findViewById<TextView>(R.id.tv_passwordRecover).setOnClickListener {
+            startActivity(Intent(applicationContext, PasswordRecoveryActivity::class.java))
         }
 
         val emailEditText = findViewById<EditText>(R.id.email_input)
         val passwordEditText = findViewById<EditText>(R.id.password_input)
 
-        val loginButton = findViewById<Button>(R.id.login_button)
-        loginButton.setOnClickListener {
+        findViewById<Button>(R.id.login_button).setOnClickListener {
             if (validateUser(emailEditText.text.toString(), passwordEditText.text.toString())) {
-                val intent = Intent(applicationContext, HomeActivity::class.java)
-                startActivity(intent)
+                startActivity(Intent(applicationContext, HomeActivity::class.java))
             } else {
                 Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
             }
         }
 
-        val registerButton = findViewById<Button>(R.id.register_button)
-        registerButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                AccountTypeActivity::class.java
-            )
-            startActivity(intent)
+        findViewById<Button>(R.id.register_button).setOnClickListener {
+            startActivity(Intent(applicationContext, AccountTypeActivity::class.java))
         }
     }
 
     private fun validateUser(email: String, password: String): Boolean {
-        val json = loadJSONFromAsset("usuarios.json")
-        if (json != null) {
-            val jsonObject = JSONObject(json)
-            val usuariosArray = jsonObject.getJSONArray("usuarios")
-            for (i in 0 until usuariosArray.length()) {
-                val user = usuariosArray.getJSONObject(i)
-                if (user.getString("email") == email && user.getString("password") == password) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
-    private fun loadJSONFromAsset(filename: String): String? {
         return try {
-            val inputStream = assets.open(filename)
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            String(buffer, Charsets.UTF_8)
+            val json = assets.open("usuarios.json").bufferedReader().use { it.readText() }
+            val usuariosArray = JSONObject(json).getJSONArray("usuarios")
+            (0 until usuariosArray.length()).any {
+                val user = usuariosArray.getJSONObject(it)
+                user.getString("email") == email && user.getString("password") == password
+            }
         } catch (ex: IOException) {
             ex.printStackTrace()
-            return null
+            false
         }
     }
 }

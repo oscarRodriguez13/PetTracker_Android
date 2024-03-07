@@ -68,6 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="480dp"
         android:layout_below="@id/headerLayout"
+        android:layout_above="@+id/relativeLayoutBelowWebView"
         android:layout_marginTop="10dp"
         tools:ignore="WebViewLayout" />
 
