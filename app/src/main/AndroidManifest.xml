@@ -23,6 +23,9 @@
         android:theme="@style/Theme.PetTracker"
         tools:targetApi="31">
         <activity
+            android:name=".HomeWalkerActivity"
+            android:exported="false" />
+        <activity
             android:name=".PerfilPaseadorActivity"
             android:exported="false" />
         <activity

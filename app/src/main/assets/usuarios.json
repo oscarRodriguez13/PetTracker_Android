@@ -4,6 +4,7 @@
       "nombre": "Juan Perez",
       "email": "juanperez@example.com",
       "password": "123",
+      "tipoUsuario": "1",
       "mascotas": [
         {
           "nombre": "Fido",
@@ -17,7 +18,8 @@
     {
       "nombre": "Laura García",
       "email": "lauragarcia@example.com",
-      "password": "miSuperContraseña",
+      "password": "123",
+      "tipoUsuario": "2",
       "mascotas": [
         {
           "nombre": "Whiskers",
