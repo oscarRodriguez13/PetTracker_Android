@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivityUser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -22,7 +22,7 @@ class RegisterActivity : AppCompatActivity() {
         button.setOnClickListener {
             if (verificarCamposLlenos(etName, etEmail, etPassword, etConfirmPassword)) {
                 // Cambia a la siguiente pantalla
-                val intent = Intent(this, RegisterPetData::class.java)
+                val intent = Intent(this, RegisterPetDataActivity::class.java)
                 val bundle = Bundle().apply {
                     putString("nombre", etName.text.toString().trim())
                     putString("email", etEmail.text.toString().trim())

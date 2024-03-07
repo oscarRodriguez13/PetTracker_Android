@@ -19,7 +19,7 @@ import org.json.JSONObject
 import java.io.*
 
 
-class RegisterPetData : AppCompatActivity() {
+class RegisterPetDataActivity : AppCompatActivity() {
 
     private lateinit var etPetName: EditText
     private lateinit var etSpecies: EditText

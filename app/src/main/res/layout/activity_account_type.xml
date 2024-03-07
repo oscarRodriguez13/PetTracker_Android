@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:padding="32dp"
+    android:textColor="@android:color/black">
+
+    <TextView
+        android:id="@+id/tv_accountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="16dp"
+        android:text="Tipo de Cuenta"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tv_accountType"
+        android:layout_marginBottom="7dp"
+        android:contentDescription="@string/app_logo"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/logo_foreground" />
+
+    <TextView
+        android:id="@+id/tv_accountTypeUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_accountType"
+        android:layout_marginTop="40dp"
+        android:text="Dueño"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="20sp"
+        android:layout_marginStart="90dp" />
+
+    <ImageButton
+        android:id="@+id/userButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/tv_accountType"
+        app:srcCompat="@android:drawable/ic_menu_myplaces"
+        android:layout_toEndOf="@id/tv_accountTypeUser"
+        android:layout_marginStart="60dp"/>
+
+    <TextView
+        android:id="@+id/tv_accountTypeDogWalker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_accountTypeUser"
+        android:layout_marginTop="40dp"
+        android:text="Paseador"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="20sp"
+        android:layout_marginStart="90dp" />
+
+    <ImageButton
+        android:id="@+id/dogWalkerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/tv_accountTypeUser"
+        app:srcCompat="@android:drawable/ic_menu_myplaces"
+        android:layout_toEndOf="@id/tv_accountTypeUser"
+        android:layout_marginStart="60dp"/>
+
+
+
+</RelativeLayout>
