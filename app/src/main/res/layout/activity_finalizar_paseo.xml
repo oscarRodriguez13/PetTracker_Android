@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_alignBaseline="@id/imageView"
-            android:text="@string/btn_paseos"
+            android:text="Paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption1"
             android:layout_alignBaseline="@id/buttonOption1"
-            android:text="@string/btn_historial"
+            android:text="Historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption2"
             android:layout_alignBaseline="@id/buttonOption2"
-            android:text="@string/btn_ajustes"
+            android:text="Ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -63,20 +63,12 @@
     </RelativeLayout>
 
 
-    <ImageView
-        android:id="@+id/imagen_paseo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headerLayout"
-        app:srcCompat="@drawable/captura_de_pantalla_2024_03_05_220649" />
-
     <RelativeLayout
         android:id="@+id/relativeLayoutBelowWebView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_below="@id/imagen_paseo"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="100dp">
 
         <ImageView
             android:id="@+id/foto_perfil_paseador"
@@ -92,10 +84,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="142dp"
-            android:text="@string/nombre_paseador"
+            android:text="Juan Esteban Muñoz"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:textColor="@color/black"></TextView>
+            android:textColor="@color/black"/>
 
         <ImageView
             android:id="@+id/imageView3"
@@ -111,19 +103,19 @@
             android:id="@+id/mascotas_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/paseador_mascotas"
+            android:text="Mascotas: Toby (Golden Retriver)"
             android:layout_marginLeft="143dp"
             android:layout_below="@id/nombre_paseador"
-            ></TextView>
+            />
 
         <TextView
             android:id="@+id/localizacion_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/localizacion_paseador_pagina_paseo"
+            android:text="Localización: Calle 100 "
             android:layout_marginLeft="143dp"
             android:layout_below="@id/mascotas_paseo"
-            ></TextView>
+            />
 
         <TextView
             android:id="@+id/tiempo_paseo_2"
@@ -132,39 +124,79 @@
             android:layout_below="@id/localizacion_paseo"
             android:layout_marginLeft="189dp"
             android:layout_marginTop="18dp"
-            android:text="@string/estado_pagina_paseo"
+            android:text="Terminado"
             android:textColor="@color/gray"
             android:textStyle="bold"/>
 
-        <ImageView
-            android:id="@+id/icono_perro"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:srcCompat="@drawable/dog_icon"
+        <TextView
+            android:id="@+id/tv_finViaje"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="80dp"
+            android:text="Finaliza tu viaje"
+            android:textStyle="bold"
+            android:textSize="20dp"
             android:layout_below="@id/foto_perfil_paseador"/>
 
-        <Button
-            android:id="@+id/ir_mascota"
+        <TextView
+            android:id="@+id/tv_calificacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_buscar_mascota"
-            android:layout_below="@id/foto_perfil_paseador"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="168dp"
-            />
+            android:text="Califique el servicio:"
+            android:layout_below="@+id/tv_finViaje"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="29dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="1-5"
+            android:layout_below="@+id/tv_finViaje"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:layout_toEndOf="@id/tv_calificacion"
+            android:inputType="number"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/tv_comentario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agregue el comentario:"
+            android:layout_below="@+id/tv_calificacion"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="29dp"
+            android:textColor="@color/black"/>
+
+        <EditText
+            android:id="@+id/etComentario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Comment"
+            android:layout_below="@+id/tv_calificacion"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:layout_toEndOf="@id/tv_calificacion"
+            android:inputType="textCapSentences"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"/>
 
         <Button
-            android:id="@+id/bt_terminar"
+            android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="75dp"
-            android:layout_marginBottom="33dp"
-            android:layout_toEndOf="@id/tiempo_paseo_2"
-            android:text="Terminar" />
+            android:text="Pagar"
+            android:layout_below="@id/tv_comentario"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"/>
 
     </RelativeLayout>
+
+
 
 </RelativeLayout>

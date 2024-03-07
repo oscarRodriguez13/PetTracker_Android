@@ -24,6 +24,9 @@
         android:theme="@style/Theme.PetTracker"
         tools:targetApi="31">
         <activity
+            android:name=".FinalizarPaseoActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeWalkerActivity"
             android:exported="false" />
         <activity

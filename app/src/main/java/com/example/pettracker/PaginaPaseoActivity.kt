@@ -26,5 +26,14 @@ class PaginaPaseoActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
+
+        val terminarButton = findViewById<Button>(R.id.bt_terminar)
+        terminarButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                FinalizarPaseoActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 }
