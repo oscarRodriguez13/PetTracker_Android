@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_alignBaseline="@id/imageView"
-            android:text="Paseos"
+            android:text="@string/btn_paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption1"
             android:layout_alignBaseline="@id/buttonOption1"
-            android:text="Historial"
+            android:text="@string/btn_historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption2"
             android:layout_alignBaseline="@id/buttonOption2"
-            android:text="Ajustes"
+            android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -87,17 +87,16 @@
             android:id="@+id/mascotas_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Distancia: 3Km"
             android:layout_centerInParent="true"
-            android:textSize="20dp"
+            android:text="@string/distancia_mascota"
             android:textColor="@color/black"
-            ></TextView>
+            android:textSize="20dp"></TextView>
 
         <TextView
             android:id="@+id/localizacion_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Localización: Calle 100 "
+            android:text="@string/localizacion_paseador_pagina_paseo"
             android:layout_centerInParent="true"
             android:textColor="@color/black"
             android:textSize="20dp"

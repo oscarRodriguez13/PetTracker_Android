@@ -6,7 +6,6 @@
     android:padding="32dp"
     android:textColor="@android:color/black">
 
-    <!-- App logo -->
     <ImageView
         android:id="@+id/app_logo"
         android:layout_width="match_parent"
@@ -19,7 +18,6 @@
         app:srcCompat="@mipmap/logo_foreground"
         />
 
-    <!-- Email input -->
     <EditText
         android:id="@+id/email_input"
         android:layout_width="match_parent"
@@ -29,7 +27,6 @@
         android:inputType="textEmailAddress"
         android:textColor="@color/black"/>
 
-    <!-- Password input -->
     <EditText
         android:id="@+id/password_input"
         android:layout_width="match_parent"
@@ -44,13 +41,12 @@
         android:id="@+id/tv_passwordRecover"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¿Olvidaste tu contraseña?"
+        android:text="@string/forgot_password"
         android:layout_below="@id/password_input"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:textColor="@color/black"/>
 
-    <!-- Login button -->
     <Button
         android:id="@+id/login_button"
         android:layout_width="wrap_content"

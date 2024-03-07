@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_alignBaseline="@id/imageView"
-            android:text="Paseos"
+            android:text="@string/btn_paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption1"
             android:layout_alignBaseline="@id/buttonOption1"
-            android:text="Historial"
+            android:text="@string/btn_historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption2"
             android:layout_alignBaseline="@id/buttonOption2"
-            android:text="Ajustes"
+            android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -85,7 +85,7 @@
             android:id="@+id/etPrecioPaseo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Precio"
+            android:hint="@string/ingresar_precio"
             android:inputType="textCapWords"
             android:padding="8dp"
             android:textColor="@color/black"/>
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etPrecioPaseo"
-            android:hint="Duracion paseo"
+            android:hint="@string/ingresar_duracion_paseo"
             android:inputType="textEmailAddress"
             android:padding="8dp"
             android:textColor="@color/black"/>
@@ -106,8 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/etDuracionPaseo"
-            android:text="Solicitar Paseo"
-            android:textSize="15dp"
+            android:text="@string/btn_solicitar_paseo"
+            android:textSize="15sp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="5dp" />
 

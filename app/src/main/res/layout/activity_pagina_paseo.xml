@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_alignBaseline="@id/imageView"
-            android:text="Paseos"
+            android:text="@string/btn_paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption1"
             android:layout_alignBaseline="@id/buttonOption1"
-            android:text="Historial"
+            android:text="@string/btn_historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption2"
             android:layout_alignBaseline="@id/buttonOption2"
-            android:text="Ajustes"
+            android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -92,7 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="142dp"
-            android:text="Juan Esteban Muñoz"
+            android:text="@string/nombre_paseador"
             android:textSize="20dp"
             android:textStyle="bold"
             android:textColor="@color/black"></TextView>
@@ -111,7 +111,7 @@
             android:id="@+id/mascotas_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mascotas: Golden Retriver, Gran Danes"
+            android:text="@string/paseador_mascotas"
             android:layout_marginLeft="143dp"
             android:layout_below="@id/nombre_paseador"
             ></TextView>
@@ -120,7 +120,7 @@
             android:id="@+id/localizacion_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Localización: Calle 100 "
+            android:text="@string/localizacion_paseador_pagina_paseo"
             android:layout_marginLeft="143dp"
             android:layout_below="@id/mascotas_paseo"
             ></TextView>
@@ -132,7 +132,7 @@
             android:layout_below="@id/localizacion_paseo"
             android:layout_marginLeft="189dp"
             android:layout_marginTop="18dp"
-            android:text="En paseo..."
+            android:text="@string/estado_pagina_paseo"
             android:textColor="@color/gray"
             android:textStyle="bold"/>
 
@@ -149,7 +149,7 @@
             android:id="@+id/ir_mascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ir por mi mascota"
+            android:text="@string/btn_buscar_mascota"
             android:layout_below="@id/foto_perfil_paseador"
             android:layout_marginTop="30dp"
             android:layout_marginLeft="168dp"

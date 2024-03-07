@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/imageView"
             android:layout_alignBaseline="@id/imageView"
-            android:text="Paseos"
+            android:text="@string/btn_paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption1"
             android:layout_alignBaseline="@id/buttonOption1"
-            android:text="Historial"
+            android:text="@string/btn_historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/buttonOption2"
             android:layout_alignBaseline="@id/buttonOption2"
-            android:text="Ajustes"
+            android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
 
@@ -78,7 +78,7 @@
             android:layout_below="@id/line"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="23dp"
-            android:text="Información"
+            android:text="@string/titulo_informacion_perfil_paseador"
             android:textColor="@color/gray"
             android:textSize="20dp"
             android:textStyle="bold" />
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Juan Esteban Muñoz"
+            android:text="@string/nombre_paseador"
             android:textSize="22dp"
             android:textStyle="bold"
             android:layout_centerInParent="true"
@@ -108,7 +108,7 @@
             android:layout_below="@id/nombre_paseador"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="Experiencia"
+            android:text="@string/titulo_experiencia_perfil_paseador"
             android:textSize="20dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
@@ -125,7 +125,7 @@
             android:id="@+id/descripcion1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estudiante de veterinaria"
+            android:text="@string/profesion_paseador"
             android:layout_below="@id/line3"
             android:layout_marginLeft="15dp"
             android:textStyle="bold"
@@ -137,7 +137,7 @@
             android:id="@+id/descripcion2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Voluntario de la veterinaria San Jose"
+            android:text="@string/actividades_paseador"
             android:layout_below="@id/descripcion1"
             android:layout_marginLeft="15dp"
             android:textStyle="bold"
@@ -149,7 +149,7 @@
             android:id="@+id/descripcion3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Paseador de PetTracker por 2 años"
+            android:text="@string/experiencia_paseador"
             android:layout_below="@id/descripcion2"
             android:layout_marginLeft="15dp"
             android:textStyle="bold"
@@ -164,7 +164,7 @@
             android:layout_below="@id/descripcion3"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="Calificaciones"
+            android:text="@string/titulo_calificaciones_perfil_paseador"
             android:textSize="20dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
@@ -194,7 +194,7 @@
             android:layout_below="@id/calificacion_paseador"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="Comentarios"
+            android:text="@string/titulo_comentarios_perfil_paseador"
             android:textSize="20dp"
             android:textColor="@color/gray"
             android:textStyle="bold" />
@@ -214,7 +214,7 @@
             android:layout_below="@id/line5"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="No parece haber nada por aqui..."
+            android:text="@string/comentarios_perfil_paseador"
             android:textSize="17dp"
             android:layout_centerInParent="true"
             android:textColor="@color/gray"

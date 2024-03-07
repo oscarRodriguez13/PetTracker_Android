@@ -16,7 +16,7 @@
         android:id="@+id/etPetName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre de la mascota"
+        android:hint="@string/nombre_de_la_mascota_registro"
         android:layout_above="@+id/etSpecies"
         android:inputType="textPersonName"
         android:padding="12dp"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:hint="Especie"
+        android:hint="@string/especie_registro"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:inputType="textPersonName"
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/etSpecies"
-        android:hint="Raza"
+        android:hint="@string/raza_registro"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:inputType="textPersonName"
@@ -86,7 +86,7 @@
         android:id="@+id/tvAddImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agrega una foto"
+        android:text="@string/agrega_una_foto_registro"
         android:textColor="@android:color/black"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
@@ -110,7 +110,7 @@
         android:layout_below="@id/addImageButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Siguiente" />
+        android:text="@string/btn_siguiente" />
 
     <ImageView
         android:id="@+id/icon_mascotas"
@@ -128,7 +128,7 @@
         android:layout_above="@+id/etPetName"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
-        android:text="REGISTRO DE MASCOTAS"
+        android:text="@string/titulo_registro_de_mascotas"
         android:textSize="20sp"
         android:textStyle="bold" />
 

@@ -13,7 +13,7 @@
         android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre"
+        android:hint="@string/nombre_registro"
         android:inputType="textCapWords"
         android:padding="12dp"
         android:layout_marginTop="20dp"
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etName"
-        android:hint="Email"
+        android:hint="@string/email"
         android:inputType="textEmailAddress"
         android:padding="12dp"
         android:textColor="@color/black"/>
@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etEmail"
-        android:hint="Contraseña"
+        android:hint="@string/contrasena_registro"
         android:inputType="textPassword"
         android:padding="12dp"
         android:textColor="@color/black"/>
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/etPassword"
-        android:hint="Experiencia"
+        android:hint="@string/experiencia_registro"
         android:inputType="textMultiLine"
         android:padding="12dp"
         android:textColor="@color/black"
@@ -55,7 +55,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registrarse"
+        android:text="@string/btn_registrarse"
         android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp" />
@@ -74,7 +74,7 @@
         android:layout_above="@+id/etName"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
-        android:text="REGISTRO DE PASEADOR"
+        android:text="@string/titulo_registro_de_paseador"
         android:textSize="20sp"
         android:textStyle="bold" />
 
