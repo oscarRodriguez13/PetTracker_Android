@@ -46,6 +46,15 @@ class HomeActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
+
+        val historialButton = findViewById<Button>(R.id.buttonOption2)
+        historialButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                HistorialActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 
     private fun obtenerUbicacionActual() {

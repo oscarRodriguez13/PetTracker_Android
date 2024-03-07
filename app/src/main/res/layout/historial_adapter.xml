@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!-- Nuevo LinearLayout vertical para el ImageView y el TextView -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            app:srcCompat="@drawable/dog_icon"
+            tools:ignore="NestedWeights" />
+
+        <TextView
+            android:id="@+id/idMascota"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:text=""
+            android:gravity="center_vertical|center_horizontal" />
+    </LinearLayout>
+
+    <!-- Los demás TextView permanecen en el LinearLayout principal horizontal -->
+    <TextView
+        android:id="@+id/idFecha"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/idPaseador"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/idDuracion"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/idPrecio"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:text="" />
+
+</LinearLayout>
