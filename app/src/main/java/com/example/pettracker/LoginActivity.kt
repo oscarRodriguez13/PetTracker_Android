@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
@@ -25,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.login_button).setOnClickListener {
             if (validateUser(emailEditText.text.toString(), passwordEditText.text.toString())) {
-                startActivity(Intent(applicationContext, HomeActivity::class.java))
+                // Ya se redirige en la función validateUser según el tipo de usuario, no es necesario iniciar HomeActivity aquí
             } else {
                 Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
             }
@@ -40,13 +41,32 @@ class LoginActivity : AppCompatActivity() {
         return try {
             val json = assets.open("usuarios.json").bufferedReader().use { it.readText() }
             val usuariosArray = JSONObject(json).getJSONArray("usuarios")
-            (0 until usuariosArray.length()).any {
-                val user = usuariosArray.getJSONObject(it)
-                user.getString("email") == email && user.getString("password") == password
+            val userList = (0 until usuariosArray.length()).map { usuariosArray.getJSONObject(it) }
+            val user = userList.firstOrNull { it.getString("email") == email && it.getString("password") == password }
+            if (user != null) {
+                val tipoUsuario = user.getInt("tipoUsuario")
+                when (tipoUsuario) {
+                    1 -> {
+                        startActivity(Intent(applicationContext, HomeActivity::class.java))
+                    }
+                    2 -> {
+                        startActivity(Intent(applicationContext, HomeWalkerActivity::class.java))
+                    }
+                    else -> {
+                        Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                true // Usuario válido
+            } else {
+                false // Usuario inválido
             }
         } catch (ex: IOException) {
             ex.printStackTrace()
-            false
+            false // Error al leer el archivo JSON
+        } catch (ex: JSONException) {
+            ex.printStackTrace()
+            false // Error al analizar el archivo JSON
         }
     }
+
 }
