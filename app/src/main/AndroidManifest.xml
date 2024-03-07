@@ -22,19 +22,13 @@
         android:theme="@style/Theme.PetTracker"
         tools:targetApi="31">
         <activity
-            android:name=".AccountTypeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BuscarMascotaActivity"
-            android:exported="false" />
-        <activity
             android:name=".HistorialActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterPetDataActivity"
+            android:name=".RegisterPetData"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivityUser"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".HomeActivity"
