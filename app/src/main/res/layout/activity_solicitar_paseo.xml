@@ -74,8 +74,10 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutBelowWebView"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
         android:layout_marginTop="12dp">
 
         <Button
@@ -89,11 +91,11 @@
 
         <Button
             android:id="@+id/Aceptar"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Aceptar"
+            android:layout_below="@id/perfil_paseador"
             android:layout_alignParentRight="true"
-            android:layout_below="@id/perfil_paseador" />
+            android:text="Aceptar" />
 
         <Button
             android:id="@+id/Rechazar"
