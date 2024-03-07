@@ -146,6 +146,7 @@
             android:layout_below="@id/foto_perfil_paseador"/>
 
         <Button
+            android:id="@+id/ir_mascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ir por mi mascota"
