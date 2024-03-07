@@ -17,7 +17,7 @@
         android:inputType="textCapWords"
         android:padding="12dp"
         android:layout_marginTop="20dp"
-        android:layout_below="@+id/titulo_registro"
+        android:layout_centerInParent="true"
         android:textColor="@color/black"/>
 
     <EditText
@@ -64,13 +64,14 @@
         android:id="@+id/icon_paseador"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        app:srcCompat="@drawable/icon_paseador" />
+        app:srcCompat="@drawable/icon_paseador"
+        android:layout_above="@id/titulo_registro"/>
 
     <TextView
         android:id="@+id/titulo_registro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon_paseador"
+        android:layout_above="@+id/etName"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:text="REGISTRO DE PASEADOR"

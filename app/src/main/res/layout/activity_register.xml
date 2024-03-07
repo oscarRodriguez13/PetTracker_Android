@@ -9,16 +9,15 @@
     android:textColor="@android:color/black">
 
 
-
     <EditText
         android:id="@+id/etName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/titulo_registro"
         android:hint="Nombre"
         android:inputType="textCapWords"
         android:padding="12dp"
-        android:layout_below="@+id/titulo_registro"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/etEmail"
@@ -63,18 +62,18 @@
 
     <ImageView
         android:id="@+id/icon_form"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="49dp"
-        app:srcCompat="@drawable/forms_icon" />
+        android:layout_marginStart="54dp"
+        app:srcCompat="@drawable/forms_icon"
+        android:layout_above="@id/titulo_registro"/>
 
     <TextView
         android:id="@+id/titulo_registro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon_form"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:text="REGISTRO"
