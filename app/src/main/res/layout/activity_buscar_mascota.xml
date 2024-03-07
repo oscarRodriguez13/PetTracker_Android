@@ -74,7 +74,7 @@
         android:scaleType="fitCenter"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        app:srcCompat="@drawable/Buscar_perro" />
+        app:srcCompat="@drawable/buscar_perro" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutBelowWebView"
