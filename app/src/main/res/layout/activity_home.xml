@@ -32,7 +32,8 @@
             android:layout_alignBaseline="@id/imageView"
             android:text="@string/btn_paseos"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonOption2"
@@ -63,14 +64,15 @@
 
     </RelativeLayout>
 
-
-    <WebView
-        android:id="@+id/webViewMap"
+    <ImageView
+        android:id="@+id/mapImage"
         android:layout_width="match_parent"
-        android:layout_height="480dp"
+        android:layout_height="440dp"
         android:layout_below="@id/headerLayout"
+        android:layout_above="@+id/relativeLayoutBelowWebView"
         android:layout_marginTop="10dp"
-        tools:ignore="WebViewLayout" />
+        android:scaleType="fitXY"
+        android:src="@drawable/icn_labrador" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutBelowWebView"
@@ -80,36 +82,57 @@
         android:paddingHorizontal="20dp"
         android:layout_marginTop="12dp">
 
+        <Button
+            android:id="@+id/button_options"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:spinnerMode="dialog"
+            android:text="Mascotas"
+            style="@style/ButtonStyle" />
 
-        <EditText
-            android:id="@+id/etPrecioPaseo"
+        <TextView
+            android:id="@+id/tv_option"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/ingresar_precio"
-            android:inputType="textCapWords"
-            android:padding="8dp"
-            android:textColor="@color/black"/>
+            android:spinnerMode="dialog"
+            android:padding="12dp"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@+id/button_options" />
 
         <EditText
-            android:id="@+id/etDuracionPaseo"
+            android:id="@+id/etHoraInicial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etPrecioPaseo"
-            android:hint="@string/ingresar_duracion_paseo"
-            android:inputType="textEmailAddress"
             android:padding="8dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:layout_below="@+id/button_options"
+            android:hint="Hora inicial"
+            android:layout_marginTop="10dp"
+            android:focusable="false"
+            android:clickable="true" />
+
+        <EditText
+            android:id="@+id/etHoraFinal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_below="@+id/etHoraInicial"
+            android:textColor="@color/black"
+            android:hint="Hora final"
+            android:focusable="false"
+            android:clickable="true" />
 
         <Button
             android:id="@+id/btn_solicitud_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/etDuracionPaseo"
+            android:layout_below="@id/etHoraFinal"
             android:text="@string/btn_solicitar_paseo"
             android:textSize="15sp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            style="@style/ButtonStyle" />
 
     </RelativeLayout>
 

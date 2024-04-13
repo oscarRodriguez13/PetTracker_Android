@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:padding="12dp" >
 
     <RelativeLayout
         android:id="@+id/headerLayout"
@@ -31,7 +32,8 @@
             android:layout_alignBaseline="@id/imageView"
             android:text="@string/btn_paseos"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonOption2"
@@ -62,111 +64,185 @@
 
     </RelativeLayout>
 
-
-    <WebView
-        android:id="@+id/webViewMap"
+    <ImageView
+        android:id="@+id/mapImage"
         android:layout_width="match_parent"
         android:layout_height="480dp"
         android:layout_below="@id/headerLayout"
-        android:layout_above="@+id/relativeLayoutBelowWebView"
         android:layout_marginTop="10dp"
-        tools:ignore="WebViewLayout" />
+        android:scaleType="fitXY"
+        android:src="@drawable/captura_de_pantalla_2024_03_05_220649" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutBelowWebView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="12dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/mapImage"
+        tools:context=".Horizontal_ScrollView">
 
-        <Button
-            android:id="@+id/perfil_paseador"
-            android:layout_width="100dp"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/btn_perfil" />
+            android:layout_marginTop="20dp">
 
-        <Button
-            android:id="@+id/Aceptar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/perfil_paseador"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="-6dp"
-            android:layout_marginRight="19dp"
-            android:text="@string/btn_aceptar" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/Rechazar"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Aceptar"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="18dp"
-            android:text="@string/btn_rechazar"
-            android:textSize="12dp" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/perfil1"
+                    android:layout_width="150dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp">
 
-        <ImageView
-            android:id="@+id/foto_perfil_paseador"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            app:srcCompat="@drawable/perfil_hombre_vivo__1_" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/nombre_paseador"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            android:layout_marginStart="8dp"
-            android:text="@string/nombre_paseador"
-            android:textColor="@color/black"/>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/perfil_hombre_vivo__1_" />
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/nombre_paseador"
-            android:layout_marginLeft="8dp"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            app:srcCompat="@drawable/pngtree_big_wall_clock_icon_simple_style_png_image_1921191__1__removebg_preview" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Olivia"
+                            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tiempo_paseo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nombre_paseador"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="13dp"
-            android:layout_toEndOf="@id/imageView3"
-            android:text="@string/duracion_paseo" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$ 45.000"
+                            android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/costo_paseo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_below="@id/tiempo_paseo"
-            android:layout_marginTop="14dp"
-            android:layout_marginLeft="8dp"
-            android:layout_toEndOf="@id/foto_perfil_paseador"
-            app:srcCompat="@drawable/coin_png_image_5a3a896a20e7b3_87186704151378570613487780_removebg_preview" />
+                    </LinearLayout>
 
-        <TextView
-            android:id="@+id/costo_paseo_texto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tiempo_paseo"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="22dp"
-            android:layout_toEndOf="@id/imageView3"
-            android:text="@string/precio_paseo" />
+                </androidx.cardview.widget.CardView>
 
-    </RelativeLayout>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/perfil2"
+                    android:layout_width="150dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/perfil_hombre_vivo__1_" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Tony Stark"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$ 53.000"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/perfil3"
+                    android:layout_width="150dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/perfil_hombre_vivo__1_" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Charles"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$ 41.000"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/perfil4"
+                    android:layout_width="150dp"
+                    android:layout_height="180dp"
+                    android:layout_margin="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/perfil_hombre_vivo__1_" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Lucy"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$ 60.000"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

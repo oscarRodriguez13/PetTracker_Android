@@ -1,6 +1,8 @@
 package com.example.pettracker
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ListView
 import com.example.pettracker.domain.HistorialAdapter
@@ -30,6 +32,15 @@ class HistorialActivity : AppCompatActivity() {
         // Inicialización del adaptador con la lista parseada
         mHistorialAdapter = HistorialAdapter(this, historialList)
         mlista?.adapter = mHistorialAdapter
+
+        val buttonPaseos = findViewById<Button>(R.id.buttonOption1)
+        buttonPaseos.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                HomeActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 
     private fun loadJSONFromAsset(): String? {

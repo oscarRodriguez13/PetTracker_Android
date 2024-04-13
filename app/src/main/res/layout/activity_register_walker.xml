@@ -58,14 +58,15 @@
         android:text="@string/btn_registrarse"
         android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="60dp"
+        style="@style/ButtonStyle" />
 
     <ImageView
         android:id="@+id/icon_paseador"
         android:layout_width="wrap_content"
         android:layout_height="200dp"
-        app:srcCompat="@drawable/icon_paseador"
-        android:layout_above="@id/titulo_registro"/>
+        app:srcCompat="@drawable/loguito_principal"
+        android:layout_above="@id/titulo_registro" />
 
     <TextView
         android:id="@+id/titulo_registro"
@@ -76,6 +77,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/titulo_registro_de_paseador"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/black" />
 
 </RelativeLayout>

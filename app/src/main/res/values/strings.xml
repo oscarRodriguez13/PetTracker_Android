@@ -12,7 +12,7 @@
     <string name="btn_paseos">Paseos</string>
     <string name="btn_historial">Historial</string>
     <string name="btn_ajustes">Ajustes</string>
-    <string name="ingresar_precio">Precio</string>
+    <string name="ingresar_precio">Hora</string>
     <string name="ingresar_duracion_paseo">Duracion paseo</string>
     <string name="btn_solicitar_paseo">Solicitar Paseo</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
@@ -52,5 +52,8 @@
     <string name="duracion_paseo">40 minutos</string>
     <string name="precio_paseo">$40.000 COP</string>
     <string name="distancia_mascota">Distancia: 3Km</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="continuar">Continuar</string>
+    <string name="terminar">Terminar</string>
 
 </resources>

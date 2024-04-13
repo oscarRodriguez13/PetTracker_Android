@@ -2,11 +2,10 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="8dp">
+    android:padding="12dp">
 
     <RelativeLayout
         android:id="@+id/headerLayout"
@@ -32,7 +31,8 @@
             android:layout_alignBaseline="@id/imageView"
             android:text="@string/btn_paseos"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/buttonOption2"
@@ -63,20 +63,21 @@
 
     </RelativeLayout>
 
-
     <ImageView
-        android:id="@+id/imagen_paseo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/mapImage"
+        android:layout_width="match_parent"
+        android:layout_height="480dp"
         android:layout_below="@id/headerLayout"
-        app:srcCompat="@drawable/captura_de_pantalla_2024_03_05_220649" />
+        android:layout_marginTop="10dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/captura_de_pantalla_2024_03_05_220649" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutBelowWebView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/mapImage"
         android:layout_centerVertical="true"
-        android:layout_below="@id/imagen_paseo"
         android:layout_marginTop="50dp">
 
         <ImageView
@@ -92,9 +93,9 @@
             android:id="@+id/nombre_paseador"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="142dp"
+            android:layout_marginStart="142dp"
             android:text="@string/nombre_paseador"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black" />
 
@@ -105,66 +106,56 @@
             app:srcCompat="@drawable/pngtree_big_wall_clock_icon_simple_style_png_image_1921191__1__removebg_preview"
             android:layout_below="@id/localizacion_paseo"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="142dp"
-            />
+            android:layout_marginStart="142dp" />
 
         <TextView
             android:id="@+id/mascotas_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/paseador_mascotas"
-            android:layout_marginLeft="143dp"
-            android:layout_below="@id/nombre_paseador"
-           />
+            android:layout_marginStart="143dp"
+            android:layout_below="@id/nombre_paseador" />
 
         <TextView
             android:id="@+id/localizacion_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/localizacion_paseador_pagina_paseo"
-            android:layout_marginLeft="143dp"
-            android:layout_below="@id/mascotas_paseo"
-            />
+            android:layout_marginStart="143dp"
+            android:layout_below="@id/mascotas_paseo" />
 
         <TextView
             android:id="@+id/tiempo_paseo_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/localizacion_paseo"
-            android:layout_marginLeft="189dp"
+            android:layout_marginStart="189dp"
             android:layout_marginTop="18dp"
             android:text="@string/estado_pagina_paseo"
             android:textColor="@color/gray"
-            android:textStyle="bold"/>
-
-        <ImageView
-            android:id="@+id/icono_perro"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:srcCompat="@drawable/dog_icon"
-            android:layout_marginTop="18dp"
-            android:layout_marginLeft="80dp"
-            android:layout_below="@id/foto_perfil_paseador"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/ir_mascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_buscar_mascota"
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/foto_perfil_paseador"
             android:layout_marginTop="30dp"
-            android:layout_marginLeft="168dp"
-            />
+            android:layout_marginStart="168dp"
+            style="@style/ButtonStyle" />
 
         <Button
             android:id="@+id/bt_terminar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="75dp"
             android:layout_marginBottom="33dp"
             android:layout_toEndOf="@id/tiempo_paseo_2"
-            android:text="Terminar" />
+            android:text="@string/terminar"
+            style="@style/ButtonStyle" />
 
     </RelativeLayout>
 

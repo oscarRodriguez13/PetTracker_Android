@@ -1,67 +1,15 @@
 package com.example.pettracker
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.pettracker.domain.Datos
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import androidx.cardview.widget.CardView
 
 class SolicitarPaseoActivity : AppCompatActivity() {
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    private lateinit var etPrecioPaseo: EditText
-    private lateinit var etDuracionPaseo: EditText
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_solicitar_paseo)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                Datos.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            )
-        } else {
-            obtenerUbicacionActual()
-        }
-
-        val paseoButton = findViewById<Button>(R.id.Aceptar)
-        paseoButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                PaginaPaseoActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val rechazarButton = findViewById<Button>(R.id.Rechazar)
-        rechazarButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HomeActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val perfilButton = findViewById<Button>(R.id.perfil_paseador)
-        perfilButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                PerfilPaseadorActivity::class.java
-            )
-            startActivity(intent)
-        }
 
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
@@ -71,33 +19,31 @@ class SolicitarPaseoActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
-    }
 
-    private fun obtenerUbicacionActual() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
+        findViewById<CardView>(R.id.perfil1).setOnClickListener {
+            abrirDetallePerfil()
         }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                location?.let {
-                    val latitude = it.latitude
-                    val longitude = it.longitude
-                    val url = "https://www.google.com/maps/@$latitude,$longitude,15z"
 
-                    val webView = findViewById<WebView>(R.id.webViewMap)
-                    webView.settings.javaScriptEnabled = true
-                    webView.webViewClient = WebViewClient()
-                    webView.loadUrl(url)
-                }
-            }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == Datos.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                obtenerUbicacionActual()
-            }
+        findViewById<CardView>(R.id.perfil2).setOnClickListener {
+            abrirDetallePerfil()
         }
+
+        findViewById<CardView>(R.id.perfil3).setOnClickListener {
+            abrirDetallePerfil()
+        }
+
+        findViewById<CardView>(R.id.perfil4).setOnClickListener {
+            abrirDetallePerfil()
+        }
+
     }
+
+    private fun abrirDetallePerfil() {
+        val intent = Intent(
+            this,
+            PerfilPaseadorActivity::class.java
+        )
+        startActivity(intent)
+    }
+
 }

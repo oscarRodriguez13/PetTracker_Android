@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="8dp">
+    android:padding="12dp">
 
     <RelativeLayout
         android:id="@+id/headerLayout"
@@ -32,6 +32,7 @@
             android:layout_alignBaseline="@id/imageView"
             android:text="Paseos"
             android:textColor="@color/black"
+            android:textStyle="bold"
             android:background="@android:color/transparent"/>
 
         <Button
@@ -63,141 +64,128 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_finViaje"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="80dp"
+        android:text="Finaliza tu viaje"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_below="@id/headerLayout"/>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutBelowWebView"
+    <ImageView
+        android:id="@+id/foto_perfil_paseador"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        app:srcCompat="@drawable/perfil_hombre_vivo__1_"
+        android:layout_above="@+id/nombre_paseador"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/nombre_paseador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/mascotas_paseo"
+        android:layout_centerInParent="true"
+        android:text="Juan Esteban Muñoz"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/mascotas_paseo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mascotas: Toby (Golden Retriver)"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/localizacion_paseo"/>
+
+    <TextView
+        android:id="@+id/localizacion_paseo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Localización: Calle 100 "
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@drawable/pngtree_big_wall_clock_icon_simple_style_png_image_1921191__1__removebg_preview"
+        android:layout_below="@id/localizacion_paseo"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="142dp" />
+
+    <TextView
+        android:id="@+id/tiempo_paseo_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/localizacion_paseo"
+        android:layout_marginLeft="189dp"
+        android:layout_marginTop="18dp"
+        android:text="Terminado"
+        android:textColor="@color/gray"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_calificacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Califique el servicio:"
+        android:layout_below="@+id/imageView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_calificacion"
+        android:layout_centerHorizontal="true"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="1.0" />
+
+    <TextView
+        android:id="@+id/tv_comentario"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregue el comentario:"
+        android:layout_below="@+id/ratingBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/black" />
+
+    <EditText
+        android:id="@+id/et_comentario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="100dp">
-
-        <ImageView
-            android:id="@+id/foto_perfil_paseador"
-            android:layout_width="125dp"
-            android:layout_height="125dp"
-            app:srcCompat="@drawable/perfil_hombre_vivo__1_"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="5dp"
-            />
-
-        <TextView
-            android:id="@+id/nombre_paseador"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="142dp"
-            android:text="Juan Esteban Muñoz"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/pngtree_big_wall_clock_icon_simple_style_png_image_1921191__1__removebg_preview"
-            android:layout_below="@id/localizacion_paseo"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="142dp"
-            />
-
-        <TextView
-            android:id="@+id/mascotas_paseo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Mascotas: Toby (Golden Retriver)"
-            android:layout_marginLeft="143dp"
-            android:layout_below="@id/nombre_paseador"
-            />
-
-        <TextView
-            android:id="@+id/localizacion_paseo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Localización: Calle 100 "
-            android:layout_marginLeft="143dp"
-            android:layout_below="@id/mascotas_paseo"
-            />
-
-        <TextView
-            android:id="@+id/tiempo_paseo_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/localizacion_paseo"
-            android:layout_marginLeft="189dp"
-            android:layout_marginTop="18dp"
-            android:text="Terminado"
-            android:textColor="@color/gray"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tv_finViaje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="80dp"
-            android:text="Finaliza tu viaje"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:layout_below="@id/foto_perfil_paseador"/>
-
-        <TextView
-            android:id="@+id/tv_calificacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Califique el servicio:"
-            android:layout_below="@+id/tv_finViaje"
-            android:layout_marginLeft="110dp"
-            android:layout_marginTop="29dp"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/password_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="1-5"
-            android:layout_below="@+id/tv_finViaje"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:layout_toEndOf="@id/tv_calificacion"
-            android:inputType="number"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/tv_comentario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Agregue el comentario:"
-            android:layout_below="@+id/tv_calificacion"
-            android:layout_marginLeft="80dp"
-            android:layout_marginTop="29dp"
-            android:textColor="@color/black"/>
-
-        <EditText
-            android:id="@+id/etComentario"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Comment"
-            android:layout_below="@+id/tv_calificacion"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="14dp"
-            android:layout_toEndOf="@id/tv_calificacion"
-            android:inputType="textCapSentences"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"/>
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pagar"
-            android:layout_below="@id/tv_comentario"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"/>
-
-    </RelativeLayout>
+        android:layout_below="@id/tv_comentario"
+        android:layout_marginTop="10dp"
+        android:hint="Ingrese su comentario aquí..."
+        android:inputType="textMultiLine"
+        android:minLines="2"
+        android:gravity="start|top"
+        android:padding="10dp"
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray" />
 
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pagar"
+        android:layout_below="@id/et_comentario"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        style="@style/ButtonStyle" />
 
 </RelativeLayout>

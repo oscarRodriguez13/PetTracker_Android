@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,11 +30,11 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private lateinit var etPetName: EditText
     private lateinit var etSpecies: EditText
     private lateinit var etBreed: EditText
-    private lateinit var etAge: EditText
+    private lateinit var ageSeekBar : SeekBar
+    private lateinit var tvAge : TextView
     private lateinit var etDescription: EditText
     private lateinit var buttonNext: Button
     private lateinit var takePictureButton: ImageButton
-
     private var currentPetIndex = 1
     private var totalPets = 0
     private val petsList = mutableListOf<JSONObject>()
@@ -73,16 +74,31 @@ class RegisterPetDataActivity : AppCompatActivity() {
 
     }
 
-    private fun setup(){
+    private fun setup() {
         // Inicializar vistas
         etPetName = findViewById(R.id.etPetName)
         etSpecies = findViewById(R.id.etSpecies)
         etBreed = findViewById(R.id.etBreed)
-        etAge = findViewById(R.id.etAge)
         etDescription = findViewById(R.id.etDescription)
         val tvPetProgress = findViewById<TextView>(R.id.tvCurrentPet)
         buttonNext = findViewById(R.id.buttonNext)
         takePictureButton = findViewById(R.id.addImageButton)
+        ageSeekBar = findViewById(R.id.ageSeekBar)
+        tvAge = findViewById(R.id.tvAge)
+
+        ageSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                tvAge.text = "Edad: $progress meses"
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                // Implementar si es necesario
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                // Implementar si es necesario
+            }
+        })
 
         // Obtener el número total de mascotas del Intent
         totalPets = intent.extras?.getString("numberPets")?.toInt() ?: 0
@@ -143,9 +159,8 @@ class RegisterPetDataActivity : AppCompatActivity() {
         val petName = etPetName.text.toString().trim()
         val species = etSpecies.text.toString().trim()
         val breed = etBreed.text.toString().trim()
-        val age = etAge.text.toString().trim()
 
-        if (petName.isEmpty() || species.isEmpty() || breed.isEmpty() || age.isEmpty()) {
+        if (petName.isEmpty() || species.isEmpty() || breed.isEmpty()) {
             // Si algún campo está vacío, mostrar un mensaje de error y devolver falso
             showToast("Por favor, completa todos los campos")
             return false
@@ -160,7 +175,6 @@ class RegisterPetDataActivity : AppCompatActivity() {
             put("nombre", etPetName.text.toString().trim())
             put("especie", etSpecies.text.toString().trim())
             put("raza", etBreed.text.toString().trim())
-            put("edad", etAge.text.toString().trim().toIntOrNull() ?: 0)
             put("descripcion", etDescription.text.toString().trim())
         }
         petsList.add(mascotaObject)
@@ -171,7 +185,6 @@ class RegisterPetDataActivity : AppCompatActivity() {
         etPetName.text.clear()
         etSpecies.text.clear()
         etBreed.text.clear()
-        etAge.text.clear()
         etDescription.text.clear()
     }
 

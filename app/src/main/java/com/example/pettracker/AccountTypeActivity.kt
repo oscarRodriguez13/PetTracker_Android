@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.widget.ImageButton
 
 class AccountTypeActivity : AppCompatActivity() {
+
+    //hola
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_type)

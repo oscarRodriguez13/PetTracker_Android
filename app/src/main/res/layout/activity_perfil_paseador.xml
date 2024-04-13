@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:padding="12dp" >
 
     <RelativeLayout
         android:id="@+id/headerLayout"
@@ -31,7 +32,8 @@
             android:layout_alignBaseline="@id/imageView"
             android:text="@string/btn_paseos"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"/>
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
 
         <Button
             android:id="@+id/buttonOption2"
@@ -59,7 +61,7 @@
             android:layout_height="1dp"
             android:background="@color/black"
             android:layout_below="@id/buttonOption2"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="12dp" />
 
 
         <ImageView
@@ -77,18 +79,32 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/line"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="23dp"
+            android:layout_marginTop="17dp"
             android:text="@string/titulo_informacion_perfil_paseador"
             android:textColor="@color/gray"
             android:textSize="20dp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnContratar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:layout_marginTop="4dp"
+            android:text="Contratar"
+            android:textColor="@color/gray"
+            android:layout_marginStart="260dp"
+            android:textSize="20sp"
+            style="@style/ButtonStyle"/>
+
+
         <View
             android:id="@+id/line2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/gray"
             android:layout_below="@id/titulo_info"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginTop="14dp"/>
 
         <TextView
             android:id="@+id/nombre_paseador"
@@ -221,7 +237,5 @@
             />
 
     </RelativeLayout>
-
-
 
 </RelativeLayout>

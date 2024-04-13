@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!-- Colores para la barra de estado y navegación. -->
+        <item name="android:statusBarColor">@color/colorNavigationBar</item>
+        <item name="android:navigationBarColor">@color/colorNavigationBar</item>
+    </style>
+
+    <style name="ButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">#6B9BFA</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+</resources>

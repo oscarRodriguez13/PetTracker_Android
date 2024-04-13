@@ -1,51 +1,79 @@
 package com.example.pettracker
 
-import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.TimePickerDialog
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.pettracker.domain.Datos.Companion.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import java.util.Calendar
+import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
-        } else {
-            obtenerUbicacionActual()
-        }
-
-        val etPrecioPaseo = findViewById<EditText>(R.id.etPrecioPaseo)
-        val etDuracionPaseo = findViewById<EditText>(R.id.etDuracionPaseo)
+        val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
+        val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
         val btn_solicitud_paseo = findViewById<Button>(R.id.btn_solicitud_paseo)
 
+
+        // Obtener la hora actual
+        val now = Calendar.getInstance()
+        val hour = now.get(Calendar.HOUR_OF_DAY)
+        val minute = now.get(Calendar.MINUTE)
+
+        // Crear un diálogo de selección de hora
+        val timePickerDialog = TimePickerDialog(
+            this,
+            { _, selectedHour, selectedMinute ->
+                // Manejar la hora seleccionada aquí
+                val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
+                etHoraInicial.setText("Hora inicial: " + selectedTime)
+            },
+            hour,
+            minute,
+            true // Si deseas usar formato de 24 horas
+        )
+
+        // Mostrar el diálogo de selección de hora cuando se haga clic en el EditText
+        etHoraInicial.setOnClickListener {
+            timePickerDialog.show()
+        }
+
+
+        // Crear un diálogo de selección de hora
+        val timePickerDialog2 = TimePickerDialog(
+            this,
+            { _, selectedHour, selectedMinute ->
+                // Manejar la hora seleccionada aquí
+                val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
+                etHoraFinal.setText("Hora final: " + selectedTime)
+            },
+            hour,
+            minute,
+            true // Si deseas usar formato de 24 horas
+        )
+
+        // Mostrar el diálogo de selección de hora cuando se haga clic en el EditText
+        etHoraFinal.setOnClickListener {
+            timePickerDialog2.show()
+        }
+
         btn_solicitud_paseo.setOnClickListener {
-            if (verificarCamposLlenos(etPrecioPaseo,etDuracionPaseo)) {
+            if (verificarCamposLlenos(etHoraInicial, etHoraFinal)) {
                 // Cambia a la siguiente pantalla
                 val intent = Intent(this, SolicitarPaseoActivity::class.java)
                 val bundle = Bundle().apply {
-                    putString("precio", etPrecioPaseo.text.toString().trim())
-                    putString("duracion", etDuracionPaseo.text.toString().trim())
+                    putString("duracion", etHoraInicial.text.toString().trim())
+                    putString("duracion", etHoraFinal.text.toString().trim())
                 }
 
                 // Añadir el Bundle al Intent
@@ -67,34 +95,36 @@ class HomeActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
-    }
 
-    private fun obtenerUbicacionActual() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return
-        }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                location?.let {
-                    val latitude = it.latitude
-                    val longitude = it.longitude
-                    val url = "https://www.google.com/maps/@$latitude,$longitude,15z"
+        val selectionSummaryTextView = findViewById<TextView>(R.id.tv_option)
+        val selectOptionsButton = findViewById<Button>(R.id.button_options)
+        val options = arrayOf("Opción 1", "Opción 2", "Opción 3", "Opción 4")
+        val selectedOptions = booleanArrayOf(false, false, false, false)
 
-                    val webView = findViewById<WebView>(R.id.webViewMap)
-                    webView.settings.javaScriptEnabled = true
-                    webView.webViewClient = WebViewClient()
-                    webView.loadUrl(url)
-                }
+        selectOptionsButton.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Seleccione las opciones")
+
+            builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->
+                selectedOptions[which] = isChecked
             }
-    }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                obtenerUbicacionActual()
+            builder.setPositiveButton("Aceptar") { _, _ ->
+                val selectedItemsText = options.indices
+                    .filter { selectedOptions[it] }
+                    .joinToString { options[it] }
+
+                selectionSummaryTextView.text = "$selectedItemsText" + ", "
             }
+
+            builder.setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val dialog = builder.create()
+            dialog.show()
         }
+
     }
 
     private fun verificarCamposLlenos(vararg campos: EditText): Boolean =

@@ -24,8 +24,8 @@
         android:layout_above="@id/tv_accountType"
         android:layout_marginBottom="7dp"
         android:contentDescription="@string/app_logo"
-        android:scaleType="centerCrop"
-        app:srcCompat="@mipmap/logo_foreground" />
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/loguito_principal" />
 
     <TextView
         android:id="@+id/tv_accountTypeUser"
@@ -41,13 +41,16 @@
 
     <ImageButton
         android:id="@+id/userButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/tv_accountType"
-        app:srcCompat="@android:drawable/ic_menu_myplaces"
+        app:srcCompat="@drawable/icn_perrito"
+        android:scaleType="centerInside"
         android:layout_toEndOf="@id/tv_accountTypeUser"
-        android:layout_marginStart="60dp"/>
+        android:layout_marginStart="60dp"
+        android:background="#6B9BFA"
+        android:padding="5dp"/>
 
     <TextView
         android:id="@+id/tv_accountTypeDogWalker"
@@ -63,13 +66,16 @@
 
     <ImageButton
         android:id="@+id/dogWalkerButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/tv_accountTypeUser"
-        app:srcCompat="@android:drawable/ic_menu_myplaces"
+        app:srcCompat="@drawable/icn_paseador"
+        android:scaleType="centerInside"
         android:layout_toEndOf="@id/tv_accountTypeUser"
-        android:layout_marginStart="60dp"/>
+        android:layout_marginStart="60dp"
+        android:background="#6B9BFA"
+        android:padding="5dp" />
 
 
 

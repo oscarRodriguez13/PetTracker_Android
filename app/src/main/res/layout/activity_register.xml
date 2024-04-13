@@ -54,20 +54,19 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_registrarse"
+        android:text="@string/continuar"
         android:layout_below="@id/etPassword"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
-        />
+        android:layout_marginTop="80dp"
+        style="@style/ButtonStyle" />
 
     <ImageView
         android:id="@+id/icon_form"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginStart="54dp"
-        app:srcCompat="@drawable/forms_icon"
+        app:srcCompat="@drawable/loguito_principal"
         android:layout_above="@id/titulo_registro"/>
 
     <TextView
@@ -78,6 +77,7 @@
         android:layout_marginTop="10dp"
         android:text="@string/titulo_registro"
         android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@color/black" />
 
 </RelativeLayout>
