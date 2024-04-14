@@ -92,7 +92,7 @@
             android:layout_below="@id/line"
             android:layout_marginTop="4dp"
             android:text="Contratar"
-            android:textColor="@color/gray"
+            android:textColor="@color/black"
             android:layout_marginStart="260dp"
             android:textSize="20sp"
             style="@style/ButtonStyle"/>

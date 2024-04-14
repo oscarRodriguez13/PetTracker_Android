@@ -4,46 +4,53 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.pettracker.domain.Profile
+import com.example.pettracker.domain.SolicitudPaseoAdapter
+import java.util.Arrays
 
 class SolicitarPaseoActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_solicitar_paseo)
 
+        // Botón para ir al historial
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
             val intent = Intent(
-                applicationContext,
+                this@SolicitarPaseoActivity,
                 HistorialActivity::class.java
             )
             startActivity(intent)
         }
 
-        findViewById<CardView>(R.id.perfil1).setOnClickListener {
-            abrirDetallePerfil()
-        }
+        // Configuración del RecyclerView
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val profiles = Arrays.asList(
+            Profile(R.drawable.perfil_hombre_vivo__1_, "Olivia", "$ 45.000"),
+            Profile(R.drawable.perfil_hombre_vivo__1_, "Tony Stark", "$ 53.000"),
+            Profile(R.drawable.perfil_hombre_vivo__1_, "Charles", "$ 41.000"),
+            Profile(R.drawable.perfil_hombre_vivo__1_, "Lucy", "$ 60.000")
+        )
 
-        findViewById<CardView>(R.id.perfil2).setOnClickListener {
-            abrirDetallePerfil()
+        // Usar un adaptador personalizado con funcionalidad de clic
+        val adapter = SolicitudPaseoAdapter(profiles) { profile ->
+            abrirDetallePerfil(profile)
         }
+        recyclerView.adapter = adapter
 
-        findViewById<CardView>(R.id.perfil3).setOnClickListener {
-            abrirDetallePerfil()
-        }
-
-        findViewById<CardView>(R.id.perfil4).setOnClickListener {
-            abrirDetallePerfil()
-        }
-
+        // Establecer el LinearLayoutManager para vertical
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
     }
 
-    private fun abrirDetallePerfil() {
-        val intent = Intent(
-            this,
-            PerfilPaseadorActivity::class.java
-        )
+    private fun abrirDetallePerfil(profile: Profile) {
+        val intent = Intent(this, PerfilPaseadorActivity::class.java)
+        // Aquí puedes agregar datos adicionales al intent si es necesario
+        intent.putExtra("profileName", profile.name)
+        intent.putExtra("profilePrice", profile.price)
         startActivity(intent)
     }
-
 }

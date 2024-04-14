@@ -1,32 +1,29 @@
 package com.example.pettracker
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
-import com.example.pettracker.domain.Datos.Companion.WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE
-import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 
 class RegisterPetDataActivity : AppCompatActivity() {
 
+    private lateinit var icon: ImageView
     private lateinit var etPetName: EditText
     private lateinit var etSpecies: EditText
     private lateinit var etBreed: EditText
@@ -38,40 +35,16 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private var currentPetIndex = 1
     private var totalPets = 0
     private val petsList = mutableListOf<JSONObject>()
-
-
-
-    private val requestCameraPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                openCamera()
-            } else {
-                showToast("Funcionalidad limitada: permiso denegado")
-            }
-        }
-
-    private val takePictureLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // Aquí puedes manejar la imagen capturada
-            } else {
-                showToast("Error al capturar la imagen")
-            }
-        }
+    private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
+    private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private var photoURI: Uri? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet_data)
 
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            // Si el permiso no ha sido otorgado, solicítalo
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE)
-        }else{
-            setup()
-        }
-
+        setup()
     }
 
     private fun setup() {
@@ -85,6 +58,24 @@ class RegisterPetDataActivity : AppCompatActivity() {
         takePictureButton = findViewById(R.id.addImageButton)
         ageSeekBar = findViewById(R.id.ageSeekBar)
         tvAge = findViewById(R.id.tvAge)
+        icon = findViewById(R.id.icon)
+
+
+        // Preparar el lanzador para el resultado de selección de imagen.
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                icon.setImageURI(uri)
+            }
+        }
+
+        // Preparar el lanzador para el resultado de tomar foto.
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                photoURI?.let {
+                    icon.setImageURI(it)
+                }
+            }
+        }
 
         ageSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -117,38 +108,66 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     clearFields()
                 } else {
                     // Si no quedan más mascotas, guardar el usuario en el archivo usuarios.json
-                    saveUserToJsonFile()
+                    //saveUserToJsonFile()
                 }
             }
         }
 
+        icon.setOnClickListener {
+            // Intent explícito para seleccionar una imagen de la galería
+            imagePickerLauncher.launch("image/*")
+        }
+
         // Configurar el botón de tomar foto
         takePictureButton.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                openCamera()
-            } else {
-                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            when {
+                ContextCompat.checkSelfPermission(
+                    this, android.Manifest.permission.CAMERA
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    //Lanzamos la camara
+                    openCamera()
+                }
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    this, android.Manifest.permission.CAMERA) -> {
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        Datos.MY_PERMISSION_REQUEST_CAMERA)
+                }
+                else -> {
+                    requestPermissions(
+                        arrayOf(android.Manifest.permission.CAMERA),
+                        Datos.MY_PERMISSION_REQUEST_CAMERA
+                    )
+                }
             }
         }
     }
 
     private fun openCamera() {
-        val camerai = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        takePictureLauncher.launch(camerai)
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicacion del Taller 2")
+        photoURI = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        photoURI?.let { uri ->
+            takePictureLauncher.launch(uri)
+        }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE) {
-            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                setup()
-            }else {
-                Toast.makeText(this, "Funcionalidad limitada: permiso denegado", Toast.LENGTH_SHORT).show()
-
+        when (requestCode) {
+            Datos.MY_PERMISSION_REQUEST_CAMERA -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    openCamera()
+                } else {
+                    Toast.makeText(this, "Funcionalidades limitadas!", Toast.LENGTH_SHORT).show()
+                }
+                return
+            }
+            else -> {
+                // Ignore all other requests.
             }
         }
     }
@@ -187,53 +206,6 @@ class RegisterPetDataActivity : AppCompatActivity() {
         etBreed.text.clear()
         etDescription.text.clear()
     }
-
-    private fun saveUserToJsonFile() {
-        val nombre = intent.getStringExtra("nombre") ?: ""
-        val email = intent.getStringExtra("email") ?: ""
-        val password = intent.getStringExtra("password") ?: ""
-
-        if (nombre.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showToast("Error: Datos de usuario incompletos")
-            return
-        }
-
-        val usuarioObject = JSONObject().apply {
-            put("nombre", nombre)
-            put("email", email)
-            put("password", password)
-            put("mascotas", JSONArray(petsList))
-        }
-
-        try {
-            val file = File(filesDir, "usuarios.json")
-            val jsonArray = if (file.exists()) {
-                val jsonString = file.readText()
-                JSONArray(jsonString)
-            } else {
-                JSONArray()
-            }
-
-            // Agregar el objeto de usuario al arreglo JSON
-            jsonArray.put(usuarioObject)
-
-            // Escribir el arreglo JSON actualizado en el archivo
-            val outputStream = FileOutputStream(file)
-            outputStream.use {
-                it.write(jsonArray.toString().toByteArray())
-            }
-
-            showToast("Usuario registrado exitosamente")
-
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-
-        } catch (e: IOException) {
-            e.printStackTrace()
-            showToast("Error al guardar usuario")
-        }
-    }
-
 
     private fun showToast(message: String) {
         // Muestra un Toast con el mensaje proporcionado

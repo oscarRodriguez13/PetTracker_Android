@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/white"
     android:padding="12dp">
 
-    <RelativeLayout
-        android:id="@+id/headerLayout"
+    <!-- Header section with buttons -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="56dp"
             android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="0dp"
             android:layout_marginEnd="8dp"
             android:src="@mipmap/loguito_foreground" />
 
@@ -28,8 +28,6 @@
             android:id="@+id/buttonOption1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/imageView"
-            android:layout_alignBaseline="@id/imageView"
             android:text="@string/btn_paseos"
             android:textColor="@color/black"
             android:background="@android:color/transparent"
@@ -39,8 +37,6 @@
             android:id="@+id/buttonOption2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/buttonOption1"
-            android:layout_alignBaseline="@id/buttonOption1"
             android:text="@string/btn_historial"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
@@ -49,55 +45,60 @@
             android:id="@+id/buttonOption3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/buttonOption2"
-            android:layout_alignBaseline="@id/buttonOption2"
             android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
+    </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_below="@id/buttonOption2"
-            android:layout_marginTop="12dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:layout_marginTop="0dp"/>
 
-    </RelativeLayout>
-
+    <!-- Map Image -->
     <ImageView
         android:id="@+id/mapImage"
         android:layout_width="match_parent"
-        android:layout_height="440dp"
-        android:layout_below="@id/headerLayout"
-        android:layout_above="@+id/relativeLayoutBelowWebView"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
         android:layout_marginTop="10dp"
         android:scaleType="fitXY"
         android:src="@drawable/icn_labrador" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutBelowWebView"
+    <!-- Bottom section with buttons and text inputs -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="0dp"
+        android:layout_weight="0.25"
+        android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:layout_marginTop="12dp">
 
-        <Button
-            android:id="@+id/button_options"
-            android:layout_width="130dp"
-            android:layout_height="40dp"
-            android:spinnerMode="dialog"
-            android:text="Mascotas"
-            style="@style/ButtonStyle" />
-
-        <TextView
-            android:id="@+id/tv_option"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            android:padding="12dp"
-            android:layout_marginStart="10dp"
-            android:layout_toRightOf="@+id/button_options" />
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:layout_marginTop="12dp">
+
+            <Button
+                android:id="@+id/button_options"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Mascotas"
+                style="@style/ButtonStyle" />
+
+            <TextView
+                android:id="@+id/tv_option"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="12dp"
+                android:gravity="center_vertical" />
+
+        </LinearLayout>
+
 
         <EditText
             android:id="@+id/etHoraInicial"
@@ -105,7 +106,6 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textColor="@color/black"
-            android:layout_below="@+id/button_options"
             android:hint="Hora inicial"
             android:layout_marginTop="10dp"
             android:focusable="false"
@@ -116,7 +116,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:layout_below="@+id/etHoraInicial"
             android:textColor="@color/black"
             android:hint="Hora final"
             android:focusable="false"
@@ -126,15 +125,12 @@
             android:id="@+id/btn_solicitud_paseo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/etHoraFinal"
             android:text="@string/btn_solicitar_paseo"
             android:textSize="15sp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:layout_gravity="center_horizontal"
             style="@style/ButtonStyle" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-
-</RelativeLayout>
+</LinearLayout>
