@@ -24,7 +24,7 @@ class RegisterUserActivity : AppCompatActivity() {
                 // Cambia a la siguiente pantalla
                 val intent = Intent(this, RegisterPetDataActivity::class.java)
                 val bundle = Bundle().apply {
-                    putString("nombre", etName.text.toString().trim())
+                    putString("name", etName.text.toString().trim())
                     putString("email", etEmail.text.toString().trim())
                     putString("password", etPassword.text.toString().trim())
                     putString("numberPets", etConfirmPassword.text.toString().trim())

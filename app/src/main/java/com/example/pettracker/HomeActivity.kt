@@ -10,20 +10,26 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONObject
+import java.io.File
 import java.util.Calendar
 import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
+
+    private lateinit var userEmail: String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        userEmail = intent.getStringExtra("EMAIL") ?: ""
+
         val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
         val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
-        val btn_solicitud_paseo = findViewById<Button>(R.id.btn_solicitud_paseo)
-
+        val btnSolicitudPaseo = findViewById<Button>(R.id.btn_solicitud_paseo)
+        val tvOption = findViewById<TextView>(R.id.tv_option)
 
         // Obtener la hora actual
         val now = Calendar.getInstance()
@@ -67,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
             timePickerDialog2.show()
         }
 
-        btn_solicitud_paseo.setOnClickListener {
+        btnSolicitudPaseo.setOnClickListener {
             if (verificarCamposLlenos(etHoraInicial, etHoraFinal)) {
                 // Cambia a la siguiente pantalla
                 val intent = Intent(this, SolicitarPaseoActivity::class.java)
@@ -96,14 +102,24 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val selectionSummaryTextView = findViewById<TextView>(R.id.tv_option)
+        val settingsButton = findViewById<Button>(R.id.buttonOption3)
+        settingsButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                SettingsActivity::class.java
+            )
+            startActivity(intent)
+        }
+
         val selectOptionsButton = findViewById<Button>(R.id.button_options)
-        val options = arrayOf("Opción 1", "Opción 2", "Opción 3", "Opción 4")
-        val selectedOptions = booleanArrayOf(false, false, false, false)
 
         selectOptionsButton.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Seleccione las opciones")
+
+            val mascotas = getMascotasFromJson(userEmail)
+            val options = mascotas.map { it.getString("nombre") }.toTypedArray()
+            val selectedOptions = booleanArrayOf(false, false, false, false)
 
             builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->
                 selectedOptions[which] = isChecked
@@ -114,7 +130,8 @@ class HomeActivity : AppCompatActivity() {
                     .filter { selectedOptions[it] }
                     .joinToString { options[it] }
 
-                selectionSummaryTextView.text = "$selectedItemsText" + ", "
+                // Mostrar las opciones seleccionadas
+                tvOption.text = "Mascotas seleccionadas: $selectedItemsText"
             }
 
             builder.setNegativeButton("Cancelar") { dialog, _ ->
@@ -124,10 +141,30 @@ class HomeActivity : AppCompatActivity() {
             val dialog = builder.create()
             dialog.show()
         }
-
     }
+
+    private fun getMascotasFromJson(email: String): List<JSONObject> {
+        try {
+            val file = File(getExternalFilesDir(null), "usuarios.json")
+            val json = file.bufferedReader().use { it.readText() }
+            val usuariosArray = JSONObject(json).getJSONArray("usuarios")
+
+            for (i in 0 until usuariosArray.length()) {
+                val user = usuariosArray.getJSONObject(i)
+                if (user.getString("email") == email) {
+                    return user.getJSONArray("mascotas").let { mascotasArray ->
+                        (0 until mascotasArray.length()).map { mascotasArray.getJSONObject(it) }
+                    }
+                }
+            }
+            return emptyList()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            return emptyList()
+        }
+    }
+
 
     private fun verificarCamposLlenos(vararg campos: EditText): Boolean =
         campos.all { it.text.toString().trim().isNotEmpty() }
-
 }

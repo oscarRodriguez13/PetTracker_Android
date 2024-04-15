@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
@@ -39,26 +40,37 @@ class LoginActivity : AppCompatActivity() {
 
     private fun validateUser(email: String, password: String): Boolean {
         return try {
-            val json = assets.open("usuarios.json").bufferedReader().use { it.readText() }
-            val usuariosArray = JSONObject(json).getJSONArray("usuarios")
-            val userList = (0 until usuariosArray.length()).map { usuariosArray.getJSONObject(it) }
-            val user = userList.firstOrNull { it.getString("email") == email && it.getString("password") == password }
-            if (user != null) {
-                val tipoUsuario = user.getInt("tipoUsuario")
-                when (tipoUsuario) {
-                    1 -> {
-                        startActivity(Intent(applicationContext, HomeActivity::class.java))
+            val file = File(getExternalFilesDir(null), "usuarios.json")
+            if (file.exists()) {
+                val json = file.bufferedReader().use { it.readText() }
+                val usuariosArray = JSONObject(json).getJSONArray("usuarios")
+                val userList = (0 until usuariosArray.length()).map { usuariosArray.getJSONObject(it) }
+                val user = userList.firstOrNull { it.getString("email") == email && it.getString("password") == password }
+                if (user != null) {
+                    val tipoUsuario = user.getInt("tipoUsuario")
+                    val intent: Intent
+                    when (tipoUsuario) {
+                        1 -> {
+                            intent = Intent(applicationContext, HomeActivity::class.java)
+                        }
+                        2 -> {
+                            intent = Intent(applicationContext, HomeWalkerActivity::class.java)
+                        }
+                        else -> {
+                            Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()
+                            return false
+                        }
                     }
-                    2 -> {
-                        startActivity(Intent(applicationContext, HomeWalkerActivity::class.java))
-                    }
-                    else -> {
-                        Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()
-                    }
+                    // Agregar el email como extra al Intent
+                    intent.putExtra("EMAIL", email)
+                    startActivity(intent)
+                    true // Usuario válido
+                } else {
+                    false // Usuario inválido
                 }
-                true // Usuario válido
             } else {
-                false // Usuario inválido
+                Toast.makeText(this, "Archivo de usuarios no encontrado", Toast.LENGTH_SHORT).show()
+                false // Archivo no encontrado
             }
         } catch (ex: IOException) {
             ex.printStackTrace()
@@ -68,5 +80,4 @@ class LoginActivity : AppCompatActivity() {
             false // Error al analizar el archivo JSON
         }
     }
-
 }

@@ -15,7 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/imageView"
@@ -85,17 +85,17 @@
             <Button
                 android:id="@+id/button_options"
                 android:layout_width="130dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Mascotas"
                 style="@style/ButtonStyle" />
 
             <TextView
                 android:id="@+id/tv_option"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:padding="12dp"
-                android:gravity="center_vertical" />
+                android:gravity="center" />
 
         </LinearLayout>
 

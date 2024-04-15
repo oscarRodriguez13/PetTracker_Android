@@ -41,6 +41,15 @@ class HistorialActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
+
+        val settingsButton = findViewById<Button>(R.id.buttonOption3)
+        settingsButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                SettingsActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 
     private fun loadJSONFromAsset(): String? {
