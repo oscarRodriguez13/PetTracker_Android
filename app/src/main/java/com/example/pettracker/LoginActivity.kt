@@ -48,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
                 val user = userList.firstOrNull { it.getString("email") == email && it.getString("password") == password }
                 if (user != null) {
                     val tipoUsuario = user.getInt("tipoUsuario")
+                    println("Tipo de usuario $tipoUsuario")
                     val intent: Intent
                     when (tipoUsuario) {
                         1 -> {
