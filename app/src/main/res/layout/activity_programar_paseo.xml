@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     android:padding="12dp" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center">
 
         <ImageView
@@ -63,7 +65,7 @@
             android:layout_below="@id/buttonOption2"
             android:layout_marginTop="12dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/historial"
@@ -73,4 +75,4 @@
         tools:layout_editor_absoluteY="1dp"
         tools:ignore="MissingConstraints" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -57,13 +57,15 @@
         android:background="@color/black"
         android:layout_marginTop="0dp"/>
 
-    <!-- Mapa -->
-    <org.osmdroid.views.MapView
-        android:id="@+id/osmMap"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-    </org.osmdroid.views.MapView>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_below="@id/headerLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:layout_weight="1"
+        android:src = "@drawable/img_buscando_paseo" />
 
     <!-- Botones adicionales en una columna -->
     <LinearLayout

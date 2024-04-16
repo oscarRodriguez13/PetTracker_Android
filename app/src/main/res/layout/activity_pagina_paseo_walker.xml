@@ -7,12 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".PaginaPaseoWalkerActivity">
 
-    <org.osmdroid.views.MapView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/osmMap">
-
-    </org.osmdroid.views.MapView>
 
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -32,7 +26,7 @@
                 android:id="@+id/profile_image"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/icn_labrador" />
+                android:src="@drawable/img_perfil1" />
 
             <LinearLayout
                 android:layout_width="0dp"
