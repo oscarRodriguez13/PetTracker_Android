@@ -52,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
                     val intent: Intent
                     when (tipoUsuario) {
                         1 -> {
-                            intent = Intent(applicationContext, PaginaPaseoActivity::class.java)
+                            intent = Intent(applicationContext, HomeActivity::class.java)
                         }
                         2 -> {
                             intent = Intent(applicationContext, HomeWalkerActivity::class.java)

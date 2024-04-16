@@ -70,7 +70,7 @@
                     android:textColor="@color/black" />
 
                 <Button
-                    android:id="@+id/btn_seguimiento"
+                    android:id="@+id/btn_terminar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"

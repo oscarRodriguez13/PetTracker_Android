@@ -13,6 +13,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        val userEmail = intent.getStringExtra("EMAIL")
+
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
             val intent = Intent(

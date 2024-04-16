@@ -104,10 +104,10 @@ class HomeActivity : AppCompatActivity() {
 
         val settingsButton = findViewById<Button>(R.id.buttonOption3)
         settingsButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                SettingsActivity::class.java
-            )
+            val intent = Intent(applicationContext, SettingsActivity::class.java)
+
+            intent.putExtra("EMAIL", userEmail)
+
             startActivity(intent)
         }
 
