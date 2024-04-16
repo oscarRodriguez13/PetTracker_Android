@@ -1,20 +1,24 @@
 package com.example.pettracker
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.AsyncTask
 import android.os.Bundle
-import android.widget.Button
+import android.util.Log
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -23,67 +27,108 @@ import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import org.json.JSONArray
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
+import org.osmdroid.events.DelayedMapListener
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.events.MapListener
+import org.osmdroid.events.ScrollEvent
+import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.io.Writer
+import java.util.Date
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.math.sqrt
 
-class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
-
+class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private var sensorManager: SensorManager? = null
     private lateinit var locationManager: LocationManager
     private var lightSensor: Sensor? = null
     private var marker: Marker? = null
-    private var mGeocoder: Geocoder? = null
     private var geoPoint: GeoPoint? = null
-    private val RADIUS_OF_EARTH_KM = 6371
     private lateinit var roadManager: RoadManager
     private lateinit var osmMap: MapView
+    private val routePolylineMap = mutableMapOf<Road, Polyline>()
+    private val routeColors = mutableMapOf<Road, Int>()
+    private var previousZoomLevel: Double = 0.0
     private var isFirstLocationUpdate = true
     private var randomMarker: Marker? = null
+    private val ROUTE_COLOR = Color.BLUE
+
+    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
+
+        override fun doInBackground(vararg params: Void?): Road? {
+            val routePoints = ArrayList<GeoPoint>()
+            routePoints.add(start)
+            routePoints.add(finish)
+            return roadManager.getRoad(routePoints)
+        }
+
+        override fun onPostExecute(result: Road?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                drawRoad(result)
+            } else {
+                Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pagina_paseo)
-
+        setContentView(R.layout.activity_seguimiento_paseo)
         Configuration.getInstance().userAgentValue = applicationContext.packageName
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         lightSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         roadManager = OSRMRoadManager(this, "ANDROID")
-
         handlePermissions()
 
         osmMap = findViewById(R.id.osmMap)
         osmMap.setTileSource(TileSourceFactory.MAPNIK)
         osmMap.setMultiTouchControls(true)
-        val btnSeguimiento = findViewById<Button>(R.id.btn_seguimiento)
-
-        mGeocoder = Geocoder(baseContext)
-
+        previousZoomLevel = osmMap.zoomLevelDouble
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
-
-        btnSeguimiento.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                SeguimientoPaseoActivity::class.java
-            )
-            startActivity(intent)
-        }
 
         centerButton.setOnClickListener {
             centerCameraOnUser()
         }
+        mapZoomListener()
 
+    }
+
+    private fun mapZoomListener(){
+        osmMap.addMapListener(DelayedMapListener(object : MapListener {
+            override fun onScroll(event: ScrollEvent?): Boolean {
+                return false
+            }
+
+            override fun onZoom(event: ZoomEvent): Boolean {
+                val currentZoomLevel = osmMap.zoomLevelDouble
+                previousZoomLevel = currentZoomLevel
+                return true
+            }
+        }, 100))
     }
 
     private fun handlePermissions() {
@@ -115,17 +160,12 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     override fun onResume() {
         sensorManager?.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10f, this)
-        val latitude = 4.62
-        val longitude = -74.07
-        val startPoint = GeoPoint(latitude, longitude)
+
         super.onResume()
         osmMap.onResume()
         val mapController: IMapController = osmMap.controller
         mapController.setZoom(20.0)
-        geoPoint?.let {
-            mapController.setCenter(startPoint)
-            addRandomMarkerAroundUser(1.0)
-        }
+        previousZoomLevel = osmMap.zoomLevelDouble
     }
 
     override fun onPause() {
@@ -134,6 +174,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         sensorManager?.unregisterListener(this)
         locationManager.removeUpdates(this)
     }
+
 
     override fun onLocationChanged(location: Location) {
         geoPoint = GeoPoint(location.latitude, location.longitude)
@@ -154,7 +195,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
 
         // Agregar el marcador aleatorio solo la primera vez que se obtiene la ubicación
         if (isFirstLocationUpdate) {
-            addRandomMarkerAroundUser(10.0)
+            drawRandomRouteAroundUser()
             isFirstLocationUpdate = false
         }
     }
@@ -173,22 +214,9 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // No implementation needed
-    }
-
-    private fun addRandomMarkerAroundUser(radiusKm: Double) {
-        val random = Math.random()
-        val randomAngle = random * 2 * Math.PI
-        val randomDistance = Math.sqrt(random) * radiusKm / RADIUS_OF_EARTH_KM
-
-        val latitude = geoPoint!!.latitude + randomDistance * Math.cos(randomAngle)
-        val longitude = geoPoint!!.longitude + randomDistance * Math.sin(randomAngle)
-
-        val randomGeoPoint = GeoPoint(latitude, longitude)
-
+    private fun addRandomMarker(point: GeoPoint) {
         randomMarker = Marker(osmMap)
-        randomMarker?.position = randomGeoPoint
+        randomMarker?.position = point
         randomMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         randomMarker?.title = "Marcador Aleatorio"
 
@@ -212,15 +240,78 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         osmMap.invalidate()
     }
 
+    private fun drawRandomRouteAroundUser() {
+        val numberOfRandomPoints = 5 // Define cuántos puntos aleatorios quieres generar
+        val randomPoints = mutableListOf<GeoPoint>()
+
+        // Genera puntos aleatorios alrededor de la ubicación actual
+        repeat(numberOfRandomPoints) {
+            val randomDistance = (Math.random() * 0.001) // 0.01 grados es aproximadamente 1.11 km
+            val randomBearing = (Math.random() * 360).toFloat()
+
+            val newLat = geoPoint!!.latitude + (randomDistance * cos(Math.toRadians(randomBearing.toDouble())))
+            val newLon = geoPoint!!.longitude + (randomDistance * sin(Math.toRadians(randomBearing.toDouble())))
+
+            randomPoints.add(GeoPoint(newLat, newLon))
+        }
+
+        // Añade el punto final que es la ubicación actual
+        randomPoints.add(geoPoint!!)
+
+        // Escoge uno de los puntos aleatorios para el marcador
+        val selectedPoint = randomPoints.random()
+
+        // Coloca el marcador en el punto seleccionado
+        addRandomMarker(selectedPoint)
+
+        // Calcula y dibuja la ruta
+        calculateAndDrawRoute(randomPoints)
+    }
+
+    // Método para calcular y dibujar la ruta entre una lista de puntos
+    private fun calculateAndDrawRoute(points: List<GeoPoint>) {
+        var start = geoPoint!!
+        points.forEach { point ->
+            drawRoute(start, point)
+            start = point
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // No implementation needed
+    }
+
+    private fun drawRoute(start: GeoPoint, finish: GeoPoint) {
+        FetchRouteTask(start, finish).execute()
+    }
+
+    private fun drawRoad(road: Road) {
+        // Verifica si ya existe una Polyline para esta ruta
+        val existingPolyline = routePolylineMap[road]
+
+        if (existingPolyline == null) {
+            // Si no existe, crea una nueva Polyline
+            val newPolyline = RoadManager.buildRoadOverlay(road)
+            newPolyline.outlinePaint.color = ROUTE_COLOR // Asigna el color constante a la polilínea
+            newPolyline.outlinePaint.strokeWidth = 10f
+            routePolylineMap[road] = newPolyline
+            routeColors[road] = ROUTE_COLOR
+            osmMap.overlays.add(newPolyline)
+        }
+
+        osmMap.invalidate()
+    }
+
     private fun centerCameraOnUser() {
         marker?.let {
             val mapController: IMapController = osmMap.controller
             mapController.setCenter(marker!!.position)
             mapController.setZoom(20.0)
+            previousZoomLevel = osmMap.zoomLevelDouble
+
         } ?: run {
             Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
         }
     }
-
 
 }
