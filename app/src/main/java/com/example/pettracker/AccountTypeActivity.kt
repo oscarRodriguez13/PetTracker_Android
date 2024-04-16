@@ -19,6 +19,7 @@ class AccountTypeActivity : AppCompatActivity() {
                 RegisterUserActivity::class.java
             )
             startActivity(intent)
+            finish()
         }
 
         val accountTypeWalker = findViewById<ImageButton>(R.id.dogWalkerButton)
@@ -28,6 +29,7 @@ class AccountTypeActivity : AppCompatActivity() {
                 RegisterWalkerActivity::class.java
             )
             startActivity(intent)
+            finish()
         }
     }
 }

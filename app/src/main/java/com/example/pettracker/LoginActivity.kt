@@ -14,16 +14,20 @@ import java.io.IOException
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        emailEditText = findViewById(R.id.email_input)
+        passwordEditText = findViewById(R.id.password_input)
 
         findViewById<TextView>(R.id.tv_passwordRecover).setOnClickListener {
             startActivity(Intent(applicationContext, PasswordRecoveryActivity::class.java))
         }
 
-        val emailEditText = findViewById<EditText>(R.id.email_input)
-        val passwordEditText = findViewById<EditText>(R.id.password_input)
 
         findViewById<Button>(R.id.login_button).setOnClickListener {
             if (validateUser(emailEditText.text.toString(), passwordEditText.text.toString())) {
@@ -52,10 +56,14 @@ class LoginActivity : AppCompatActivity() {
                     val intent: Intent
                     when (tipoUsuario) {
                         1 -> {
-                            intent = Intent(applicationContext, PaginaPaseoActivity::class.java)
+                            intent = Intent(applicationContext, HomeActivity::class.java)
+                            emailEditText.setText("")
+                            passwordEditText.setText("")
                         }
                         2 -> {
                             intent = Intent(applicationContext, HomeWalkerActivity::class.java)
+                            emailEditText.setText("")
+                            passwordEditText.setText("")
                         }
                         else -> {
                             Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()

@@ -50,6 +50,7 @@ class HomeWalkerActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private val routePolylineMap = mutableMapOf<Road, Polyline>()
     private val routeColors = mutableMapOf<Road, Int>()
     private lateinit var osmMap: MapView
+    private lateinit var buttonCurrentWalk:Button
 
 
     private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
@@ -76,7 +77,12 @@ class HomeWalkerActivity : AppCompatActivity(), SensorEventListener, LocationLis
         setContentView(R.layout.activity_home_walker)
 
 
-        //val buttonAceptar = findViewById<Button>(R.id.Aceptar)
+        buttonCurrentWalk = findViewById(R.id.buttonCurrentWalk)
+        buttonCurrentWalk.setOnClickListener {
+            intent = Intent(this, PaginaPaseoWalkerActivity::class.java)
+            startActivity(intent)
+        }
+
 
         configurarMapa()
 

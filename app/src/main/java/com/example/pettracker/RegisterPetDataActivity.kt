@@ -124,6 +124,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     writeJSONObject()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
+                    finish()
                 }
             }
         }

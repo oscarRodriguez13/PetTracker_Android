@@ -41,6 +41,7 @@ class RegisterWalkerActivity : AppCompatActivity() {
             writeJSONObject()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
@@ -54,14 +55,6 @@ class RegisterWalkerActivity : AppCompatActivity() {
             put("password", etPassword.text.toString())
             put("tipoUsuario", "2") // Puedes definir el tipo de usuario como quieras
         }
-
-        println("NAME $etName")
-        println("email $etEmail")
-        println("pass $etPassword")
-
-
-
-
         // Añadir el usuario al array de usuarios
         usuariosArray.put(userObject)
 
