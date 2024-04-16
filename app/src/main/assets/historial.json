@@ -3,35 +3,50 @@
     "nombreMascota": "Firulais",
     "fecha": "20/02/2024",
     "nombrePaseador": "Juan Pérez",
-    "duracion": "30 minutos",
-    "precio": "10 USD"
+    "hora_inicial": "08:00",
+    "hora_final": "08:30",
+    "precio": "10 USD",
+    "calificacion": 5,
+    "comentario": "Excelente servicio"
   },
   {
     "nombreMascota": "Bella",
     "fecha": "21/02/2024",
     "nombrePaseador": "Ana Gómez",
-    "duracion": "45 minutos",
-    "precio": "15 USD"
+    "hora_inicial": "09:00",
+    "hora_final": "09:45",
+    "precio": "15 USD",
+    "calificacion": 4,
+    "comentario": "Muy buen paseo, aunque empezó tarde"
   },
   {
     "nombreMascota": "Rocky",
     "fecha": "22/02/2024",
     "nombrePaseador": "Sergio López",
-    "duracion": "1 hora",
-    "precio": "20 USD"
+    "hora_inicial": "10:00",
+    "hora_final": "11:00",
+    "precio": "20 USD",
+    "calificacion": 3,
+    "comentario": "Paseo regular, Rocky volvió inquieto"
   },
   {
     "nombreMascota": "Luna",
     "fecha": "23/02/2024",
     "nombrePaseador": "Marta Ruiz",
-    "duracion": "30 minutos",
-    "precio": "10 USD"
+    "hora_inicial": "08:30",
+    "hora_final": "09:00",
+    "precio": "10 USD",
+    "calificacion": 5,
+    "comentario": "Perfecto como siempre"
   },
   {
     "nombreMascota": "Toby",
     "fecha": "24/02/2024",
     "nombrePaseador": "Carlos Fernández",
-    "duracion": "1 hora",
-    "precio": "20 USD"
+    "hora_inicial": "11:00",
+    "hora_final": "12:00",
+    "precio": "20 USD",
+    "calificacion": 4,
+    "comentario": "Buen paseo, pero Toby necesitaba más agua"
   }
 ]

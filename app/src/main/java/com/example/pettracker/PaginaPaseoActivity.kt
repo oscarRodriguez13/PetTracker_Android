@@ -1,26 +1,18 @@
 package com.example.pettracker
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.os.AsyncTask
 import android.os.Bundle
-import android.os.StrictMode
-import android.util.Log
-import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,19 +23,13 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
-import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
-import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
-import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
-import java.io.IOException
-import kotlin.math.roundToInt
 
 class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
@@ -54,31 +40,10 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     private var marker: Marker? = null
     private var mGeocoder: Geocoder? = null
     private var geoPoint: GeoPoint? = null
-    private val markers = mutableListOf<Marker>()
     private val RADIUS_OF_EARTH_KM = 6371
     private lateinit var roadManager: RoadManager
-    private val routePolylineMap = mutableMapOf<Road, Polyline>()
-    private val routeColors = mutableMapOf<Road, Int>()
     private lateinit var osmMap: MapView
-
-    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
-
-        override fun doInBackground(vararg params: Void?): Road? {
-            val routePoints = ArrayList<GeoPoint>()
-            routePoints.add(start)
-            routePoints.add(finish)
-            return roadManager.getRoad(routePoints)
-        }
-
-        override fun onPostExecute(result: Road?) {
-            super.onPostExecute(result)
-            if (result != null) {
-                drawRoad(result)
-            } else {
-                Toast.makeText(this@PaginaPaseoActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+    private var isFirstLocationUpdate = true
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,7 +110,10 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         osmMap.onResume()
         val mapController: IMapController = osmMap.controller
         mapController.setZoom(18.0)
-        mapController.setCenter(startPoint)
+        geoPoint?.let {
+            mapController.setCenter(startPoint)
+            addRandomMarkerAroundUser(1.0)
+        }
     }
 
     override fun onPause() {
@@ -159,7 +127,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         geoPoint = GeoPoint(location.latitude, location.longitude)
         val mapController: IMapController = osmMap.controller
         mapController.setCenter(geoPoint)
-        mapController.setZoom(18.0)
+        mapController.setZoom(20.0)
 
         if (marker == null) {
             marker = Marker(osmMap)
@@ -169,7 +137,14 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         marker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         marker?.title = "Tú"
         osmMap.invalidate()
+
+        // Agregar el marcador aleatorio solo la primera vez que se obtiene la ubicación
+        if (isFirstLocationUpdate) {
+            addRandomMarkerAroundUser(10.0)
+            isFirstLocationUpdate = false
+        }
     }
+
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
@@ -188,34 +163,6 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         // No implementation needed
     }
 
-    private fun drawRoute(start: GeoPoint, finish: GeoPoint) {
-        FetchRouteTask(start, finish).execute()
-    }
-
-    private fun drawRoad(road: Road) {
-        Log.i("OSM_acticity", "Route length: ${road.mLength} klm")
-        Log.i("OSM_acticity", "Duration: ${road.mDuration / 60} min")
-
-        // Verifica si ya existe una Polyline para esta ruta
-        val existingPolyline = routePolylineMap[road]
-
-        if (existingPolyline == null) {
-            // Si no existe, crea una nueva Polyline
-            val newPolyline = RoadManager.buildRoadOverlay(road)
-            val color = generateUniqueColor()
-            newPolyline.outlinePaint.color = color
-            newPolyline.outlinePaint.strokeWidth = 10f
-            routePolylineMap[road] = newPolyline
-            routeColors[road] = color
-            osmMap.overlays.add(newPolyline)
-        }
-
-        osmMap.invalidate()
-
-        // Agregar marcador aleatorio a 3 km alrededor del usuario
-        addRandomMarkerAroundUser(3.0)
-    }
-
     private fun addRandomMarkerAroundUser(radiusKm: Double) {
         val random = Math.random()
         val randomAngle = random * 2 * Math.PI
@@ -231,12 +178,24 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         randomMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         randomMarker.title = "Marcador Aleatorio"
 
+        // Obtener el drawable de la imagen personalizada
+        val customMarkerDrawable = ContextCompat.getDrawable(this, R.drawable.icn_marcador_paseador)
+
+        // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
+        val width = 48
+        val height = 48
+        val scaledDrawable = Bitmap.createScaledBitmap(
+            (customMarkerDrawable as BitmapDrawable).bitmap,
+            width,
+            height,
+            false
+        )
+
+        // Asignar la imagen escalada al marcador
+        randomMarker.icon = BitmapDrawable(resources, scaledDrawable)
+
         osmMap.overlays.add(randomMarker)
         osmMap.invalidate()
-    }
-
-    private fun generateUniqueColor(): Int {
-        return Color.rgb((Math.random() * 256).toInt(), (Math.random() * 256).toInt(), (Math.random() * 256).toInt())
     }
 
     private fun centerCameraOnUser() {

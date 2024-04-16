@@ -21,10 +21,9 @@ class SolicitarPaseoActivity : AppCompatActivity() {
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
-            Profile(R.drawable.perfil_hombre_vivo__1_, "Olivia", "$ 45.000"),
-            Profile(R.drawable.perfil_hombre_vivo__1_, "Tony Stark", "$ 53.000"),
-            Profile(R.drawable.perfil_hombre_vivo__1_, "Charles", "$ 41.000"),
-            Profile(R.drawable.perfil_hombre_vivo__1_, "Lucy", "$ 60.000")
+            Profile(R.drawable.img_perfil3, "Olivia", "$ 45.000"),
+            Profile(R.drawable.img_perfil2, "Tony Stark", "$ 53.000"),
+            Profile(R.drawable.img_perfil1, "Charles", "$ 41.000")
         )
 
         // Usar un adaptador personalizado con funcionalidad de clic

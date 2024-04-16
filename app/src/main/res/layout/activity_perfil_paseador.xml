@@ -71,7 +71,7 @@
             android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
             android:layout_below="@+id/line2"
-            app:srcCompat="@drawable/perfil_hombre_vivo__1_" />
+            app:srcCompat="@drawable/img_perfil1" />
 
         <TextView
             android:id="@+id/titulo_info"

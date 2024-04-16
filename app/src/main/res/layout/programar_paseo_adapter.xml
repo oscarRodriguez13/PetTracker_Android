@@ -18,7 +18,7 @@
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/perfil_hombre_vivo__1_" />
+            android:src="@drawable/img_perfil1" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Nombre del Usuario" />
+                android:text="Nombre del Usuario"
+                android:textColor="@color/black" />
 
             <TextView
                 android:id="@+id/duracion_paseo"
@@ -42,14 +43,16 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Duracion: 30 min" />
+                android:text="Duracion: 30 min"
+                android:textColor="@color/black" />
             <TextView
                 android:id="@+id/cantidad_mascotas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Cantidad mascotas: 1" />
+                android:text="Cantidad mascotas: 1"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 

@@ -18,7 +18,7 @@
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/perfil_hombre_vivo__1_" />
+            android:src="@drawable/img_perfil1" />
 
         <LinearLayout
             android:layout_width="0dp"

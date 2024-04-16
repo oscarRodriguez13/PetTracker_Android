@@ -80,7 +80,7 @@
         android:id="@+id/foto_perfil_paseador"
         android:layout_width="125dp"
         android:layout_height="125dp"
-        app:srcCompat="@drawable/perfil_hombre_vivo__1_"
+        app:srcCompat="@drawable/img_perfil1"
         android:layout_above="@+id/nombre_paseador"
         android:layout_centerHorizontal="true" />
 

@@ -2,6 +2,7 @@ package com.example.pettracker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.AdapterView
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.ListView
@@ -32,6 +33,32 @@ class HistorialActivity : AppCompatActivity() {
         // Inicialización del adaptador con la lista parseada
         mHistorialAdapter = HistorialAdapter(this, historialList)
         mlista?.adapter = mHistorialAdapter
+
+        mlista?.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            // Obtener el historial de paseo seleccionado
+            val selectedPaseo = historialList[position]
+
+            // Crear un Bundle para almacenar los datos del paseo
+            val paseoBundle = Bundle().apply {
+                putString("nombreMascota", selectedPaseo.nombreMascota)
+                putString("fecha", selectedPaseo.fecha)
+                putString("nombrePaseador", selectedPaseo.nombrePaseador)
+                putString("hora_inicial", selectedPaseo.hora_inicial)
+                putString("hora_final", selectedPaseo.hora_final)
+                putString("precio", selectedPaseo.precio)
+                putInt("calificacion", selectedPaseo.calificacion)
+                putString("comentario", selectedPaseo.comentario)
+            }
+
+            // Crear un Intent para enviar la información a la actividad de detalles
+            val intent = Intent(this@HistorialActivity, DetallesHistorialActivity::class.java).apply {
+                putExtras(paseoBundle)
+            }
+
+            // Iniciar la actividad de detalles
+            startActivity(intent)
+        }
+
 
         val buttonPaseos = findViewById<Button>(R.id.buttonOption1)
         buttonPaseos.setOnClickListener {

@@ -22,13 +22,11 @@ class HistorialAdapter(context: Context, historialList: List<HistorialItem>) :
         val tvMascota = itemView?.findViewById<TextView>(R.id.idMascota)
         val tvFecha = itemView?.findViewById<TextView>(R.id.idFecha)
         val tvPaseador = itemView?.findViewById<TextView>(R.id.idPaseador)
-        val tvDuracion = itemView?.findViewById<TextView>(R.id.idDuracion)
         val tvPrecio = itemView?.findViewById<TextView>(R.id.idPrecio)
 
         tvMascota?.text = currentItem?.nombreMascota
         tvFecha?.text = currentItem?.fecha
         tvPaseador?.text = currentItem?.nombrePaseador
-        tvDuracion?.text = currentItem?.duracion
         tvPrecio?.text = currentItem?.precio
 
         return itemView!!
