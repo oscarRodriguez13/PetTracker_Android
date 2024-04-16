@@ -1,6 +1,7 @@
 package com.example.pettracker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -9,16 +10,12 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -27,35 +24,23 @@ import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import org.json.JSONArray
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.DelayedMapListener
-import org.osmdroid.events.MapEventsReceiver
 import org.osmdroid.events.MapListener
 import org.osmdroid.events.ScrollEvent
 import org.osmdroid.events.ZoomEvent
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.io.Writer
-import java.util.Date
-import kotlin.math.atan2
 import kotlin.math.cos
-import kotlin.math.roundToInt
 import kotlin.math.sin
-import kotlin.math.sqrt
 
 class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
@@ -70,10 +55,12 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private val routeColors = mutableMapOf<Road, Int>()
     private var previousZoomLevel: Double = 0.0
     private var isFirstLocationUpdate = true
+    private var isFirstMarkerUpdate = true
     private var randomMarker: Marker? = null
     private val ROUTE_COLOR = Color.BLUE
 
-    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
+    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) :
+        AsyncTask<Void, Void, Road>() {
 
         override fun doInBackground(vararg params: Void?): Road? {
             val routePoints = ArrayList<GeoPoint>()
@@ -87,7 +74,11 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             if (result != null) {
                 drawRoad(result)
             } else {
-                Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@SeguimientoPaseoActivity,
+                    "Error al obtener la ruta",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -115,9 +106,17 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         }
         mapZoomListener()
 
+        val btnTerminar = findViewById<Button>(R.id.btn_terminar)
+        btnTerminar.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                FinalizarPaseoActivity::class.java
+            )
+            startActivity(intent)
+        }
     }
 
-    private fun mapZoomListener(){
+    private fun mapZoomListener() {
         osmMap.addMapListener(DelayedMapListener(object : MapListener {
             override fun onScroll(event: ScrollEvent?): Boolean {
                 return false
@@ -140,13 +139,16 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
                     onLocationChanged(location)
                 }
             }
+
             ActivityCompat.shouldShowRequestPermissionRationale(
-                this, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) -> {
                 requestPermissions(
                     arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                     Datos.MY_PERMISSION_REQUEST_LOCATION
                 )
             }
+
             else -> {
                 requestPermissions(
                     arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
@@ -250,20 +252,16 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             val randomDistance = (Math.random() * 0.001) // 0.01 grados es aproximadamente 1.11 km
             val randomBearing = (Math.random() * 360).toFloat()
 
-            val newLat = geoPoint!!.latitude + (randomDistance * cos(Math.toRadians(randomBearing.toDouble())))
-            val newLon = geoPoint!!.longitude + (randomDistance * sin(Math.toRadians(randomBearing.toDouble())))
+            val newLat =
+                geoPoint!!.latitude + (randomDistance * cos(Math.toRadians(randomBearing.toDouble())))
+            val newLon =
+                geoPoint!!.longitude + (randomDistance * sin(Math.toRadians(randomBearing.toDouble())))
 
             randomPoints.add(GeoPoint(newLat, newLon))
         }
 
         // Añade el punto final que es la ubicación actual
         randomPoints.add(geoPoint!!)
-
-        // Escoge uno de los puntos aleatorios para el marcador
-        val selectedPoint = randomPoints.random()
-
-        // Coloca el marcador en el punto seleccionado
-        addRandomMarker(selectedPoint)
 
         // Calcula y dibuja la ruta
         calculateAndDrawRoute(randomPoints)
@@ -293,14 +291,29 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         if (existingPolyline == null) {
             // Si no existe, crea una nueva Polyline
             val newPolyline = RoadManager.buildRoadOverlay(road)
-            newPolyline.outlinePaint.color = ROUTE_COLOR // Asigna el color constante a la polilínea
+            newPolyline.outlinePaint.color = ROUTE_COLOR
             newPolyline.outlinePaint.strokeWidth = 10f
             routePolylineMap[road] = newPolyline
             routeColors[road] = ROUTE_COLOR
             osmMap.overlays.add(newPolyline)
-        }
+            osmMap.invalidate()
 
-        osmMap.invalidate()
+            // Calcula la posición intermedia entre los puntos de inicio y final de la ruta
+            val intermediatePoint = calculateIntermediatePosition(road.mNodes[0].mLocation, road.mNodes[1].mLocation)
+
+            if (isFirstMarkerUpdate) {
+                addRandomMarker(intermediatePoint)
+                isFirstMarkerUpdate = false
+            }
+
+        }
+    }
+
+
+    private fun calculateIntermediatePosition(start: GeoPoint, finish: GeoPoint): GeoPoint {
+        val intermediateLatitude = (start.latitude + finish.latitude) / 2
+        val intermediateLongitude = (start.longitude + finish.longitude) / 2
+        return GeoPoint(intermediateLatitude, intermediateLongitude)
     }
 
     private fun centerCameraOnUser() {
@@ -310,9 +323,9 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             mapController.setZoom(20.0)
             previousZoomLevel = osmMap.zoomLevelDouble
 
-        } ?: run {
-            Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
-        }
+            } ?: run {
+                Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
+            }
     }
 
 }
