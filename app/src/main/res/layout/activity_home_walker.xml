@@ -74,42 +74,33 @@
         android:orientation="vertical"
         android:paddingTop="20dp">
 
-        <!-- Botón para el Calendario de citas -->
-        <Button
-            android:id="@+id/buttonCalendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Calendario"
-            android:textColor="@color/black"
-            android:background="@drawable/boton_home_walker"
-            android:layout_marginBottom="10dp"/>
 
         <!-- Botón para Ganancias y pagos -->
         <Button
-            android:id="@+id/buttonPayments"
+            android:id="@+id/btnPaseosProgramados"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Resumen de ganancias"
+            android:text="Paseos Programados"
             android:textColor="@color/black"
             android:background="@drawable/boton_home_walker"
             android:layout_marginBottom="10dp"/>
 
         <!-- Botón para Paseo actual -->
         <Button
-            android:id="@+id/buttonCurrentWalk"
+            android:id="@+id/btnPaseosActuales"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Paseo actual"
+            android:text="Paseos Actuales"
             android:textColor="@color/black"
             android:background="@drawable/boton_home_walker"
             android:layout_marginBottom="10dp"/>
 
         <!-- Botón para Iniciar Paseo -->
         <Button
-            android:id="@+id/buttonStartWalk"
+            android:id="@+id/btnBuscarPaseo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Programar paseo"
+            android:text="Buscar Paseos"
             android:textColor="@color/black"
             android:background="@drawable/boton_home_walker"
             android:layout_marginBottom="10dp"/>

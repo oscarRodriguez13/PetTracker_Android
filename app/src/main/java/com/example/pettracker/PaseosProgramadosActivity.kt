@@ -9,24 +9,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pettracker.domain.Profile
 import com.example.pettracker.domain.ProgramarPaseoAdapter
 import com.example.pettracker.domain.ProgramarPaseoItem
-import com.example.pettracker.domain.SolicitudPaseoAdapter
 import java.util.Arrays
 
-class ProgramarPaseoActivity : AppCompatActivity() {
+class PaseosProgramadosActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_programar_paseo)
-
+        setContentView(R.layout.activity_paseos_programados)
 
         setupBarraHerramientas()
 
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Natalia Hernandez", "60 min", "1"),
+            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "60 min", "1"),
             ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "30 min", "1"),
             ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "60 min", "1")
         )
@@ -42,12 +39,13 @@ class ProgramarPaseoActivity : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
     }
 
+
     private fun setupBarraHerramientas() {
         // Botón para ir al historial
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
             val intent = Intent(
-                this@ProgramarPaseoActivity,
+                this@PaseosProgramadosActivity,
                 HistorialActivity::class.java
             )
             startActivity(intent)

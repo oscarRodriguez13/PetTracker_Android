@@ -24,6 +24,15 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".PaseosActualesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaseosProgramadosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PerfilDuenhoActivity"
+            android:exported="false" />
+        <activity
             android:name=".PaginaPaseoWalkerActivity"
             android:exported="false" />
         <activity
