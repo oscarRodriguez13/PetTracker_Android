@@ -77,14 +77,14 @@ class HomeWalkerActivity : AppCompatActivity(){
         historialButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                HistorialActivity::class.java
+                HistorialWalkerActivity::class.java
             )
             startActivity(intent)
         }
 
         val settingsButton = findViewById<Button>(R.id.buttonOption3)
         settingsButton.setOnClickListener {
-            val intent = Intent(applicationContext, SettingsActivity::class.java)
+            val intent = Intent(applicationContext, SettingsWalkerActivity::class.java)
 
             intent.putExtra("EMAIL", userEmail)
 

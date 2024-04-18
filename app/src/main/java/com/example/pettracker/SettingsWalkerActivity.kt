@@ -3,6 +3,7 @@ package com.example.pettracker
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.RatingBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -19,7 +20,7 @@ class SettingsWalkerActivity: AppCompatActivity() {
     private var isNotified = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.activity_settings_walker)
 
         val userEmail = intent.getStringExtra("EMAIL")
 
@@ -44,7 +45,7 @@ class SettingsWalkerActivity: AppCompatActivity() {
         historialButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                HistorialActivity::class.java
+                HistorialWalkerActivity::class.java
             )
             startActivity(intent)
         }
@@ -53,7 +54,7 @@ class SettingsWalkerActivity: AppCompatActivity() {
         buttonPaseos.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                HomeActivity::class.java
+                HomeWalkerActivity::class.java
             )
             startActivity(intent)
         }
@@ -80,6 +81,15 @@ class SettingsWalkerActivity: AppCompatActivity() {
             // Actualizar el estado del botón
             isNotified = !isNotified
         }
+
+        val ratingBar = findViewById<RatingBar>(R.id.calificacionView)
+        ratingBar.isClickable = false
+        ratingBar.isFocusable = false
+        ratingBar.stepSize = 1f // Definir un paso de calificación de 1 para evitar calificaciones parciales
+        ratingBar.numStars = 5 // Definir el número máximo de estrellas
+        ratingBar.rating = 4f
+        ratingBar.isEnabled = false
+
     }
 
     private fun abrirDetallePerfil(profile: Profile) {
