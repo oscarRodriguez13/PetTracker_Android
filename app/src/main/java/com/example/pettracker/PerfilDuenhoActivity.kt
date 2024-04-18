@@ -18,7 +18,7 @@ class PerfilDuenhoActivity : AppCompatActivity() {
         historialButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                HistorialActivity::class.java
+                HistorialWalkerActivity::class.java
             )
             startActivity(intent)
         }

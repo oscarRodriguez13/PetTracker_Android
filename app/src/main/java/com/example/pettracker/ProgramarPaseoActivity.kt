@@ -48,7 +48,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
         historialButton.setOnClickListener {
             val intent = Intent(
                 this@ProgramarPaseoActivity,
-                HistorialActivity::class.java
+                HistorialWalkerActivity::class.java
             )
             startActivity(intent)
         }
