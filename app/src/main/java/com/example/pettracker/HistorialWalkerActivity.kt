@@ -3,6 +3,7 @@ package com.example.pettracker
 import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ListView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +56,25 @@ class HistorialWalkerActivity : AppCompatActivity() {
             }
 
             // Iniciar la actividad de detalles
+            startActivity(intent)
+        }
+
+
+        val buttonPaseos = findViewById<Button>(R.id.buttonOption1)
+        buttonPaseos.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                HomeWalkerActivity::class.java
+            )
+            startActivity(intent)
+        }
+
+        val settingsButton = findViewById<Button>(R.id.buttonOption3)
+        settingsButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                SettingsWalkerActivity::class.java
+            )
             startActivity(intent)
         }
     }
