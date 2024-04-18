@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,8 +10,7 @@
     <!-- Header section with buttons -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
 
@@ -57,9 +55,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.6"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -96,7 +93,7 @@
             android:id="@+id/txt_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nombre"
+            android:text="Juan Perez"
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 
@@ -104,7 +101,7 @@
             android:id="@+id/txt_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="juanperez@example.com"
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 
@@ -112,18 +109,17 @@
             android:id="@+id/txt_Mascotas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mascotas"
+            android:text="Mascotas: 3"
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:layout_weight="1"
-            tools:ignore="NestedWeights" />
+            android:layout_height="match_parent"
+            android:layout_below="@id/imageView2"
+            android:layout_marginTop="20dp" />
 
     </LinearLayout>
-
-    <!-- Map Image -->
 
 </LinearLayout>

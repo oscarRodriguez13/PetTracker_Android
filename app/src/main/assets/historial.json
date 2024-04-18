@@ -5,7 +5,7 @@
     "nombrePaseador": "Juan Pérez",
     "hora_inicial": "08:00",
     "hora_final": "08:30",
-    "precio": "10 USD",
+    "precio": "$10.000",
     "calificacion": 5,
     "comentario": "Excelente servicio"
   },
@@ -15,7 +15,7 @@
     "nombrePaseador": "Ana Gómez",
     "hora_inicial": "09:00",
     "hora_final": "09:45",
-    "precio": "15 USD",
+    "precio": "$15.000",
     "calificacion": 4,
     "comentario": "Muy buen paseo, aunque empezó tarde"
   },
@@ -25,7 +25,7 @@
     "nombrePaseador": "Sergio López",
     "hora_inicial": "10:00",
     "hora_final": "11:00",
-    "precio": "20 USD",
+    "precio": "$20.000",
     "calificacion": 3,
     "comentario": "Paseo regular, Rocky volvió inquieto"
   },
@@ -35,7 +35,7 @@
     "nombrePaseador": "Marta Ruiz",
     "hora_inicial": "08:30",
     "hora_final": "09:00",
-    "precio": "10 USD",
+    "precio": "$10.000",
     "calificacion": 5,
     "comentario": "Perfecto como siempre"
   },
@@ -45,7 +45,7 @@
     "nombrePaseador": "Carlos Fernández",
     "hora_inicial": "11:00",
     "hora_final": "12:00",
-    "precio": "20 USD",
+    "precio": "$20.000",
     "calificacion": 4,
     "comentario": "Buen paseo, pero Toby necesitaba más agua"
   }

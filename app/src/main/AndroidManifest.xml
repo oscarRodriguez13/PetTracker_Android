@@ -36,6 +36,9 @@
             android:name=".PerfilDuenhoActivity"
             android:exported="false" />
         <activity
+            android:name=".DetallesMascotaActivity"
+            android:exported="false" />
+        <activity
             android:name=".PaginaPaseoWalkerActivity"
             android:exported="false" />
         <activity
