@@ -195,7 +195,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         event?.let {
             if (event.sensor.type == Sensor.TYPE_LIGHT) {
                 val lux = event.values[0]
-                if (lux < 15000) {
+                if (lux < 30) {
                     osmMap.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS)
                 } else {
                     osmMap.overlayManager.tilesOverlay.setColorFilter(null)
