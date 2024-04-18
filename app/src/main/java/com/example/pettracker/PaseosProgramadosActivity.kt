@@ -55,7 +55,7 @@ class PaseosProgramadosActivity : AppCompatActivity() {
         settingsButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                SettingsActivity::class.java
+                SettingsWalkerActivity::class.java
             )
             startActivity(intent)
         }
