@@ -105,7 +105,12 @@
                 android:layout_marginLeft="100dp"
                 android:layout_weight="0.5"
                 android:layout_height="wrap_content"
+                style="@style/ButtonStyle"
                 app:srcCompat="@android:drawable/ic_menu_camera" />
+
+            <Space
+                android:layout_width="24dp"
+                android:layout_height="match_parent" />
 
             <ImageButton
                 android:id="@+id/agregarFotoView"
@@ -113,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:layout_marginRight="100dp"
+                style="@style/ButtonStyle"
                 app:srcCompat="@android:drawable/ic_menu_gallery" />
 
 
