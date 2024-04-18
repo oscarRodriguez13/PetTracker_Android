@@ -14,6 +14,7 @@ import com.example.pettracker.domain.ProgramarPaseoItem
 import java.util.Arrays
 
 class PaseosActualesActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paseos_actuales)
@@ -23,9 +24,9 @@ class PaseosActualesActivity : AppCompatActivity() {
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView1)
         val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "30 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "30 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "60 min", "1")
+            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "Duración: 30 min", "Mascotas: 1"),
+            ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "Duración: 30 min", "Mascotas: 1"),
+            ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "Duración: 60 min", "Mascotas: 1")
         )
 
         // Usar un adaptador personalizado con funcionalidad de clic
@@ -66,6 +67,7 @@ class PaseosActualesActivity : AppCompatActivity() {
         intent.putExtra("duracion", profile.duracion)
         intent.putExtra("cantidad", profile.cantidad)
         intent.putExtra("direccion", "Cl. 45 #8-14")
+        intent.putExtra("estado", "en progreso")
         startActivity(intent)
     }
 }

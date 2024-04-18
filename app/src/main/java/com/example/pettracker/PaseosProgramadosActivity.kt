@@ -23,9 +23,9 @@ class PaseosProgramadosActivity : AppCompatActivity() {
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "30 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil2, "Marta Pérez", "30 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil1, "Sofía Hernández", "30 min", "1")
+            ProgramarPaseoItem(R.drawable.img_perfil3, "Sofía Hernández", "Duración: 30 min", "Mascotas: 1"),
+            ProgramarPaseoItem(R.drawable.img_perfil2, "Marta Pérez", "Duración: 30 min", "Mascotas: 1"),
+            ProgramarPaseoItem(R.drawable.img_perfil1, "Pedro Jimenez", "Duración: 30 min", "Mascotas: 1")
         )
 
         // Usar un adaptador personalizado con funcionalidad de clic
@@ -67,6 +67,7 @@ class PaseosProgramadosActivity : AppCompatActivity() {
         intent.putExtra("duracion", profile.duracion)
         intent.putExtra("cantidad", profile.cantidad)
         intent.putExtra("direccion", "Cl. 45 #8-14")
+        intent.putExtra("estado", "sin empezar")
         startActivity(intent)
     }
 }

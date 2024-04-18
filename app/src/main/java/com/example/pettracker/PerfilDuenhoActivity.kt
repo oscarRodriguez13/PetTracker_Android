@@ -9,6 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class PerfilDuenhoActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil_duenho)
@@ -30,7 +32,11 @@ class PerfilDuenhoActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
         val aceptarButton = findViewById<Button>(R.id.btnAceptar)
+
+
         aceptarButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
@@ -38,5 +44,6 @@ class PerfilDuenhoActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
+
     }
 }

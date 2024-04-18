@@ -61,6 +61,7 @@ class RutaDuenhoActivity : AppCompatActivity() , SensorEventListener, LocationLi
     private var isFirstMarkerUpdate = true
     private var randomMarker: Marker? = null
     private val ROUTE_COLOR = Color.BLUE
+    private lateinit var estado : String
 
     private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) :
         AsyncTask<Void, Void, Road>() {
@@ -110,8 +111,15 @@ class RutaDuenhoActivity : AppCompatActivity() , SensorEventListener, LocationLi
             centerCameraOnUser()
         }
         mapZoomListener()
+        estado = intent.getStringExtra("estado") ?: ""
+
 
         val btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+        if (estado == "en progreso"){
+
+            btnEmpezar.text = "Terminar"
+
+        }
         btnEmpezar.setOnClickListener {
             val intent = Intent(
                 applicationContext,
