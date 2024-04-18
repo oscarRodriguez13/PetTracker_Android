@@ -53,6 +53,18 @@ class HomeWalkerActivity : AppCompatActivity(){
             startActivity(intent)
         }
 
+        var btnPaseosProgramados = findViewById<Button>(R.id.btnPaseosProgramados)
+        btnPaseosProgramados.setOnClickListener {
+            intent = Intent(this, PaseosProgramadosActivity::class.java)
+            startActivity(intent)
+        }
+
+        var btnPaseosActuales = findViewById<Button>(R.id.btnPaseosActuales)
+        btnPaseosActuales.setOnClickListener {
+            intent = Intent(this, PaseosActualesActivity::class.java)
+            startActivity(intent)
+        }
+
 
         setpBarraTareas()
 

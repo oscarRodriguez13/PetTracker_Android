@@ -10,12 +10,12 @@
     android:padding="12dp">
 
 
-    <!-- Header section with buttons -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
         android:orientation="horizontal"
-        android:gravity="start">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/imageView"
@@ -48,7 +48,6 @@
             android:text="@string/btn_ajustes"
             android:textColor="@color/black"
             android:background="@android:color/transparent"/>
-
     </LinearLayout>
 
     <View

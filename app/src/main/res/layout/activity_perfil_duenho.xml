@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="María Rodríguez"
+            android:text="Antonio Banderas"
             android:textSize="22dp"
             android:textStyle="bold"
             android:layout_centerInParent="true"
@@ -174,10 +174,34 @@
             android:layout_marginTop="2dp"/>
 
         <TextView
+            android:id="@+id/descripcion4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edad: 18 meses"
+            android:layout_below="@id/descripcion3"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/descripcion5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descripcion: Travieso"
+            android:layout_below="@id/descripcion4"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/gray"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
             android:id="@+id/titulo_direccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/descripcion3"
+            android:layout_below="@id/descripcion5"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:text="Direccion"
@@ -242,4 +266,4 @@
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
