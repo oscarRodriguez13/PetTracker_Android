@@ -60,14 +60,38 @@
         android:layout_marginTop="80dp"
         style="@style/ButtonStyle" />
 
-    <ImageView
-        android:id="@+id/icon_form"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/icn_paseador"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/icn_foto_perfil"
         android:layout_centerHorizontal="true"
-        app:srcCompat="@drawable/loguito_principal"
-        android:layout_above="@id/titulo_registro"/>
+        android:layout_above="@id/buttons" />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/titulo_registro"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/tomarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <ImageButton
+            android:id="@+id/agregarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/titulo_registro"

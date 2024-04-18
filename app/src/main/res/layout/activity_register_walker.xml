@@ -67,7 +67,32 @@
         android:layout_height="150dp"
         android:src="@drawable/icn_foto_perfil"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/titulo_registro" />
+        android:layout_above="@id/buttons" />
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/titulo_registro"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/tomarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <ImageButton
+            android:id="@+id/agregarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/titulo_registro"

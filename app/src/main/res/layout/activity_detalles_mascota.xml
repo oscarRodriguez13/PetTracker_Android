@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".DetallesHistorialActivity"
     android:padding="16dp"
     android:gravity="center_vertical">
@@ -13,14 +15,37 @@
         android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:src="@drawable/img_perro3"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal">
+
+        <ImageButton
+            android:id="@+id/tomarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <ImageButton
+            android:id="@+id/agregarFotoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/nombreMascotaView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageView"
         android:text="Firulais"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -36,7 +61,6 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:paddingBottom="8dp"
-        android:layout_below="@id/nombreMascotaView"
         android:gravity="center" />
 
     <TextView
@@ -47,7 +71,6 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:paddingBottom="8dp"
-        android:layout_below="@id/fechaView"
         android:gravity="center" />
 
     <TextView
@@ -58,7 +81,6 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:paddingBottom="8dp"
-        android:layout_below="@id/nombrePaseadorView"
         android:gravity="center" />
 
     <TextView
@@ -69,7 +91,6 @@
         android:textSize="16sp"
         android:textColor="@color/black"
         android:paddingBottom="8dp"
-        android:layout_below="@id/horaInicialView"
         android:gravity="center" />
 
-</RelativeLayout>
+</LinearLayout>
