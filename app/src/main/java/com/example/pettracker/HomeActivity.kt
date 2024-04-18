@@ -117,8 +117,7 @@ class HomeActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Seleccione las opciones")
 
-            val mascotas = getMascotasFromJson(userEmail)
-            val options = mascotas.map { it.getString("nombre") }.toTypedArray()
+            val options = arrayOf("Tony", "Alaska", "Firulais")
             val selectedOptions = booleanArrayOf(false, false, false, false)
 
             builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->

@@ -61,11 +61,12 @@
         android:layout_marginTop="60dp"
         style="@style/ButtonStyle" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon_paseador"
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        app:srcCompat="@drawable/loguito_principal"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/icn_foto_perfil"
+        android:layout_centerHorizontal="true"
         android:layout_above="@id/titulo_registro" />
 
     <TextView
