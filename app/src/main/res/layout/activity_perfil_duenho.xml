@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Antonio Banderas"
+            android:text="María Rodríguez"
             android:textSize="22dp"
             android:textStyle="bold"
             android:layout_centerInParent="true"
@@ -174,28 +174,69 @@
             android:layout_marginTop="2dp"/>
 
         <TextView
-            android:id="@+id/descripcion4"
+            android:id="@+id/titulo_direccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edad: 18 meses"
             android:layout_below="@id/descripcion3"
             android:layout_marginLeft="15dp"
-            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:text="Direccion"
+            android:textSize="20dp"
             android:textColor="@color/gray"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/titulo_direccion"
+            android:layout_marginTop="12dp"/>
 
         <TextView
-            android:id="@+id/descripcion5"
+            android:id="@+id/direccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Descripcion: Travieso"
-            android:layout_below="@id/descripcion4"
+            android:layout_below="@id/line6"
             android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
+            android:layout_marginTop="15dp"
+            android:text="Cl. 45 #8-14"
+            android:textSize="17dp"
             android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
+            android:textColor="@color/gray"
+            />
+
+        <TextView
+            android:id="@+id/Precio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/direccion"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Precio"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/Precio"
+            android:layout_marginTop="12dp"/>
+
+
+
+        <EditText
+            android:id="@+id/etPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line5"
+            android:hint="Ingrese el precio"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:textColor="@color/black"/>
 
 
 

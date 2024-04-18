@@ -23,7 +23,7 @@ class PaseosActualesActivity : AppCompatActivity() {
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView1)
         val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "60 min", "1"),
+            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "30 min", "1"),
             ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "30 min", "1"),
             ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "60 min", "1")
         )
@@ -60,7 +60,7 @@ class PaseosActualesActivity : AppCompatActivity() {
         }
     }
     private fun abrirDetallePerfil(profile: ProgramarPaseoItem) {
-        val intent = Intent(this, PerfilPaseadorActivity::class.java)
+        val intent = Intent(this, RutaDuenhoActivity::class.java)
         // Aquí puedes agregar datos adicionales al intent si es necesario
         intent.putExtra("nombre", profile.nombre)
         intent.putExtra("duracion", profile.duracion)

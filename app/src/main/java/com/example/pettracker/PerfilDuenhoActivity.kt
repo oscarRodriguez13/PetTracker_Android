@@ -34,7 +34,7 @@ class PerfilDuenhoActivity : AppCompatActivity() {
         aceptarButton.setOnClickListener {
             val intent = Intent(
                 applicationContext,
-                PaginaPaseoActivity::class.java
+                HomeWalkerActivity::class.java
             )
             startActivity(intent)
         }

@@ -26,9 +26,9 @@ class ProgramarPaseoActivity : AppCompatActivity() {
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Natalia Hernandez", "60 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "30 min", "1"),
-            ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "60 min", "1")
+            ProgramarPaseoItem(R.drawable.img_perfil3, "Ana Martínez", "30 min", "1"),
+            ProgramarPaseoItem(R.drawable.img_perfil2, "María Rodríguez", "30 min", "1"),
+            ProgramarPaseoItem(R.drawable.img_perfil1, "Juan Perez", "60 min", "1")
         )
 
         // Usar un adaptador personalizado con funcionalidad de clic
@@ -63,7 +63,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
         }
     }
     private fun abrirDetallePerfil(profile: ProgramarPaseoItem) {
-        val intent = Intent(this, PerfilPaseadorActivity::class.java)
+        val intent = Intent(this, PerfilDuenhoActivity::class.java)
         // Aquí puedes agregar datos adicionales al intent si es necesario
         intent.putExtra("nombre", profile.nombre)
         intent.putExtra("duracion", profile.duracion)
