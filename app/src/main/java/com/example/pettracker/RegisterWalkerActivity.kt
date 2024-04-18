@@ -11,7 +11,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -38,86 +37,51 @@ class RegisterWalkerActivity : AppCompatActivity() {
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_walker)
 
+        initializeViews()
+        setupButtons()
+    }
+
+    private fun initializeViews() {
         etName = findViewById(R.id.etName)
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         etExperience = findViewById(R.id.etExperience)
         buttonRegister = findViewById(R.id.button)
+    }
 
+    private fun setupButtons() {
         buttonRegister.setOnClickListener {
-            writeJSONObject()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            handleRegistration()
         }
 
-        val perfilView = findViewById<CircleImageView>(R.id.icn_paseador)
+        setupImagePickers()
+    }
 
-        // Preparar el lanzador para el resultado de selección de imagen.
-        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-            uri?.let {
-                perfilView.setImageURI(uri)
-            }
-        }
+    private fun handleRegistration() {
+        writeJSONObject()
+        navigateToLogin()
+    }
 
-        // Preparar el lanzador para el resultado de tomar foto.
-        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-            if (success) {
-                photoURI?.let {
-                    perfilView.setImageURI(it)
-                }
-            }
-        }
-
-        findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
-            // Intent explícito para seleccionar una imagen de la galería
-            imagePickerLauncher.launch("image/*")
-        }
-
-        findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this, android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    //Lanzamos la camara
-                    openCamera()
-                }
-
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, android.Manifest.permission.CAMERA
-                ) -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA
-                    )
-                }
-
-                else -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA
-                    )
-                }
-            }
-        }
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun writeJSONObject() {
         val usuariosArray = readJSONObject()
 
-        // Crear el objeto de usuario con sus datos
         val userObject = JSONObject().apply {
             put("nombre", etName.text.toString())
             put("email", etEmail.text.toString())
             put("password", etPassword.text.toString())
-            put("tipoUsuario", "2") // Puedes definir el tipo de usuario como quieras
+            put("tipoUsuario", "2")
         }
-        // Añadir el usuario al array de usuarios
+
         usuariosArray.put(userObject)
 
         var output: Writer?
@@ -125,7 +89,6 @@ class RegisterWalkerActivity : AppCompatActivity() {
 
         try {
             val file = File(baseContext.getExternalFilesDir(null), filename)
-            Log.i("USER", "Ubicacion de archivo: $file")
             output = BufferedWriter(FileWriter(file))
             output.write("{\"usuarios\": $usuariosArray}")
             output.close()
@@ -137,8 +100,8 @@ class RegisterWalkerActivity : AppCompatActivity() {
 
     private fun readJSONObject(): JSONArray {
         var jsonArray = JSONArray()
-
         val filename = "usuarios.json"
+
         try {
             val file = File(baseContext.getExternalFilesDir(null), filename)
             if (file.exists()) {
@@ -152,11 +115,59 @@ class RegisterWalkerActivity : AppCompatActivity() {
         return jsonArray
     }
 
+    private fun setupImagePickers() {
+        val perfilView = findViewById<CircleImageView>(R.id.icn_paseador)
+
+        imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                perfilView.setImageURI(uri)
+            }
+        }
+
+        takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                photoURI?.let {
+                    perfilView.setImageURI(it)
+                }
+            }
+        }
+
+        findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
+            launchImagePicker()
+        }
+
+        findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
+            handleCameraPermission()
+        }
+    }
+
+    private fun launchImagePicker() {
+        imagePickerLauncher.launch("image/*")
+    }
+
+    private fun handleCameraPermission() {
+        when {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED -> {
+                openCamera()
+            }
+            ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) -> {
+                requestCameraPermission()
+            }
+            else -> {
+                requestCameraPermission()
+            }
+        }
+    }
+
+    private fun requestCameraPermission() {
+        requestPermissions(arrayOf(Manifest.permission.CAMERA), Datos.MY_PERMISSION_REQUEST_CAMERA)
+    }
 
     private fun openCamera() {
-        val values = ContentValues()
-        values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicacion del Taller 2")
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.TITLE, "Foto nueva")
+            put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicacion del Taller 2")
+        }
         photoURI = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         photoURI?.let { uri ->
@@ -168,13 +179,7 @@ class RegisterWalkerActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             Datos.MY_PERMISSION_REQUEST_CAMERA -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    openCamera()
-                } else {
-                    Toast.makeText(this, "Funcionalidades limitadas!", Toast.LENGTH_SHORT).show()
-                }
-                return
+                handleCameraPermissionResult(grantResults)
             }
             else -> {
                 // Ignore all other requests.
@@ -182,4 +187,11 @@ class RegisterWalkerActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleCameraPermissionResult(grantResults: IntArray) {
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openCamera()
+        } else {
+            Toast.makeText(this, "Funcionalidades limitadas!", Toast.LENGTH_SHORT).show()
+        }
+    }
 }

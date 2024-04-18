@@ -7,7 +7,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
 import java.io.IOException
@@ -24,21 +23,31 @@ class LoginActivity : AppCompatActivity() {
         emailEditText = findViewById(R.id.email_input)
         passwordEditText = findViewById(R.id.password_input)
 
+        setupClickListeners()
+    }
+
+    private fun setupClickListeners() {
         findViewById<TextView>(R.id.tv_passwordRecover).setOnClickListener {
             startActivity(Intent(applicationContext, PasswordRecoveryActivity::class.java))
         }
 
-
         findViewById<Button>(R.id.login_button).setOnClickListener {
-            if (validateUser(emailEditText.text.toString(), passwordEditText.text.toString())) {
-                // Ya se redirige en la función validateUser según el tipo de usuario, no es necesario iniciar HomeActivity aquí
-            } else {
-                Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-            }
+            handleLogin()
         }
 
         findViewById<Button>(R.id.register_button).setOnClickListener {
             startActivity(Intent(applicationContext, AccountTypeActivity::class.java))
+        }
+    }
+
+    private fun handleLogin() {
+        val email = emailEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        if (validateUser(email, password)) {
+            // El redireccionamiento se maneja dentro de validateUser
+        } else {
+            Toast.makeText(this, "Email o contraseña incorrectos", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -52,27 +61,7 @@ class LoginActivity : AppCompatActivity() {
                 val user = userList.firstOrNull { it.getString("email") == email && it.getString("password") == password }
                 if (user != null) {
                     val tipoUsuario = user.getInt("tipoUsuario")
-                    println("Tipo de usuario $tipoUsuario")
-                    val intent: Intent
-                    when (tipoUsuario) {
-                        1 -> {
-                            intent = Intent(applicationContext, HomeActivity::class.java)
-                            emailEditText.setText("")
-                            passwordEditText.setText("")
-                        }
-                        2 -> {
-                            intent = Intent(applicationContext, HomeWalkerActivity::class.java)
-                            emailEditText.setText("")
-                            passwordEditText.setText("")
-                        }
-                        else -> {
-                            Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()
-                            return false
-                        }
-                    }
-                    // Agregar el email como extra al Intent
-                    intent.putExtra("EMAIL", email)
-                    startActivity(intent)
+                    handleUserType(tipoUsuario, email)
                     true // Usuario válido
                 } else {
                     false // Usuario inválido
@@ -84,9 +73,24 @@ class LoginActivity : AppCompatActivity() {
         } catch (ex: IOException) {
             ex.printStackTrace()
             false // Error al leer el archivo JSON
-        } catch (ex: JSONException) {
+        } catch (ex: Exception) {
             ex.printStackTrace()
-            false // Error al analizar el archivo JSON
+            false // Otros errores
         }
+    }
+
+    private fun handleUserType(tipoUsuario: Int, email: String) {
+        val intent = when (tipoUsuario) {
+            1 -> Intent(applicationContext, HomeActivity::class.java)
+            2 -> Intent(applicationContext, HomeWalkerActivity::class.java)
+            else -> {
+                Toast.makeText(this, "Tipo de usuario no válido", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+        intent.putExtra("EMAIL", email)
+        emailEditText.setText("")
+        passwordEditText.setText("")
+        startActivity(intent)
     }
 }

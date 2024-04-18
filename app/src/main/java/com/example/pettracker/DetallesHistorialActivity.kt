@@ -6,36 +6,35 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class DetallesHistorialActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalles_historial)
 
-        val nombreMascota = intent.getStringExtra("nombreMascota")
-        val fecha = intent.getStringExtra("fecha")
-        val nombrePaseador = intent.getStringExtra("nombrePaseador")
-        val horaInicial = intent.getStringExtra("hora_inicial")
-        val horaFinal = intent.getStringExtra("hora_final")
-        val precio = intent.getStringExtra("precio")
-        val calificacion = intent.getIntExtra("calificacion", 0) // Cambia getIntExtra a getFloatExtra
-        val comentario = intent.getStringExtra("comentario")
+        val extras = intent.extras
 
-        // Aquí puedes asignar estos valores a las vistas de tu layout
-        findViewById<TextView>(R.id.nombreMascotaView).text = nombreMascota
-        findViewById<TextView>(R.id.fechaView).text = fecha
-        findViewById<TextView>(R.id.nombrePaseadorView).text = nombrePaseador
-        findViewById<TextView>(R.id.horaInicialView).text = horaInicial
-        findViewById<TextView>(R.id.horaFinalView).text = horaFinal
-        findViewById<TextView>(R.id.precioView).text = precio
+        setTextView(R.id.nombreMascotaView, extras?.getString("nombreMascota"))
+        setTextView(R.id.fechaView, extras?.getString("fecha"))
+        setTextView(R.id.nombrePaseadorView, extras?.getString("nombrePaseador"))
+        setTextView(R.id.horaInicialView, extras?.getString("hora_inicial"))
+        setTextView(R.id.horaFinalView, extras?.getString("hora_final"))
+        setTextView(R.id.precioView, extras?.getString("precio"))
 
-        val ratingBar = findViewById<RatingBar>(R.id.calificacionView)
-        ratingBar.rating = calificacion.toFloat()
+        setRatingBar(R.id.calificacionView, extras?.getInt("calificacion", 0)?.toFloat())
+        setTextView(R.id.comentarioView, extras?.getString("comentario"))
+    }
+
+    private fun setTextView(id: Int, text: String?) {
+        findViewById<TextView>(id).text = text
+    }
+
+    private fun setRatingBar(id: Int, rating: Float?) {
+        val ratingBar = findViewById<RatingBar>(id)
+        ratingBar.rating = rating ?: 0f
         ratingBar.isClickable = false
         ratingBar.isFocusable = false
-        ratingBar.stepSize = 1f // Definir un paso de calificación de 1 para evitar calificaciones parciales
-        ratingBar.numStars = 5 // Definir el número máximo de estrellas
-        ratingBar.rating = calificacion.toFloat() // Establecer el valor de la calificación
+        ratingBar.stepSize = 1f
+        ratingBar.numStars = 5
         ratingBar.isEnabled = false
-
-        findViewById<TextView>(R.id.comentarioView).text = comentario
     }
 }

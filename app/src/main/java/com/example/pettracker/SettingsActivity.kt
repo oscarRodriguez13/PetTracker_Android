@@ -10,14 +10,11 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.domain.Datos
@@ -33,21 +30,27 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
         fotoPaseador = findViewById(R.id.icn_perfil)
 
+        setupImagePickers()
 
-        // Preparar el lanzador para el resultado de selección de imagen.
+        setupButtons()
+
+        setupRecyclerView()
+    }
+
+    private fun setupImagePickers() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 fotoPaseador.setImageURI(uri)
             }
         }
 
-        // Preparar el lanzador para el resultado de tomar foto.
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
                 photoURI?.let {
@@ -55,37 +58,59 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun setupButtons() {
         findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
-            // Intent explícito para seleccionar una imagen de la galería
             imagePickerLauncher.launch("image/*")
         }
 
         findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this, android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    //Lanzamos la camara
-                    openCamera()
-                }
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, android.Manifest.permission.CAMERA) -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA)
-                }
-                else -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA
-                    )
-                }
-            }
+            handleCameraPermission()
         }
 
-        val userEmail = intent.getStringExtra("EMAIL")
+        findViewById<Button>(R.id.buttonOption2).setOnClickListener {
+            navigateToHistorial()
+        }
 
+        findViewById<Button>(R.id.buttonOption1).setOnClickListener {
+            navigateToHome()
+        }
+
+        findViewById<CircleImageView>(R.id.icn_logout).setOnClickListener {
+            navigateToLogin()
+        }
+
+        findViewById<CircleImageView>(R.id.icn_notificacion).setOnClickListener {
+            toggleNotification()
+        }
+    }
+
+    private fun handleCameraPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                openCamera()
+            }
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this, android.Manifest.permission.CAMERA
+            ) -> {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.CAMERA),
+                    Datos.MY_PERMISSION_REQUEST_CAMERA
+                )
+            }
+            else -> {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.CAMERA),
+                    Datos.MY_PERMISSION_REQUEST_CAMERA
+                )
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
             Profile(R.drawable.img_perro1, "Tony", "Labrador"),
@@ -93,57 +118,15 @@ class SettingsActivity : AppCompatActivity() {
             Profile(R.drawable.img_perro3, "Firulais", "Beagle")
         )
 
-        // Usar un adaptador personalizado con funcionalidad de clic
         val adapter = SolicitudPaseoAdapter(profiles) { profile ->
             abrirDetallePerfil(profile)
         }
         recyclerView.adapter = adapter
 
-        // Establecer el LinearLayoutManager para vertical
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-
-        val historialButton = findViewById<Button>(R.id.buttonOption2)
-        historialButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HistorialActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val buttonPaseos = findViewById<Button>(R.id.buttonOption1)
-        buttonPaseos.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HomeActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val logOutButton = findViewById<CircleImageView>(R.id.icn_logout)
-        logOutButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                LoginActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val notifyButton = findViewById<CircleImageView>(R.id.icn_notificacion)
-        notifyButton.setOnClickListener {
-            if (isNotified) {
-                // Cambiar a la imagen original
-                notifyButton.setImageResource(R.drawable.icn_notificacion_inactiva)
-            } else {
-                // Cambiar a la nueva imagen
-                notifyButton.setImageResource(R.drawable.icn_notificacion)
-            }
-
-            // Actualizar el estado del botón
-            isNotified = !isNotified
-        }
     }
+
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
@@ -155,27 +138,33 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            Datos.MY_PERMISSION_REQUEST_CAMERA -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    openCamera()
-                } else {
-                    Toast.makeText(this, "Funcionalidades limitadas!", Toast.LENGTH_SHORT).show()
-                }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
-            }
+    private fun navigateToHistorial() {
+        val intent = Intent(applicationContext, HistorialActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToHome() {
+        val intent = Intent(applicationContext, HomeActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun toggleNotification() {
+        val notifyButton = findViewById<CircleImageView>(R.id.icn_notificacion)
+        if (isNotified) {
+            notifyButton.setImageResource(R.drawable.icn_notificacion_inactiva)
+        } else {
+            notifyButton.setImageResource(R.drawable.icn_notificacion)
         }
+        isNotified = !isNotified
     }
 
     private fun abrirDetallePerfil(profile: Profile) {
         val intent = Intent(this, DetallesMascotaActivity::class.java)
-        // Aquí puedes agregar datos adicionales al intent si es necesario
         intent.putExtra("profileName", profile.name)
         intent.putExtra("profilePrice", profile.price)
         startActivity(intent)

@@ -19,8 +19,6 @@ class ProgramarPaseoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_programar_paseo)
-
-
         setupBarraHerramientas()
 
         // Configuración del RecyclerView
@@ -36,7 +34,6 @@ class ProgramarPaseoActivity : AppCompatActivity() {
             abrirDetallePerfil(ProgramarPaseoItem)
         }
         recyclerView.adapter = adapter
-
         // Establecer el LinearLayoutManager para vertical
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager

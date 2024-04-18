@@ -21,20 +21,30 @@ class DetallesMascotaActivity : AppCompatActivity() {
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalles_mascota)
 
         fotoPaseador = findViewById(R.id.imageView)
+        setupActivityForResult()
 
-        // Preparar el lanzador para el resultado de selección de imagen.
+        findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
+            launchImagePicker()
+        }
+
+        findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
+            handleCameraPermissions()
+        }
+    }
+
+    private fun setupActivityForResult() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 fotoPaseador.setImageURI(uri)
             }
         }
 
-        // Preparar el lanzador para el resultado de tomar foto.
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
                 photoURI?.let {
@@ -42,39 +52,37 @@ class DetallesMascotaActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
-        findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
-            // Intent explícito para seleccionar una imagen de la galería
-            imagePickerLauncher.launch("image/*")
-        }
+    private fun launchImagePicker() {
+        imagePickerLauncher.launch("image/*")
+    }
 
-        findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
-            when {
-                ContextCompat.checkSelfPermission(
-                    this, android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    //Lanzamos la camara
-                    openCamera()
-                }
+    private fun handleCameraPermissions() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                openCamera()
+            }
 
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, android.Manifest.permission.CAMERA
-                ) -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA
-                    )
-                }
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this, android.Manifest.permission.CAMERA
+            ) -> {
+                requestCameraPermission()
+            }
 
-                else -> {
-                    requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
-                        Datos.MY_PERMISSION_REQUEST_CAMERA
-                    )
-                }
+            else -> {
+                requestCameraPermission()
             }
         }
+    }
 
+    private fun requestCameraPermission() {
+        requestPermissions(
+            arrayOf(android.Manifest.permission.CAMERA),
+            Datos.MY_PERMISSION_REQUEST_CAMERA
+        )
     }
 
     private fun openCamera() {
@@ -82,7 +90,6 @@ class DetallesMascotaActivity : AppCompatActivity() {
         values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
         values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicacion del Taller 2")
         photoURI = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-
         photoURI?.let { uri ->
             takePictureLauncher.launch(uri)
         }
@@ -92,18 +99,12 @@ class DetallesMascotaActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             Datos.MY_PERMISSION_REQUEST_CAMERA -> {
-                // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     openCamera()
                 } else {
                     Toast.makeText(this, "Funcionalidades limitadas!", Toast.LENGTH_SHORT).show()
                 }
-                return
-            }
-            else -> {
-                // Ignore all other requests.
             }
         }
     }
-
 }

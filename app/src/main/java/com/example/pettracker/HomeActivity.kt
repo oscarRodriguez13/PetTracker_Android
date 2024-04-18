@@ -26,144 +26,114 @@ class HomeActivity : AppCompatActivity() {
 
         userEmail = intent.getStringExtra("EMAIL") ?: ""
 
+        setupTimePickers()
+        setupSolicitudPaseo()
+        setupHistorialButton()
+        setupSettingsButton()
+        setupSelectOptionsButton()
+    }
+
+    private fun setupTimePickers() {
         val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
         val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
-        val btnSolicitudPaseo = findViewById<Button>(R.id.btn_solicitud_paseo)
-        val tvOption = findViewById<TextView>(R.id.tv_option)
 
-        // Obtener la hora actual
         val now = Calendar.getInstance()
         val hour = now.get(Calendar.HOUR_OF_DAY)
         val minute = now.get(Calendar.MINUTE)
 
-        // Crear un diálogo de selección de hora
+        setupTimePicker(etHoraInicial, hour, minute) { selectedTime ->
+            etHoraInicial.setText("Hora inicial: $selectedTime")
+        }
+
+        setupTimePicker(etHoraFinal, hour, minute) { selectedTime ->
+            etHoraFinal.setText("Hora final: $selectedTime")
+        }
+    }
+
+    private fun setupTimePicker(editText: EditText, hour: Int, minute: Int, onTimeSet: (String) -> Unit) {
         val timePickerDialog = TimePickerDialog(
             this,
             { _, selectedHour, selectedMinute ->
-                // Manejar la hora seleccionada aquí
                 val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
-                etHoraInicial.setText("Hora inicial: " + selectedTime)
+                onTimeSet(selectedTime)
             },
             hour,
             minute,
-            true // Si deseas usar formato de 24 horas
+            true
         )
 
-        // Mostrar el diálogo de selección de hora cuando se haga clic en el EditText
-        etHoraInicial.setOnClickListener {
+        editText.setOnClickListener {
             timePickerDialog.show()
         }
+    }
 
-
-        // Crear un diálogo de selección de hora
-        val timePickerDialog2 = TimePickerDialog(
-            this,
-            { _, selectedHour, selectedMinute ->
-                // Manejar la hora seleccionada aquí
-                val selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
-                etHoraFinal.setText("Hora final: " + selectedTime)
-            },
-            hour,
-            minute,
-            true // Si deseas usar formato de 24 horas
-        )
-
-        // Mostrar el diálogo de selección de hora cuando se haga clic en el EditText
-        etHoraFinal.setOnClickListener {
-            timePickerDialog2.show()
-        }
+    private fun setupSolicitudPaseo() {
+        val btnSolicitudPaseo = findViewById<Button>(R.id.btn_solicitud_paseo)
 
         btnSolicitudPaseo.setOnClickListener {
+            val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
+            val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
+
             if (verificarCamposLlenos(etHoraInicial, etHoraFinal)) {
-                // Cambia a la siguiente pantalla
-                val intent = Intent(this, SolicitarPaseoActivity::class.java)
-                val bundle = Bundle().apply {
-                    putString("duracion", etHoraInicial.text.toString().trim())
-                    putString("duracion", etHoraFinal.text.toString().trim())
+                val intent = Intent(this, SolicitarPaseoActivity::class.java).apply {
+                    putExtras(Bundle().apply {
+                        putString("duracion", etHoraInicial.text.toString().trim())
+                        putString("duracion", etHoraFinal.text.toString().trim())
+                    })
                 }
-
-                // Añadir el Bundle al Intent
-                intent.putExtras(bundle)
-
-                // Iniciar la actividad con el Intent que tiene el Bundle
                 startActivity(intent)
             } else {
-                // Muestra un mensaje de error o indicación
                 Toast.makeText(this, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
+    }
 
-        val historialButton = findViewById<Button>(R.id.buttonOption2)
-        historialButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HistorialActivity::class.java
-            )
-            startActivity(intent)
-        }
-
-        val settingsButton = findViewById<Button>(R.id.buttonOption3)
-        settingsButton.setOnClickListener {
-            val intent = Intent(applicationContext, SettingsActivity::class.java)
-
-            intent.putExtra("EMAIL", userEmail)
-
-            startActivity(intent)
-        }
-
-        val selectOptionsButton = findViewById<Button>(R.id.button_options)
-
-        selectOptionsButton.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Seleccione las opciones")
-
-            val options = arrayOf("Tony", "Alaska", "Firulais")
-            val selectedOptions = booleanArrayOf(false, false, false, false)
-
-            builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->
-                selectedOptions[which] = isChecked
-            }
-
-            builder.setPositiveButton("Aceptar") { _, _ ->
-                val selectedItemsText = options.indices
-                    .filter { selectedOptions[it] }
-                    .joinToString { options[it] }
-
-                // Mostrar las opciones seleccionadas
-                tvOption.text = "Mascotas seleccionadas: $selectedItemsText"
-            }
-
-            builder.setNegativeButton("Cancelar") { dialog, _ ->
-                dialog.dismiss()
-            }
-
-            val dialog = builder.create()
-            dialog.show()
+    private fun setupHistorialButton() {
+        findViewById<Button>(R.id.buttonOption2).setOnClickListener {
+            startActivity(Intent(applicationContext, HistorialActivity::class.java))
         }
     }
 
-    private fun getMascotasFromJson(email: String): List<JSONObject> {
-        try {
-            val file = File(getExternalFilesDir(null), "usuarios.json")
-            val json = file.bufferedReader().use { it.readText() }
-            val usuariosArray = JSONObject(json).getJSONArray("usuarios")
-
-            for (i in 0 until usuariosArray.length()) {
-                val user = usuariosArray.getJSONObject(i)
-                if (user.getString("email") == email) {
-                    return user.getJSONArray("mascotas").let { mascotasArray ->
-                        (0 until mascotasArray.length()).map { mascotasArray.getJSONObject(it) }
-                    }
-                }
-            }
-            return emptyList()
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-            return emptyList()
+    private fun setupSettingsButton() {
+        findViewById<Button>(R.id.buttonOption3).setOnClickListener {
+            startActivity(Intent(applicationContext, SettingsActivity::class.java).apply {
+                putExtra("EMAIL", userEmail)
+            })
         }
     }
 
+    private fun setupSelectOptionsButton() {
+        val tvOption = findViewById<TextView>(R.id.tv_option)
+        findViewById<Button>(R.id.button_options).setOnClickListener {
+            showOptionsDialog(tvOption)
+        }
+    }
 
-    private fun verificarCamposLlenos(vararg campos: EditText): Boolean =
-        campos.all { it.text.toString().trim().isNotEmpty() }
+    private fun showOptionsDialog(tvOption: TextView) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Seleccione las opciones")
+
+        val options = arrayOf("Tony", "Alaska", "Firulais")
+        val selectedOptions = booleanArrayOf(false, false, false)
+
+        builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->
+            selectedOptions[which] = isChecked
+        }
+
+        builder.setPositiveButton("Aceptar") { _, _ ->
+            val selectedItemsText = options.indices
+                .filter { selectedOptions[it] }
+                .joinToString { options[it] }
+
+            tvOption.text = "Mascotas seleccionadas: $selectedItemsText"
+        }
+
+        builder.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
+
+    private fun verificarCamposLlenos(vararg campos: EditText) = campos.all { it.text.toString().trim().isNotEmpty() }
 }

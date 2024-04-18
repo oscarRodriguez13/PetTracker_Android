@@ -2,10 +2,9 @@ package com.example.pettracker
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.AdapterView
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.pettracker.domain.HistorialAdapter
 import com.example.pettracker.domain.HistorialItem
 import com.google.gson.Gson
@@ -14,90 +13,85 @@ import java.io.IOException
 
 class HistorialActivity : AppCompatActivity() {
 
-    private var mlista: ListView? = null
-    private var mHistorialAdapter: HistorialAdapter? = null
+    private lateinit var mlista: ListView
+    private lateinit var mHistorialAdapter: HistorialAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_historial)
 
-        // Inicialización de la ListView
+        setupListView()
+        setupButtonPaseos()
+        setupSettingsButton()
+    }
+
+    private fun setupListView() {
         mlista = findViewById(R.id.historial)
-
-        // Cargar JSON desde los assets
-        val jsonString = loadJSONFromAsset()
-
-        // Parsear el JSON a una lista de objetos HistorialItem
-        val historialList = parseJSON(jsonString) ?: listOf()
-
-        // Inicialización del adaptador con la lista parseada
+        val historialList = parseJSON(loadJSONFromAsset()) ?: listOf()
         mHistorialAdapter = HistorialAdapter(this, historialList)
-        mlista?.adapter = mHistorialAdapter
+        mlista.adapter = mHistorialAdapter
 
-        mlista?.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            // Obtener el historial de paseo seleccionado
+        mlista.setOnItemClickListener { _, _, position, _ ->
             val selectedPaseo = historialList[position]
-
-            // Crear un Bundle para almacenar los datos del paseo
-            val paseoBundle = Bundle().apply {
-                putString("nombreMascota", selectedPaseo.nombreMascota)
-                putString("fecha", selectedPaseo.fecha)
-                putString("nombrePaseador", selectedPaseo.nombrePaseador)
-                putString("hora_inicial", selectedPaseo.hora_inicial)
-                putString("hora_final", selectedPaseo.hora_final)
-                putString("precio", selectedPaseo.precio)
-                putInt("calificacion", selectedPaseo.calificacion)
-                putString("comentario", selectedPaseo.comentario)
-            }
-
-            // Crear un Intent para enviar la información a la actividad de detalles
-            val intent = Intent(this@HistorialActivity, DetallesHistorialActivity::class.java).apply {
-                putExtras(paseoBundle)
-            }
-
-            // Iniciar la actividad de detalles
-            startActivity(intent)
+            val paseoBundle = createBundle(selectedPaseo)
+            startDetailsActivity(paseoBundle)
         }
+    }
 
-
-        val buttonPaseos = findViewById<Button>(R.id.buttonOption1)
-        buttonPaseos.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HomeActivity::class.java
-            )
-            startActivity(intent)
+    private fun setupButtonPaseos() {
+        findViewById<Button>(R.id.buttonOption1).setOnClickListener {
+            startNewActivity(HomeActivity::class.java)
         }
+    }
 
-        val settingsButton = findViewById<Button>(R.id.buttonOption3)
-        settingsButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                SettingsActivity::class.java
-            )
-            startActivity(intent)
+    private fun setupSettingsButton() {
+        findViewById<Button>(R.id.buttonOption3).setOnClickListener {
+            startNewActivity(SettingsActivity::class.java)
         }
+    }
+
+    private fun createBundle(selectedPaseo: HistorialItem): Bundle {
+        return Bundle().apply {
+            putString("nombreMascota", selectedPaseo.nombreMascota)
+            putString("fecha", selectedPaseo.fecha)
+            putString("nombrePaseador", selectedPaseo.nombrePaseador)
+            putString("hora_inicial", selectedPaseo.hora_inicial)
+            putString("hora_final", selectedPaseo.hora_final)
+            putString("precio", selectedPaseo.precio)
+            putInt("calificacion", selectedPaseo.calificacion)
+            putString("comentario", selectedPaseo.comentario)
+        }
+    }
+
+    private fun startDetailsActivity(paseoBundle: Bundle) {
+        val intent = Intent(this@HistorialActivity, DetallesHistorialActivity::class.java).apply {
+            putExtras(paseoBundle)
+        }
+        startActivity(intent)
+    }
+
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(applicationContext, activityClass)
+        startActivity(intent)
     }
 
     private fun loadJSONFromAsset(): String? {
         return try {
-            val inputStream = assets.open("historial.json")
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            String(buffer, Charsets.UTF_8)
+            assets.open("historial.json").use { inputStream ->
+                val size = inputStream.available()
+                val buffer = ByteArray(size)
+                inputStream.read(buffer)
+                String(buffer, Charsets.UTF_8)
+            }
         } catch (ex: IOException) {
             ex.printStackTrace()
-            return null
+            null
         }
     }
 
     private fun parseJSON(jsonString: String?): List<HistorialItem>? {
         return jsonString?.let {
-            val gson = Gson()
-            val type = object : TypeToken<List<HistorialItem>>() {}.type
-            gson.fromJson<List<HistorialItem>>(it, type)
+            Gson().fromJson(it, object : TypeToken<List<HistorialItem>>() {}.type)
         }
     }
 }
