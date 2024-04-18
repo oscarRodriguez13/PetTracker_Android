@@ -158,7 +158,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         mapController.setZoom(20.0)
         geoPoint?.let {
             mapController.setCenter(startPoint)
-            addRandomMarkerAroundUser(1.0)
+            addRandomMarkerAroundUser(5.0)
         }
     }
 
@@ -225,7 +225,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         randomMarker = Marker(osmMap)
         randomMarker?.position = randomGeoPoint
         randomMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        randomMarker?.title = "Marcador Aleatorio"
+        randomMarker?.title = "Paseador(a): Sofia Perez"
 
         // Obtener el drawable de la imagen personalizada
         val customMarkerDrawable = ContextCompat.getDrawable(this, R.drawable.icn_marcador_mascota)

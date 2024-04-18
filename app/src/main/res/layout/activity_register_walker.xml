@@ -62,7 +62,7 @@
         style="@style/ButtonStyle" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/icon_paseador"
+        android:id="@+id/icn_paseador"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/icn_foto_perfil"

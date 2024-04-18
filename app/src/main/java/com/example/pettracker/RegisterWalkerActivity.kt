@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import de.hdodenhof.circleimageview.CircleImageView
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedWriter
@@ -42,6 +43,11 @@ class RegisterWalkerActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        val perfilView = findViewById<CircleImageView>(R.id.icn_paseador)
+        perfilView.setOnClickListener {
+
         }
     }
 

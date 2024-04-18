@@ -190,7 +190,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         randomMarker = Marker(osmMap)
         randomMarker?.position = randomGeoPoint
         randomMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        randomMarker?.title = "Marcador Aleatorio"
+        randomMarker?.title = "Paseador(a): Sofia Perez"
 
         // Obtener el drawable de la imagen personalizada
         val customMarkerDrawable = ContextCompat.getDrawable(this, R.drawable.icn_marcador_paseador)
