@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:background="#FFFFFF"
-    tools:context=".RegisterPetDataActivity"
+    tools:context=".generalActivities.RegisterPetDataActivity"
     android:textColor="@android:color/black">
 
     <de.hdodenhof.circleimageview.CircleImageView
