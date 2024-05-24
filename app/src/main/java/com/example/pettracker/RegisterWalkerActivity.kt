@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -18,13 +19,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
+import com.example.pettracker.domain.User
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.Writer
 
 class RegisterWalkerActivity : AppCompatActivity() {
 
@@ -32,14 +37,22 @@ class RegisterWalkerActivity : AppCompatActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etExperience: EditText
+    private lateinit var imageView: CircleImageView
     private lateinit var buttonRegister: Button
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
+    private var auth: FirebaseAuth = Firebase.auth
+    private var user: FirebaseUser? = null
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_walker)
+
+        // Inicializa Firebase Auth y Database
+        auth = Firebase.auth
+        user = auth.currentUser
 
         initializeViews()
         setupButtons()
@@ -51,6 +64,7 @@ class RegisterWalkerActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword)
         etExperience = findViewById(R.id.etExperience)
         buttonRegister = findViewById(R.id.button)
+        imageView = findViewById(R.id.icn_paseador)
     }
 
     private fun setupButtons() {
@@ -61,9 +75,104 @@ class RegisterWalkerActivity : AppCompatActivity() {
         setupImagePickers()
     }
 
+    private fun validarCampos(): Boolean {
+        var isValid = true
+
+        // Validar nombre
+        if (etName.text.toString().isEmpty()) {
+            etName.error = "Falta ingresar nombre"
+            isValid = false
+        } else {
+            etName.error = null
+        }
+
+        // Validar correo electrónico
+        if (etEmail.text.toString().isEmpty() ||
+            !Patterns.EMAIL_ADDRESS.matcher(etEmail.text.toString()).matches()
+        ) {
+            etEmail.error = "Correo electrónico inválido"
+            isValid = false
+        } else {
+            etEmail.error = null
+        }
+
+        // Validar experiencia
+        if (etExperience.text.toString().isEmpty()) {
+            etExperience.error = "Falta ingresar apellido"
+            isValid = false
+        } else {
+            etExperience.error = null
+        }
+
+        // Validar contraseña
+        if (etPassword.text.toString().isEmpty()) {
+            etPassword.error = "Falta ingresar contraseña"
+            isValid = false
+        } else {
+            etPassword.error = null
+        }
+
+        return isValid
+    }
+
     private fun handleRegistration() {
-        writeJSONObject()
-        navigateToLogin()
+        if (validarCampos()) {
+            val name = etName.text.toString()
+            val email = etEmail.text.toString()
+            val password = etPassword.text.toString()
+            val experience = etExperience.text.toString()
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        user = auth.currentUser
+                        val userId = user?.uid
+                        // Guarda los datos del usuario en la base de datos
+                        val database = Firebase.database
+                        val ref = database.getReference("Paseadores").child(userId!!)
+                        val userData = HashMap<String, Any>()
+                        userData["nombre"] = name
+                        userData["experiencia"] = experience
+
+                        ref.setValue(userData)
+                            .addOnSuccessListener {
+                                cargarFotoPerfil(userId)
+
+                                navigateToLogin()
+
+                            }.addOnFailureListener { e ->
+                                Snackbar.make(findViewById(android.R.id.content), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content), "Error: ${task.exception?.message}", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+
+        }
+    }
+
+    private fun cargarFotoPerfil(userId: String) {
+        photoURI?.let { uri ->
+            val storageRef = Firebase.storage.reference.child("Paseadores/$userId/profile")
+
+            storageRef.putFile(uri)
+                .addOnSuccessListener {
+                    limpiarCampos()
+                }
+                .addOnFailureListener { e ->
+                    println("No funciono la carga de la foto del usuario")
+                }
+        } ?: run {
+            println("URI de foto nula")
+        }
+    }
+
+    private fun limpiarCampos() {
+        etName.setText("")
+        etEmail.setText("")
+        etPassword.setText("")
+        etExperience.setText("")
+        imageView.setImageResource(R.drawable.icn_foto_perfil)
     }
 
     private fun navigateToLogin() {
@@ -72,62 +181,20 @@ class RegisterWalkerActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun writeJSONObject() {
-        val usuariosArray = readJSONObject()
-
-        val userObject = JSONObject().apply {
-            put("nombre", etName.text.toString())
-            put("email", etEmail.text.toString())
-            put("password", etPassword.text.toString())
-            put("tipoUsuario", "2")
-        }
-
-        usuariosArray.put(userObject)
-
-        var output: Writer?
-        val filename = "usuarios.json"
-
-        try {
-            val file = File(baseContext.getExternalFilesDir(null), filename)
-            output = BufferedWriter(FileWriter(file))
-            output.write("{\"usuarios\": $usuariosArray}")
-            output.close()
-            Toast.makeText(applicationContext, "Usuario guardado", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Log.e("USER", "Error al guardar el usuario: ${e.message}", e)
-        }
-    }
-
-    private fun readJSONObject(): JSONArray {
-        var jsonArray = JSONArray()
-        val filename = "usuarios.json"
-
-        try {
-            val file = File(baseContext.getExternalFilesDir(null), filename)
-            if (file.exists()) {
-                val content = file.readText()
-                jsonArray = JSONObject(content).getJSONArray("usuarios")
-            }
-        } catch (e: Exception) {
-            Log.e("READ_JSON", "Error al leer el archivo JSON: ${e.message}", e)
-        }
-
-        return jsonArray
-    }
-
     private fun setupImagePickers() {
-        val perfilView = findViewById<CircleImageView>(R.id.icn_paseador)
 
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                perfilView.setImageURI(uri)
+                photoURI = uri
+                imageView.setImageURI(uri)
+                println("URI CORRECTO")
             }
         }
 
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
                 photoURI?.let {
-                    perfilView.setImageURI(it)
+                    imageView.setImageURI(it)
                 }
             }
         }

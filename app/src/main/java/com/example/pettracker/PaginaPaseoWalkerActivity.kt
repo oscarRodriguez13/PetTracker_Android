@@ -100,8 +100,6 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
 
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
 
-
-
         centerButton.setOnClickListener {
             centerCameraOnUser()
         }

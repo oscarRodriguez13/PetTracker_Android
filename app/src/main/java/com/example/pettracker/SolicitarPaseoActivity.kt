@@ -42,7 +42,7 @@ class SolicitarPaseoActivity : AppCompatActivity() {
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
             val intent = Intent(
-                this@SolicitarPaseoActivity,
+                applicationContext,
                 HistorialActivity::class.java
             )
             startActivity(intent)
@@ -53,6 +53,15 @@ class SolicitarPaseoActivity : AppCompatActivity() {
             val intent = Intent(
                 applicationContext,
                 SettingsActivity::class.java
+            )
+            startActivity(intent)
+        }
+
+        val cancelButton = findViewById<Button>(R.id.btnCancelar)
+        cancelButton.setOnClickListener {
+            val intent = Intent(
+                applicationContext,
+                HomeActivity::class.java
             )
             startActivity(intent)
         }

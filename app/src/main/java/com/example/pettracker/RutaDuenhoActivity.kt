@@ -38,6 +38,8 @@ import org.osmdroid.views.overlay.TilesOverlay
 
 class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
+    private lateinit var estado:String
+
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private var sensorManager: SensorManager? = null
     private lateinit var locationManager: LocationManager
@@ -88,7 +90,14 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         osmMap = findViewById(R.id.osmMap)
         osmMap.setTileSource(TileSourceFactory.MAPNIK)
         osmMap.setMultiTouchControls(true)
+
+        estado = intent.getStringExtra("estado") ?: ""
+
+
         val btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+        if(estado == "en progreso"){
+            btnEmpezar.text = "Terminar"
+        }
 
         mGeocoder = Geocoder(baseContext)
 
