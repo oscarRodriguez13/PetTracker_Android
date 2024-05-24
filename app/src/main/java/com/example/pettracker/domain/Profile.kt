@@ -1,3 +1,3 @@
 package com.example.pettracker.domain
 
-data class Profile(val image: Int, val name: String, val price: String)
+data class Profile(val uid: String, val image: Int?, val name: String, val price: String)

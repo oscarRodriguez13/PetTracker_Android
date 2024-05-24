@@ -11,14 +11,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.domain.Datos
@@ -89,9 +86,9 @@ class SettingsWalkerActivity: AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val profiles = Arrays.asList(
-            Profile(R.drawable.icn_foto_perfil, "Anónimo", "Muy buen paseador, perfecto como siempre"),
-            Profile(R.drawable.icn_foto_perfil, "Anónimo", "Paseo regular, Rocky volvió inquieto"),
-            Profile(R.drawable.icn_foto_perfil, "Anónimo", "Buen paseo, pero Toby necesitaba más agua")
+            Profile("a", null, "Anónimo", "Muy buen paseador, perfecto como siempre"),
+            Profile("b", null, "Anónimo", "Paseo regular, Rocky volvió inquieto"),
+            Profile("a", null, "Anónimo", "Buen paseo, pero Toby necesitaba más agua")
         )
 
         // Usar un adaptador personalizado con funcionalidad de clic

@@ -79,7 +79,7 @@
                 android:id="@+id/icn_perfil"
                 android:layout_width="200dp"
                 android:layout_height="180dp"
-                android:src="@drawable/img_perfil2" />
+                android:src="@drawable/icn_foto_perfil" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/icn_notificacion"
@@ -121,15 +121,13 @@
                 style="@style/ButtonStyle"
                 app:srcCompat="@android:drawable/ic_menu_gallery" />
 
-
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/txt_nombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Juan Perez"
+            android:text=""
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 
@@ -137,7 +135,7 @@
             android:id="@+id/txt_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="juanperez@example.com"
+            android:text=""
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 
@@ -145,7 +143,7 @@
             android:id="@+id/txt_Mascotas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mascotas: 3"
+            android:text=""
             android:layout_marginTop="10dp"
             android:textColor="@color/black" />
 

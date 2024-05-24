@@ -1,5 +1,6 @@
 package com.example.pettracker
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -9,6 +10,7 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,12 +19,17 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.pettracker.domain.Datos
+import com.example.pettracker.domain.MascotasAdapter
+import com.example.pettracker.domain.Pet
 import com.example.pettracker.domain.Profile
 import com.example.pettracker.domain.SolicitudPaseoAdapter
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
-import java.util.Arrays
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -30,6 +37,9 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var fotoPaseador: ImageView
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
+    private lateinit var tvName: TextView
+    private lateinit var tvEmail: TextView
+    private lateinit var tvPets: TextView
     private var photoURI: Uri? = null
     private lateinit var auth: FirebaseAuth
 
@@ -41,10 +51,11 @@ class SettingsActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         setupImagePickers()
-
         setupButtons()
-
         setupRecyclerView()
+
+        // Cargar datos del usuario desde Firebase
+        loadUserData()
     }
 
     private fun setupImagePickers() {
@@ -64,6 +75,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
+
+        tvName = findViewById(R.id.txt_nombre)
+        tvEmail = findViewById(R.id.txt_email)
+        tvPets = findViewById(R.id.txt_Mascotas)
+
         findViewById<ImageButton>(R.id.agregarFotoView).setOnClickListener {
             imagePickerLauncher.launch("image/*")
         }
@@ -115,20 +131,40 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val profiles = Arrays.asList(
-            Profile(R.drawable.img_perro1, "Tony", "Labrador"),
-            Profile(R.drawable.img_perro2, "Alaska", "Lobo siberiano"),
-            Profile(R.drawable.img_perro3, "Firulais", "Beagle")
-        )
-
-        val adapter = SolicitudPaseoAdapter(profiles) { profile ->
-            abrirDetallePerfil(profile)
+        val pets = mutableListOf<Pet>()
+        val adapter = MascotasAdapter(pets) { pet ->
+            abrirDetallePerfil(pet)
         }
         recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
+        // Firebase Database reference
+        val database = FirebaseDatabase.getInstance().reference
+        val userId = auth.currentUser?.uid
+
+        if (userId != null) {
+            val ref = database.child("Usuarios").child(userId).child("mascotas")
+
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    pets.clear()
+                    for (petSnapshot in dataSnapshot.children) {
+                        val name = petSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
+                        val breed = petSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
+                        val pet = Pet(userId, petSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
+                        pets.add(pet)
+                    }
+                    adapter.notifyDataSetChanged()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(this@SettingsActivity, "Error al cargar perfiles de mascotas", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
+
 
     private fun openCamera() {
         val values = ContentValues()
@@ -168,10 +204,51 @@ class SettingsActivity : AppCompatActivity() {
         isNotified = !isNotified
     }
 
-    private fun abrirDetallePerfil(profile: Profile) {
+    private fun abrirDetallePerfil(pet: Pet) {
         val intent = Intent(this, DetallesMascotaActivity::class.java)
-        intent.putExtra("profileName", profile.name)
-        intent.putExtra("profilePrice", profile.price)
+        intent.putExtra("profileName", pet.name)
+        intent.putExtra("profilePrice", pet.price)
         startActivity(intent)
+    }
+
+    private fun loadUserData() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            val database = FirebaseDatabase.getInstance()
+            val ref = database.getReference("Usuarios").child(userId)
+
+            val profileRef = Firebase.storage.reference.child("Usuarios").child(userId).child("profile")
+
+            profileRef.downloadUrl.addOnSuccessListener { uri ->
+                val profileImageUrl = uri.toString()
+
+                // Cargar la imagen usando Glide
+                Glide.with(this@SettingsActivity) // Utiliza el contexto del itemView
+                    .load(profileImageUrl) // Utiliza la URL de la imagen
+                    .into(fotoPaseador)
+
+            }.addOnFailureListener {
+                fotoPaseador.setImageResource(R.drawable.icn_labrador)
+            }
+
+            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val userName = dataSnapshot.child("nombre").getValue(String::class.java)
+                    val userEmail = auth.currentUser?.email
+                    val petsCount = dataSnapshot.child("mascotas").childrenCount.toInt()
+
+                    tvName.text = userName ?: "Nombre no disponible"
+                    tvEmail.text = userEmail ?: "Correo no disponible"
+                    tvPets.text = "Mascotas: $petsCount"
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Toast.makeText(this@SettingsActivity, "Error al cargar datos del usuario", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        }
     }
 }

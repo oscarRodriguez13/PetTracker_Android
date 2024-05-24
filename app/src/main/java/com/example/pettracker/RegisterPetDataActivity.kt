@@ -307,7 +307,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     // Almacenar la imagen de la mascota en el almacenamiento de Firebase
                     val storage = Firebase.storage
                     val storageRef = storage.reference
-                    val imageRef = storageRef.child("Usuarios/$userId/mascotas/$petId.jpg")
+                    val imageRef = storageRef.child("Usuarios/$userId/mascotas/$petId")
                     photoPetURI?.let { uri ->
                         imageRef.putFile(uri)
                             .addOnSuccessListener { _ ->

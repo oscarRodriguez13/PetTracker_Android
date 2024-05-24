@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Nombre del Usuario" />
+                android:textColor="@color/black"
+                android:text="" />
 
             <TextView
                 android:id="@+id/profile_price"
@@ -42,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="$ Precio" />
+                android:textColor="@color/black"
+                android:text="" />
 
         </LinearLayout>
 
