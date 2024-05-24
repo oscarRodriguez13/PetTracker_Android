@@ -129,7 +129,7 @@
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_menu_camera"
         android:layout_below="@+id/ageSeekBar"
-        android:layout_marginStart="220dp"
+        android:layout_marginStart="235dp"
         android:layout_marginTop="35dp"
         android:background="#6B9BFA" />
 

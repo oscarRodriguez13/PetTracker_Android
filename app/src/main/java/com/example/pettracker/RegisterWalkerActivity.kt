@@ -44,7 +44,6 @@ class RegisterWalkerActivity : AppCompatActivity() {
     private var photoURI: Uri? = null
     private var auth: FirebaseAuth = Firebase.auth
     private var user: FirebaseUser? = null
-    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,10 +128,11 @@ class RegisterWalkerActivity : AppCompatActivity() {
                         val userId = user?.uid
                         // Guarda los datos del usuario en la base de datos
                         val database = Firebase.database
-                        val ref = database.getReference("Paseadores").child(userId!!)
+                        val ref = database.getReference("Usuarios").child(userId!!)
                         val userData = HashMap<String, Any>()
                         userData["nombre"] = name
                         userData["experiencia"] = experience
+                        userData["tipoUsuario"] = "2"
 
                         ref.setValue(userData)
                             .addOnSuccessListener {
@@ -153,7 +153,7 @@ class RegisterWalkerActivity : AppCompatActivity() {
 
     private fun cargarFotoPerfil(userId: String) {
         photoURI?.let { uri ->
-            val storageRef = Firebase.storage.reference.child("Paseadores/$userId/profile")
+            val storageRef = Firebase.storage.reference.child("Usuarios/$userId/profile")
 
             storageRef.putFile(uri)
                 .addOnSuccessListener {

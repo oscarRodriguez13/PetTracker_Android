@@ -8,36 +8,31 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.SeekBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
-import org.json.JSONArray
-import org.json.JSONException
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import org.json.JSONObject
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.io.Writer
 
 class RegisterPetDataActivity : AppCompatActivity() {
 
     private lateinit var icon: ImageView
+    private var photoUserURI: Uri? = null
     private lateinit var etPetName: EditText
     private lateinit var etSpecies: EditText
     private lateinit var etBreed: EditText
-    private lateinit var ageSeekBar : SeekBar
-    private lateinit var tvAge : TextView
+    private lateinit var ageSeekBar: SeekBar
+    private lateinit var tvAge: TextView
     private lateinit var etDescription: EditText
     private lateinit var buttonNext: Button
     private lateinit var takePictureButton: ImageButton
@@ -46,15 +41,24 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private var name = ""
     private var email = ""
     private var password = ""
+    private var edad = 0
     private val petsList = mutableListOf<JSONObject>()
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
 
+    // Firebase
+    private var auth: FirebaseAuth = Firebase.auth
+    private var user: FirebaseUser? = null
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet_data)
+
+        // Inicializar Firebase
+        auth = Firebase.auth
+        user = auth.currentUser
 
         setup()
     }
@@ -76,6 +80,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 icon.setImageURI(uri)
+                photoURI = uri
             }
         }
 
@@ -91,6 +96,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
         ageSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 tvAge.text = "Edad: $progress meses"
+                edad = progress
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -103,6 +109,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
         })
 
         // Obtener el número total de mascotas del Intent
+        photoUserURI = Uri.parse(intent.extras?.getString("fotoUsuario").toString())
         totalPets = intent.extras?.getString("numberPets")?.toInt() ?: 0
         name = intent.extras?.getString("name").toString()
         email = intent.extras?.getString("email").toString()
@@ -121,10 +128,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     tvPetProgress.text = "$currentPetIndex/$totalPets"
                     clearFields()
                 } else {
-                    writeJSONObject()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    registerUser()
                 }
             }
         }
@@ -162,7 +166,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicacion del Taller 2")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicación del Taller 2")
         photoURI = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         photoURI?.let { uri ->
@@ -174,7 +178,6 @@ class RegisterPetDataActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             Datos.MY_PERMISSION_REQUEST_CAMERA -> {
-                // If request is cancelled, the result arrays are empty.
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     openCamera()
                 } else {
@@ -205,13 +208,17 @@ class RegisterPetDataActivity : AppCompatActivity() {
 
     private fun savePetData() {
         // Guardar los datos de la mascota actual
+        val petPhotoURI = photoURI?.toString() ?: ""
         val mascotaObject = JSONObject().apply {
             put("nombre", etPetName.text.toString().trim())
             put("especie", etSpecies.text.toString().trim())
             put("raza", etBreed.text.toString().trim())
             put("descripcion", etDescription.text.toString().trim())
+            put("edad", edad.toString().trim())
+            put("photoURI", petPhotoURI)
         }
         petsList.add(mascotaObject)
+        photoURI = null
     }
 
     private fun clearFields() {
@@ -220,6 +227,9 @@ class RegisterPetDataActivity : AppCompatActivity() {
         etSpecies.text.clear()
         etBreed.text.clear()
         etDescription.text.clear()
+        icon.setImageResource(R.drawable.icn_labrador) // Cambia por tu imagen por defecto
+        ageSeekBar.progress = 0 // Reiniciar la barra de búsqueda de edad
+        tvAge.text = ""
     }
 
     private fun showToast(message: String) {
@@ -227,56 +237,97 @@ class RegisterPetDataActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun writeJSONObject() {
-        val usuariosArray = readJSONObject()
+    private fun registerUser() {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    val userId = user?.uid
+                    // Guarda los datos del usuario en la base de datos
+                    val database = Firebase.database
+                    val ref = database.getReference("Usuarios").child(userId!!)
+                    val userData = HashMap<String, Any>()
+                    userData["nombre"] = name
+                    userData["tipoUsuario"] = "1"
+                    ref.setValue(userData)
+                        .addOnSuccessListener {
+                            cargarFotoPerfil(userId)
+                            savePets(userId)
 
-        // Crear el objeto de usuario con sus datos
-        val userObject = JSONObject().apply {
-            put("nombre", name)
-            put("email", email)
-            put("password", password)
-            put("tipoUsuario", "1") // Puedes definir el tipo de usuario como quieras
-        }
+                            navigateToLogin()
 
-        // Añadir la lista de mascotas al usuario
-        val mascotasArray = JSONArray()
-        for (pet in petsList) {
-            mascotasArray.put(pet)
-        }
-        userObject.put("mascotas", mascotasArray)
-
-        // Añadir el usuario al array de usuarios
-        usuariosArray.put(userObject)
-
-        var output: Writer?
-        val filename = "usuarios.json"
-
-        try {
-            val file = File(baseContext.getExternalFilesDir(null), filename)
-            Log.i("USER", "Ubicacion de archivo: $file")
-            output = BufferedWriter(FileWriter(file))
-            output.write("{\"usuarios\": $usuariosArray}")
-            output.close()
-            Toast.makeText(applicationContext, "Usuario y mascotas guardados", Toast.LENGTH_LONG).show()
-        } catch (e: Exception) {
-            Log.e("USER", "Error al guardar el usuario y mascotas: ${e.message}", e)
-        }
-    }
-
-    private fun readJSONObject(): JSONArray {
-        var jsonArray = JSONArray()
-
-        val filename = "usuarios.json"
-        try {
-            val file = File(baseContext.getExternalFilesDir(null), filename)
-            if (file.exists()) {
-                val content = file.readText()
-                jsonArray = JSONObject(content).getJSONArray("usuarios")
+                        }.addOnFailureListener { e ->
+                            Snackbar.make(findViewById(android.R.id.content), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
+                        }
+                } else {
+                    showToast("Error al registrar usuario")
+                }
             }
-        } catch (e: Exception) {
-            Log.e("READ_JSON", "Error al leer el archivo JSON: ${e.message}", e)
-        }
-
-        return jsonArray
     }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun cargarFotoPerfil(userId: String) {
+        photoUserURI?.let { uri ->
+            val storageRef = Firebase.storage.reference.child("Usuarios/$userId/profile")
+
+            storageRef.putFile(uri)
+                .addOnSuccessListener {}
+                .addOnFailureListener { e ->
+                    println("No funciono la carga de la foto del usuario")
+                }
+        } ?: run {
+            println("URI de foto nula")
+        }
+    }
+
+    private fun savePets(userId: String) {
+        val database = Firebase.database
+        val petsRef = database.getReference("Usuarios").child(userId).child("mascotas")
+
+        // Iteramos sobre la lista de mascotas
+        petsList.forEachIndexed { index, pet ->
+            val petId = (index + 1).toString() // ID único de la mascota
+            val photoPetURI = Uri.parse(pet.optString("photoURI"))
+            val petData = hashMapOf(
+                "nombre" to pet.optString("nombre"),
+                "especie" to pet.optString("especie"),
+                "raza" to pet.optString("raza"),
+                "descripcion" to pet.optString("descripcion"),
+                "edad" to pet.optString("edad")
+            )
+
+            // Guardar los datos de la mascota en la base de datos
+            petsRef.child(petId).setValue(petData)
+                .addOnSuccessListener {
+                    // Almacenar la imagen de la mascota en el almacenamiento de Firebase
+                    val storage = Firebase.storage
+                    val storageRef = storage.reference
+                    val imageRef = storageRef.child("Usuarios/$userId/mascotas/$petId.jpg")
+                    photoPetURI?.let { uri ->
+                        imageRef.putFile(uri)
+                            .addOnSuccessListener { _ ->
+                                if (index == petsList.size - 1) {
+                                    // Todas las mascotas se han guardado exitosamente
+                                    showToast("Registro completado")
+                                    navigateToLogin()
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                showToast("Error al subir foto de mascota $petId")
+                                Log.e("UPLOAD_PET_PHOTO", "Error uploading pet photo: ${e.message}", e)
+                            }
+                    }
+                }
+                .addOnFailureListener { e ->
+                    showToast("Error al registrar mascota $petId")
+                    Log.e("SAVE_PET", "Error saving pet data: ${e.message}", e)
+                }
+        }
+    }
+
 }

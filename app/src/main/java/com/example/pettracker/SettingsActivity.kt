@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.domain.Datos
 import com.example.pettracker.domain.Profile
 import com.example.pettracker.domain.SolicitudPaseoAdapter
+import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.Arrays
 
@@ -30,12 +31,14 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
         fotoPaseador = findViewById(R.id.icn_perfil)
+        auth = FirebaseAuth.getInstance()
 
         setupImagePickers()
 
@@ -149,7 +152,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        val intent = Intent(applicationContext, LoginActivity::class.java)
+        auth.signOut()
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
     }
 

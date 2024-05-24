@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -17,17 +18,32 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pettracker.domain.Datos
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class RegisterUserActivity : AppCompatActivity() {
 
+    private lateinit var etName: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etPassword: EditText
+    private lateinit var etNumberPets: EditText
     private lateinit var fotoPaseador: ImageView
     private lateinit var imagePickerLauncher: ActivityResultLauncher<String>
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
-
+    private var auth: FirebaseAuth = Firebase.auth
+    private var user: FirebaseUser? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        auth = Firebase.auth
+        user = auth.currentUser
 
         initializeViews()
         setupButtons()
@@ -38,43 +54,150 @@ class RegisterUserActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
-        val etName = findViewById<EditText>(R.id.etName)
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etConfirmPassword = findViewById<EditText>(R.id.etNumberPets)
+        etName = findViewById<EditText>(R.id.etName)
+        etEmail = findViewById<EditText>(R.id.etEmail)
+        etPassword = findViewById<EditText>(R.id.etPassword)
+        etNumberPets = findViewById<EditText>(R.id.etNumberPets)
         val button = findViewById<Button>(R.id.button)
 
         button.setOnClickListener {
-            handleRegister(etName, etEmail, etPassword, etConfirmPassword)
+            navigateToRegisterPetData()
         }
 
         setupImagePickers()
     }
 
-    private fun handleRegister(etName: EditText, etEmail: EditText, etPassword: EditText, etConfirmPassword: EditText) {
-        if (verificarCamposLlenos(etName, etEmail, etPassword, etConfirmPassword)) {
-            navigateToRegisterPetData(etName.text.toString(), etEmail.text.toString(), etPassword.text.toString(), etConfirmPassword.text.toString())
+
+    private fun navigateToRegisterPetData() {
+        if (etNumberPets.text.toString().toInt() > 0){
+            if (validarCampos()){
+                val intent = Intent(this, RegisterPetDataActivity::class.java)
+                val bundle = Bundle().apply {
+                    putString("fotoUsuario", photoURI.toString())
+                    putString("name", etName.text.toString().trim())
+                    putString("email", etEmail.text.toString().trim())
+                    putString("password", etPassword.text.toString().trim())
+                    putString("numberPets", etNumberPets.text.toString().trim())
+                }
+                intent.putExtras(bundle)
+                startActivity(intent)
+            }
         } else {
-            Toast.makeText(this, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
+            handleRegistration()
+        }
+    }
+    private fun validarCampos(): Boolean {
+        var isValid = true
+
+        // Validar nombre
+        if (etName.text.toString().isEmpty()) {
+            etName.error = "Falta ingresar nombre"
+            isValid = false
+        } else {
+            etName.error = null
+        }
+
+        // Validar correo electrónico
+        if (etEmail.text.toString().isEmpty() ||
+            !Patterns.EMAIL_ADDRESS.matcher(etEmail.text.toString()).matches()
+        ) {
+            etEmail.error = "Correo electrónico inválido"
+            isValid = false
+        } else {
+            etEmail.error = null
+        }
+
+        // Validar experiencia
+        if (etNumberPets.text.toString().isEmpty()) {
+            etNumberPets.error = "Falta ingresar apellido"
+            isValid = false
+        } else {
+            etNumberPets.error = null
+        }
+
+        // Validar contraseña
+        if (etPassword.text.toString().isEmpty()) {
+            etPassword.error = "Falta ingresar contraseña"
+            isValid = false
+        } else {
+            etPassword.error = null
+        }
+
+        return isValid
+    }
+
+    private fun handleRegistration() {
+        if (validarCampos()) {
+            val name = etName.text.toString()
+            val email = etEmail.text.toString()
+            val password = etPassword.text.toString()
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        user = auth.currentUser
+                        val userId = user?.uid
+                        // Guarda los datos del usuario en la base de datos
+                        val database = Firebase.database
+                        val ref = database.getReference("Usuarios").child(userId!!)
+                        val userData = HashMap<String, Any>()
+                        userData["nombre"] = name
+                        userData["tipoUsuario"] = "1"
+
+                        ref.setValue(userData)
+                            .addOnSuccessListener {
+                                cargarFotoPerfil(userId)
+
+                                navigateToLogin()
+
+                            }.addOnFailureListener { e ->
+                                Snackbar.make(findViewById(android.R.id.content), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
+                            }
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content), "Error: ${task.exception?.message}", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+
         }
     }
 
-    private fun navigateToRegisterPetData(name: String, email: String, password: String, numberPets: String) {
-        val intent = Intent(this, RegisterPetDataActivity::class.java)
-        val bundle = Bundle().apply {
-            putString("name", name.trim())
-            putString("email", email.trim())
-            putString("password", password.trim())
-            putString("numberPets", numberPets.trim())
-        }
-        intent.putExtras(bundle)
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        finish()
+    }
+
+    private fun cargarFotoPerfil(userId: String) {
+        photoURI?.let { uri ->
+            val storageRef = Firebase.storage.reference.child("Usuarios/$userId/profile")
+
+            storageRef.putFile(uri)
+                .addOnSuccessListener {
+                    limpiarCampos()
+                }
+                .addOnFailureListener { e ->
+                    println("No funciono la carga de la foto del usuario")
+                }
+        } ?: run {
+            println("URI de foto nula")
+        }
+    }
+
+    private fun limpiarCampos() {
+        etName.setText("")
+        etEmail.setText("")
+        etPassword.setText("")
+        etNumberPets.setText("")
+        fotoPaseador.setImageResource(R.drawable.icn_foto_perfil)
     }
 
     private fun setupImagePickers() {
+
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
+                photoURI = uri
                 fotoPaseador.setImageURI(uri)
+                println("URI CORRECTO")
             }
         }
 
