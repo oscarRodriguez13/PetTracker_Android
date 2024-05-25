@@ -143,13 +143,16 @@ class SettingsActivity : AppCompatActivity() {
         val userId = auth.currentUser?.uid
 
         if (userId != null) {
-            val ref = database.child("Usuarios").child(userId).child("mascotas")
+            val ref = database.child("Mascotas").child(userId)
 
             ref.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     pets.clear()
                     for (petSnapshot in dataSnapshot.children) {
+                        val petsCount = dataSnapshot.childrenCount.toInt()
+                        tvPets.text = "Mascotas: $petsCount"
+
                         val name = petSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
                         val breed = petSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
                         val pet = Pet(userId, petSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
@@ -236,11 +239,11 @@ class SettingsActivity : AppCompatActivity() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val userName = dataSnapshot.child("nombre").getValue(String::class.java)
                     val userEmail = auth.currentUser?.email
-                    val petsCount = dataSnapshot.child("mascotas").childrenCount.toInt()
+
 
                     tvName.text = userName ?: "Nombre no disponible"
                     tvEmail.text = userEmail ?: "Correo no disponible"
-                    tvPets.text = "Mascotas: $petsCount"
+
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {

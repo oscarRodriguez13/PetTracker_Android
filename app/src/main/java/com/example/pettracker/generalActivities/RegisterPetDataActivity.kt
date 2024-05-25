@@ -288,7 +288,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
 
     private fun savePets(userId: String) {
         val database = Firebase.database
-        val petsRef = database.getReference("Usuarios").child(userId).child("mascotas")
+        val petsRef = database.getReference("Mascotas").child(userId)
 
         // Iteramos sobre la lista de mascotas
         petsList.forEachIndexed { index, pet ->
@@ -308,7 +308,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     // Almacenar la imagen de la mascota en el almacenamiento de Firebase
                     val storage = Firebase.storage
                     val storageRef = storage.reference
-                    val imageRef = storageRef.child("Usuarios/$userId/mascotas/$petId")
+                    val imageRef = storageRef.child("Mascotas/$userId/$petId")
                     photoPetURI?.let { uri ->
                         imageRef.putFile(uri)
                             .addOnSuccessListener { _ ->

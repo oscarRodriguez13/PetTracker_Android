@@ -11,6 +11,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.pettracker.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.Calendar
 import java.util.Locale
 
@@ -32,6 +37,7 @@ class HomeActivity : AppCompatActivity() {
         setupSelectOptionsButton()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setupTimePickers() {
         val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
         val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
@@ -104,16 +110,41 @@ class HomeActivity : AppCompatActivity() {
     private fun setupSelectOptionsButton() {
         val tvOption = findViewById<TextView>(R.id.tv_option)
         findViewById<Button>(R.id.button_options).setOnClickListener {
-            showOptionsDialog(tvOption)
+            loadPetOptions(tvOption)
         }
     }
 
-    private fun showOptionsDialog(tvOption: TextView) {
+
+    private fun loadPetOptions(tvOption: TextView) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val ref = FirebaseDatabase.getInstance().getReference("Mascotas/$userId")
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val pets = ArrayList<String>()
+                snapshot.children.forEach {
+                    it.child("nombre").getValue(String::class.java)?.let { nombre ->
+                        pets.add(nombre)
+                    }
+                }
+                showOptionsDialog(tvOption, pets.toTypedArray())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext, "Error al cargar datos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun showOptionsDialog(tvOption: TextView, options: Array<String>) {
+        val selectedOptions = BooleanArray(options.size)
+
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Seleccione las opciones")
-
-        val options = arrayOf("Tony", "Alaska", "Firulais")
-        val selectedOptions = booleanArrayOf(false, false, false)
 
         builder.setMultiChoiceItems(options, selectedOptions) { _, which, isChecked ->
             selectedOptions[which] = isChecked
@@ -133,6 +164,7 @@ class HomeActivity : AppCompatActivity() {
 
         builder.create().show()
     }
+
 
     private fun verificarCamposLlenos(vararg campos: EditText) = campos.all { it.text.toString().trim().isNotEmpty() }
 }

@@ -24,7 +24,7 @@ class MascotasAdapter(
 
         fun bind(pet: Pet) {
 
-            val petRef = Firebase.storage.reference.child("Usuarios").child(pet.uid).child("mascotas").child("${pet.petId}")
+            val petRef = Firebase.storage.reference.child("Mascotas").child(pet.uid).child("${pet.petId}")
 
             petRef.downloadUrl.addOnSuccessListener { uri ->
                 val profileImageUrl = uri.toString()
