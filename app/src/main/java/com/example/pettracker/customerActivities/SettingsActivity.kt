@@ -23,7 +23,7 @@ import com.bumptech.glide.Glide
 import com.example.pettracker.R
 import com.example.pettracker.domain.Datos
 import com.example.pettracker.adapter.MascotasAdapter
-import com.example.pettracker.domain.Pet
+import com.example.pettracker.domain.PetAdapter
 import com.example.pettracker.generalActivities.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -62,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
         imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 fotoPaseador.setImageURI(uri)
+                uploadImageToFirebase(uri) // Subir la imagen a Firebase
             }
         }
 
@@ -69,8 +70,34 @@ class SettingsActivity : AppCompatActivity() {
             if (success) {
                 photoURI?.let {
                     fotoPaseador.setImageURI(it)
+                    uploadImageToFirebase(it) // Subir la imagen a Firebase
                 }
             }
+        }
+    }
+
+    private fun uploadImageToFirebase(imageUri: Uri) {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            val storageRef = Firebase.storage.reference.child("Usuarios/$userId/profile")
+            storageRef.putFile(imageUri).addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    updateProfileImageUriInDatabase(uri.toString(), userId)
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Fallo al subir imagen", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateProfileImageUriInDatabase(imageUrl: String, userId: String) {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("Usuarios/$userId")
+        databaseRef.child("profileImageUrl").setValue(imageUrl).addOnSuccessListener {
+            Toast.makeText(this, "Imagen de perfil actualizada", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(this, "Error al actualizar la imagen de perfil en la base de datos", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -131,8 +158,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val pets = mutableListOf<Pet>()
-        val adapter = MascotasAdapter(pets) { pet ->
+        val petAdapters = mutableListOf<PetAdapter>()
+        val adapter = MascotasAdapter(petAdapters) { pet ->
             abrirDetallePerfil(pet)
         }
         recyclerView.adapter = adapter
@@ -148,15 +175,15 @@ class SettingsActivity : AppCompatActivity() {
             ref.addListenerForSingleValueEvent(object : ValueEventListener {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    pets.clear()
+                    petAdapters.clear()
                     for (petSnapshot in dataSnapshot.children) {
                         val petsCount = dataSnapshot.childrenCount.toInt()
                         tvPets.text = "Mascotas: $petsCount"
 
                         val name = petSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
                         val breed = petSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
-                        val pet = Pet(userId, petSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
-                        pets.add(pet)
+                        val petAdapter = PetAdapter(userId, petSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
+                        petAdapters.add(petAdapter)
                     }
                     adapter.notifyDataSetChanged()
                 }
@@ -207,10 +234,9 @@ class SettingsActivity : AppCompatActivity() {
         isNotified = !isNotified
     }
 
-    private fun abrirDetallePerfil(pet: Pet) {
+    private fun abrirDetallePerfil(petAdapter: PetAdapter) {
         val intent = Intent(this, DetallesMascotaActivity::class.java)
-        intent.putExtra("profileName", pet.name)
-        intent.putExtra("profilePrice", pet.price)
+        intent.putExtra("petId", petAdapter.petId)
         startActivity(intent)
     }
 

@@ -7,14 +7,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pettracker.R
-import com.example.pettracker.domain.Pet
+import com.example.pettracker.domain.PetAdapter
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class MascotasAdapter(
-    private val pets: List<Pet>,
-    private val onClick: (Pet) -> Unit // Lambda para manejar clics
+    private val petAdapters: List<PetAdapter>,
+    private val onClick: (PetAdapter) -> Unit // Lambda para manejar clics
 ) : RecyclerView.Adapter<MascotasAdapter.ProfileViewHolder>() {
 
     inner class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,9 +22,9 @@ class MascotasAdapter(
         val profileName: TextView = itemView.findViewById(R.id.profile_name)
         val profilePrice: TextView = itemView.findViewById(R.id.profile_price)
 
-        fun bind(pet: Pet) {
+        fun bind(petAdapter: PetAdapter) {
 
-            val petRef = Firebase.storage.reference.child("Mascotas").child(pet.uid).child("${pet.petId}")
+            val petRef = Firebase.storage.reference.child("Mascotas").child(petAdapter.uid).child("${petAdapter.petId}")
 
             petRef.downloadUrl.addOnSuccessListener { uri ->
                 val profileImageUrl = uri.toString()
@@ -38,11 +38,11 @@ class MascotasAdapter(
                 profileImage.setImageResource(R.drawable.icn_labrador)
             }
 
-            profileName.text = pet.name
-            profilePrice.text = pet.price
+            profileName.text = petAdapter.name
+            profilePrice.text = petAdapter.price
 
             // Manejar el clic en el elemento del RecyclerView
-            itemView.setOnClickListener { onClick(pet) }
+            itemView.setOnClickListener { onClick(petAdapter) }
         }
     }
 
@@ -52,11 +52,11 @@ class MascotasAdapter(
     }
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
-        val pet = pets[position]
+        val pet = petAdapters[position]
         holder.bind(pet) // Llamar a la función bind para configurar el elemento
     }
 
     override fun getItemCount(): Int {
-        return pets.size
+        return petAdapters.size
     }
 }

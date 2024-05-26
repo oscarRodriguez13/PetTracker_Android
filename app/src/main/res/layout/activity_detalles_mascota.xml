@@ -63,7 +63,7 @@
         android:gravity="center"/>
 
     <TextView
-        android:id="@+id/fechaView"
+        android:id="@+id/edadView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="36 meses"
@@ -73,7 +73,7 @@
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/nombrePaseadorView"
+        android:id="@+id/especieView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Perro"
@@ -83,7 +83,7 @@
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/horaInicialView"
+        android:id="@+id/razaView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Beagle"
@@ -93,7 +93,7 @@
         android:gravity="center" />
 
     <TextView
-        android:id="@+id/horaFinalView"
+        android:id="@+id/descrpcionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Jugueton y muy feliz, no le gusta estar quieto"

@@ -19,7 +19,7 @@
             android:id="@+id/imageView"
             android:layout_width="56dp"
             android:layout_height="55dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="15dp"
             android:src="@mipmap/loguito_foreground" />
 
         <Button
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/btn_paseos"
+            android:layout_marginEnd="12dp"
             android:textColor="@color/black"
             android:background="@android:color/transparent" />
 
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_historial"
             android:textColor="@color/black"
+            android:layout_marginEnd="12dp"
             android:background="@android:color/transparent"/>
 
         <Button
@@ -44,8 +46,9 @@
             android:layout_height="wrap_content"
             android:text="@string/btn_ajustes"
             android:textColor="@color/black"
-            android:background="@android:color/transparent"
-            android:textStyle="bold" />
+            android:layout_marginEnd="12dp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"/>
     </LinearLayout>
 
     <View

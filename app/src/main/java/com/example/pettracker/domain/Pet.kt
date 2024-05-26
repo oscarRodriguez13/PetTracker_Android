@@ -1,3 +1,9 @@
 package com.example.pettracker.domain
 
-data class Pet(val uid: String, val petId: String, val image: Int?, val name: String, val price: String)
+data class Pet(
+    val id: Int,
+    val name: String,
+    val age: String,  // asumiendo que la edad es en meses
+    val breed: String,
+    val description: String
+)
