@@ -123,13 +123,13 @@
         android:background="#6B9BFA" />
 
     <Button
-        android:id="@+id/buttonNext"
+        android:id="@+id/buttonAddPet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/addImageButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="@string/btn_siguiente"
+        android:text="Agregar"
         style="@style/ButtonStyle" />
 
 </RelativeLayout>

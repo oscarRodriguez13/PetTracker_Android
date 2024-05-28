@@ -12,6 +12,13 @@
     android:gravity="center_vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/deleteView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:src="@drawable/icn_eliminar"
+        android:layout_marginBottom="40dp"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="200dp"

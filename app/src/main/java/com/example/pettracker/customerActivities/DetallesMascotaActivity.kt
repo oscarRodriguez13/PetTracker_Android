@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import de.hdodenhof.circleimageview.CircleImageView
 
 class DetallesMascotaActivity : AppCompatActivity() {
 
@@ -59,6 +60,10 @@ class DetallesMascotaActivity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.tomarFotoView).setOnClickListener {
             handleCameraPermissions()
+        }
+
+        findViewById<CircleImageView>(R.id.deleteView).setOnClickListener {
+            deletePet()
         }
 
         loadPetData()
@@ -115,7 +120,6 @@ class DetallesMascotaActivity : AppCompatActivity() {
             Toast.makeText(this, "Error al actualizar la imagen de perfil en la base de datos", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun launchImagePicker() {
         imagePickerLauncher.launch("image/*")
@@ -177,6 +181,19 @@ class DetallesMascotaActivity : AppCompatActivity() {
             val database = FirebaseDatabase.getInstance()
             val ref = petId?.let { database.getReference("Mascotas").child(userId).child(it) }
 
+            val profileRef = Firebase.storage.reference.child("Mascotas").child(userId).child("$petId")
+            profileRef.downloadUrl.addOnSuccessListener { uri ->
+                val profileImageUrl = uri.toString()
+
+                // Cargar la imagen usando Glide
+                Glide.with(this@DetallesMascotaActivity) // Utiliza el contexto del itemView
+                    .load(profileImageUrl) // Utiliza la URL de la imagen
+                    .into(fotoMascota)
+
+            }.addOnFailureListener {
+                fotoMascota.setImageResource(R.drawable.icn_labrador)
+            }
+
             if (ref != null) {
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     @SuppressLint("SetTextI18n")
@@ -186,21 +203,12 @@ class DetallesMascotaActivity : AppCompatActivity() {
                         val especieMascota = dataSnapshot.child("especie").getValue(String::class.java)
                         val razaMascota = dataSnapshot.child("raza").getValue(String::class.java)
                         val descripcionMascota = dataSnapshot.child("descripcion").getValue(String::class.java)
-                        val photoURI = dataSnapshot.child("photoURI").getValue(String::class.java)
 
                         tvName.text = nombreMascota ?: "Nombre no disponible"
                         tvEdad.text = "$edadMascota meses"
                         tvEspecie.text = especieMascota
                         tvRaza.text = razaMascota
                         tvDescripcion.text = descripcionMascota
-
-                        photoURI?.let {
-                            Glide.with(this@DetallesMascotaActivity)
-                                .load(it)
-                                .into(fotoMascota)
-                        } ?: run {
-                            fotoMascota.setImageResource(R.drawable.icn_labrador)
-                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -210,6 +218,29 @@ class DetallesMascotaActivity : AppCompatActivity() {
             }
         } else {
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun deletePet() {
+        val userId = auth.currentUser?.uid
+        if (userId != null && petId != null) {
+            val databaseRef = FirebaseDatabase.getInstance().getReference("Mascotas/$userId/$petId")
+            val storageRef = Firebase.storage.reference.child("Mascotas/$userId/$petId")
+
+            // Eliminar la entrada de la mascota en la base de datos
+            databaseRef.removeValue().addOnSuccessListener {
+                // Eliminar la imagen de la mascota en Firebase Storage
+                storageRef.delete().addOnSuccessListener {
+                    Toast.makeText(this, "Mascota eliminada exitosamente", Toast.LENGTH_SHORT).show()
+                    finish() // Cerrar la actividad después de la eliminación
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Fallo al eliminar imagen de la mascota", Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Fallo al eliminar datos de la mascota", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "No se pudo autenticar al usuario o ID de la mascota no disponible", Toast.LENGTH_SHORT).show()
         }
     }
 }

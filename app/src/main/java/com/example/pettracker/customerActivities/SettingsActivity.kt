@@ -130,6 +130,11 @@ class SettingsActivity : AppCompatActivity() {
         findViewById<CircleImageView>(R.id.icn_notificacion).setOnClickListener {
             toggleNotification()
         }
+
+        findViewById<ImageButton>(R.id.btn_agregar).setOnClickListener {
+            val intent = Intent(applicationContext, AgregarMascotaActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun handleCameraPermission() {
