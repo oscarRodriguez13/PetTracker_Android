@@ -1,5 +1,6 @@
 package com.example.pettracker.generalActivities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
@@ -42,7 +43,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
-
     private lateinit var icon: ImageView
     private var photoUserURI: Uri? = null
     private lateinit var etPetName: EditText
@@ -182,20 +182,20 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
         takePictureButton.setOnClickListener {
             when {
                 ContextCompat.checkSelfPermission(
-                    this, android.Manifest.permission.CAMERA
+                    this, Manifest.permission.CAMERA
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     //Lanzamos la camara
                     openCamera()
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, android.Manifest.permission.CAMERA) -> {
+                    this, Manifest.permission.CAMERA) -> {
                     requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
+                        arrayOf(Manifest.permission.CAMERA),
                         Datos.MY_PERMISSION_REQUEST_CAMERA)
                 }
                 else -> {
                     requestPermissions(
-                        arrayOf(android.Manifest.permission.CAMERA),
+                        arrayOf(Manifest.permission.CAMERA),
                         Datos.MY_PERMISSION_REQUEST_CAMERA
                     )
                 }
@@ -353,7 +353,13 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
 
         // Iteramos sobre la lista de mascotas
         petsList.forEachIndexed { index, pet ->
-            val petId = (index + 1).toString() // ID único de la mascota
+            // Generar una push key para la mascota
+            val petId = petsRef.push().key
+            if (petId == null) {
+                Log.e("SAVE_PET", "No se pudo generar una clave única para la mascota")
+                return@forEachIndexed
+            }
+
             val photoPetURI = Uri.parse(pet.optString("photoURI"))
             val petData = hashMapOf(
                 "nombre" to pet.optString("nombre"),
@@ -363,70 +369,56 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
                 "edad" to pet.optString("edad")
             )
 
-            // Verificar si el nodo de la mascota existe
-            petsRef.child(petId).addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    // Si el nodo no existe, guardamos los datos
-                    if (!snapshot.exists()) {
-                        // Guardar los datos de la mascota en la base de datos
-                        petsRef.child(petId).setValue(petData)
-                            .addOnSuccessListener {
-                                // Almacenar la imagen de la mascota en el almacenamiento de Firebase
-                                val storage = Firebase.storage
-                                val storageRef = storage.reference
-                                val imageRef = storageRef.child("Mascotas/$userId/$petId")
-                                photoPetURI?.let { uri ->
-                                    imageRef.putFile(uri)
-                                        .addOnSuccessListener { _ ->
-                                            if (index == petsList.size - 1) {
-                                                // Todas las mascotas se han guardado exitosamente
-                                                showToast("Registro completado")
-                                                navigateToLogin()
-                                            }
-                                        }
-                                        .addOnFailureListener { e ->
-                                            showToast("Error al subir foto de mascota $petId")
-                                            Log.e("UPLOAD_PET_PHOTO", "Error uploading pet photo: ${e.message}", e)
-                                        }
+            // Guardar los datos de la mascota en la base de datos
+            petsRef.child(petId).setValue(petData)
+                .addOnSuccessListener {
+                    // Almacenar la imagen de la mascota en el almacenamiento de Firebase
+                    val storage = Firebase.storage
+                    val storageRef = storage.reference
+                    val imageRef = storageRef.child("Mascotas/$userId/$petId")
+
+                    photoPetURI?.let { uri ->
+                        imageRef.putFile(uri)
+                            .addOnSuccessListener { _ ->
+                                if (index == petsList.size - 1) {
+                                    // Todas las mascotas se han guardado exitosamente
+                                    showToast("Registro completado")
+                                    navigateToLogin()
                                 }
                             }
                             .addOnFailureListener { e ->
-                                showToast("Error al registrar mascota $petId")
-                                Log.e("SAVE_PET", "Error saving pet data: ${e.message}", e)
+                                showToast("Error al subir foto de mascota $petId")
+                                Log.e("UPLOAD_PET_PHOTO", "Error uploading pet photo: ${e.message}", e)
                             }
-                    } else {
-                        // Manejar el caso donde el nodo ya existe, si es necesario
-                        showToast("La mascota $petId ya existe")
                     }
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    showToast("Error al verificar existencia de mascota $petId")
-                    Log.e("CHECK_PET_EXISTENCE", "Error checking pet existence: ${error.message}", error.toException())
+                .addOnFailureListener { e ->
+                    showToast("Error al registrar mascota $petId")
+                    Log.e("SAVE_PET", "Error saving pet data: ${e.message}", e)
                 }
-            })
         }
     }
+
 
     private fun handlePermissions() {
         when {
             ContextCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
                 mFusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                     onLocationChanged(location)
                 }
             }
             ActivityCompat.shouldShowRequestPermissionRationale(
-                this, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                this, Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     Datos.MY_PERMISSION_REQUEST_LOCATION
                 )
             }
             else -> {
                 requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     Datos.MY_PERMISSION_REQUEST_LOCATION
                 )
             }

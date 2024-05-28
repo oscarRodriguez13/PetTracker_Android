@@ -33,7 +33,6 @@ class MascotasAdapter(
                 Glide.with(itemView.context) // Utiliza el contexto del itemView
                     .load(profileImageUrl) // Utiliza la URL de la imagen
                     .into(profileImage)
-
             }.addOnFailureListener {
                 profileImage.setImageResource(R.drawable.icn_labrador)
             }
