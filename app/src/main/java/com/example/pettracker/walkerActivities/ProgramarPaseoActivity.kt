@@ -133,6 +133,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
     private fun abrirDetallePerfil(profile: ProgramarPaseoItem) {
         val intent = Intent(this, PerfilDuenhoActivity::class.java)
         intent.putExtra("uid", uidDueño)
+        println("UID $uidDueño")
         startActivity(intent)
     }
 

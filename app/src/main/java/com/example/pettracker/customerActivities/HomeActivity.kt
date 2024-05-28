@@ -248,7 +248,7 @@ class HomeActivity : AppCompatActivity() {
             "horaInicio" to horaInicio,
             "horaFin" to horaFin,
             "estado" to "no iniciado",
-            "paseador" to "ninguno"
+            "paseador" to {}
         )
 
         database.child(solicitudId).setValue(solicitudData)

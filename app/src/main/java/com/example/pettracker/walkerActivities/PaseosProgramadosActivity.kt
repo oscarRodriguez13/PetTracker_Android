@@ -27,7 +27,6 @@ class PaseosProgramadosActivity : AppCompatActivity() {
 
 
     private fun setupBarraHerramientas() {
-        // Botón para ir al historial
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
             val intent = Intent(
