@@ -16,12 +16,14 @@ import com.example.pettracker.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var userEmail: String
+    private lateinit var auth: FirebaseAuth
     private lateinit var selectedPetIds: List<String>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -30,6 +32,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        auth = Firebase.auth
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -243,7 +247,8 @@ class HomeActivity : AppCompatActivity() {
             "petIds" to selectedPetIds,
             "horaInicio" to horaInicio,
             "horaFin" to horaFin,
-            "estado" to "en curso"
+            "estado" to "no iniciado",
+            "paseador" to "ninguno"
         )
 
         database.child(solicitudId).setValue(solicitudData)

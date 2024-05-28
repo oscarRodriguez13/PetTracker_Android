@@ -5,12 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.pettracker.R
 import com.example.pettracker.domain.ProgramarPaseoItem
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ProgramarPaseoAdapter(
-    private val profiles: List<ProgramarPaseoItem>,
+    private var profiles: List<ProgramarPaseoItem>,
     private val onClick: (ProgramarPaseoItem) -> Unit // Lambda para manejar clics
 ) : RecyclerView.Adapter<ProgramarPaseoAdapter.ProfileViewHolder>() {
 
@@ -21,7 +22,12 @@ class ProgramarPaseoAdapter(
         val cantidad: TextView = itemView.findViewById(R.id.cantidad_mascotas)
 
         fun bind(item: ProgramarPaseoItem) {
-            image.setImageResource(item.image)
+            Glide.with(itemView.context)
+                .load(item.image)
+                .placeholder(R.drawable.icn_labrador) // Imagen de placeholder mientras se carga
+                .error(R.drawable.icn_labrador) // Imagen de error si falla la carga
+                .into(image)
+
             nombre.text = item.nombre
             duracion.text = item.duracion
             cantidad.text = item.cantidad
@@ -43,5 +49,11 @@ class ProgramarPaseoAdapter(
 
     override fun getItemCount(): Int {
         return profiles.size
+    }
+
+    // Método para actualizar la lista de perfiles en el adaptador
+    fun actualizarLista(nuevaLista: List<ProgramarPaseoItem>) {
+        profiles = nuevaLista
+        notifyDataSetChanged()
     }
 }

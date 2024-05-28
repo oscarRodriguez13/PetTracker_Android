@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,17 +19,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.pettracker.R
+import com.example.pettracker.apis.NominatimService
 import com.example.pettracker.domain.Datos
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import org.json.JSONObject
+import org.osmdroid.util.GeoPoint
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
-class RegisterPetDataActivity : AppCompatActivity() {
+class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var icon: ImageView
     private var photoUserURI: Uri? = null
@@ -52,12 +68,37 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private var auth: FirebaseAuth = Firebase.auth
     private var user: FirebaseUser? = null
 
+    private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
+    private var mGeocoder: Geocoder? = null
+    private var geoPoint: GeoPoint? = null
+    private var direccionUsuario: String? = null
+    private lateinit var locationManager: LocationManager
+
+    private val TAG = "RegisterPetDataActivity"
+
+    private lateinit var nominatimService: NominatimService
+    private lateinit var retrofit: Retrofit
+
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet_data)
 
-        // Inicializar Firebase
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+
+        handlePermissions()
+
+        mGeocoder = Geocoder(baseContext)
+
+        retrofit = Retrofit.Builder()
+            .baseUrl("https://nominatim.openstreetmap.org/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        nominatimService = retrofit.create(NominatimService::class.java)
+
         auth = Firebase.auth
         user = auth.currentUser
 
@@ -167,7 +208,7 @@ class RegisterPetDataActivity : AppCompatActivity() {
     private fun openCamera() {
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "Foto nueva")
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicación del Taller 2")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Tomada desde la aplicación del proyecto")
         photoURI = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         photoURI?.let { uri ->
@@ -250,16 +291,38 @@ class RegisterPetDataActivity : AppCompatActivity() {
                     val userData = HashMap<String, Any>()
                     userData["nombre"] = name
                     userData["tipoUsuario"] = "1"
-                    ref.setValue(userData)
-                        .addOnSuccessListener {
-                            cargarFotoPerfil(userId)
-                            savePets(userId)
+                    userData["latitud"] = geoPoint?.latitude.toString()
+                    userData["longitud"] = geoPoint?.longitude.toString()
 
-                            navigateToLogin()
+                    getAddress(geoPoint?.latitude ?: 0.0, geoPoint?.longitude ?: 0.0) { address ->
+                        address?.let {
+                            userData["direccion"] = address
+                            println("direccion $address")
 
-                        }.addOnFailureListener { e ->
-                            Snackbar.make(findViewById(android.R.id.content), "Error: ${e.message}", Snackbar.LENGTH_SHORT).show()
+
+                            ref.setValue(userData)
+                                .addOnSuccessListener {
+                                    println("Registro del usuario exitoso")
+                                    cargarFotoPerfil(userId)
+                                    savePets(userId)
+                                    navigateToLogin()
+                                }.addOnFailureListener { e ->
+                                    Snackbar.make(
+                                        findViewById(android.R.id.content),
+                                        "Error: ${e.message}",
+                                        Snackbar.LENGTH_SHORT
+                                    ).show()
+                                }
+                        } ?: run {
+                            Snackbar.make(
+                                findViewById(android.R.id.content),
+                                "No se pudo obtener la dirección",
+                                Snackbar.LENGTH_SHORT
+                            ).show()
                         }
+                    }
+
+
                 } else {
                     showToast("Error al registrar usuario")
                 }
@@ -302,33 +365,126 @@ class RegisterPetDataActivity : AppCompatActivity() {
                 "edad" to pet.optString("edad")
             )
 
-            // Guardar los datos de la mascota en la base de datos
-            petsRef.child(petId).setValue(petData)
-                .addOnSuccessListener {
-                    // Almacenar la imagen de la mascota en el almacenamiento de Firebase
-                    val storage = Firebase.storage
-                    val storageRef = storage.reference
-                    val imageRef = storageRef.child("Mascotas/$userId/$petId")
-                    photoPetURI?.let { uri ->
-                        imageRef.putFile(uri)
-                            .addOnSuccessListener { _ ->
-                                if (index == petsList.size - 1) {
-                                    // Todas las mascotas se han guardado exitosamente
-                                    showToast("Registro completado")
-                                    navigateToLogin()
+            // Verificar si el nodo de la mascota existe
+            petsRef.child(petId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    // Si el nodo no existe, guardamos los datos
+                    if (!snapshot.exists()) {
+                        // Guardar los datos de la mascota en la base de datos
+                        petsRef.child(petId).setValue(petData)
+                            .addOnSuccessListener {
+                                // Almacenar la imagen de la mascota en el almacenamiento de Firebase
+                                val storage = Firebase.storage
+                                val storageRef = storage.reference
+                                val imageRef = storageRef.child("Mascotas/$userId/$petId")
+                                photoPetURI?.let { uri ->
+                                    imageRef.putFile(uri)
+                                        .addOnSuccessListener { _ ->
+                                            if (index == petsList.size - 1) {
+                                                // Todas las mascotas se han guardado exitosamente
+                                                showToast("Registro completado")
+                                                navigateToLogin()
+                                            }
+                                        }
+                                        .addOnFailureListener { e ->
+                                            showToast("Error al subir foto de mascota $petId")
+                                            Log.e("UPLOAD_PET_PHOTO", "Error uploading pet photo: ${e.message}", e)
+                                        }
                                 }
                             }
                             .addOnFailureListener { e ->
-                                showToast("Error al subir foto de mascota $petId")
-                                Log.e("UPLOAD_PET_PHOTO", "Error uploading pet photo: ${e.message}", e)
+                                showToast("Error al registrar mascota $petId")
+                                Log.e("SAVE_PET", "Error saving pet data: ${e.message}", e)
                             }
+                    } else {
+                        // Manejar el caso donde el nodo ya existe, si es necesario
+                        showToast("La mascota $petId ya existe")
                     }
                 }
-                .addOnFailureListener { e ->
-                    showToast("Error al registrar mascota $petId")
-                    Log.e("SAVE_PET", "Error saving pet data: ${e.message}", e)
+
+                override fun onCancelled(error: DatabaseError) {
+                    showToast("Error al verificar existencia de mascota $petId")
+                    Log.e("CHECK_PET_EXISTENCE", "Error checking pet existence: ${error.message}", error.toException())
                 }
+            })
         }
     }
+
+    private fun handlePermissions() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                mFusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                    onLocationChanged(location)
+                }
+            }
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    Datos.MY_PERMISSION_REQUEST_LOCATION
+                )
+            }
+            else -> {
+                requestPermissions(
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    Datos.MY_PERMISSION_REQUEST_LOCATION
+                )
+            }
+        }
+    }
+
+    override fun onLocationChanged(location: Location) {
+        geoPoint = GeoPoint(location.latitude, location.longitude)
+
+    }
+
+    private fun getAddress(lat: Double, lon: Double, onComplete: (String?) -> Unit) {
+        nominatimService.reverseGeocode(lat, lon).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { responseBody ->
+                        try {
+                            val jsonObject = JSONObject(responseBody)
+                            val displayName = jsonObject.getString("display_name")
+                            val parts = displayName.split(",")
+                            val summarizedAddress = StringBuilder()
+                            val relevantParts = listOf("road", "neighbourhood", "suburb")
+
+                            for (part in parts) {
+                                val trimmedPart = part.trim()
+                                if (relevantParts.any { trimmedPart.contains(it, ignoreCase = true) }) {
+                                    if (summarizedAddress.isNotEmpty()) {
+                                        summarizedAddress.append(", ")
+                                    }
+                                    summarizedAddress.append(trimmedPart)
+                                }
+                            }
+
+                            val finalAddress = if (summarizedAddress.isEmpty()) displayName else summarizedAddress.toString()
+                            onComplete(finalAddress)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to parse JSON", e)
+                            onComplete(null)
+                        }
+                    } ?: run {
+                        Log.e(TAG, "Response body is null")
+                        onComplete(null)
+                    }
+                } else {
+                    Log.e(TAG, "Failed to get address: ${response.errorBody()}")
+                    onComplete(null)
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "Failed to get address", t)
+                onComplete(null)
+            }
+        })
+    }
+
+
 
 }

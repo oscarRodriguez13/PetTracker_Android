@@ -68,8 +68,8 @@
             android:id="@+id/foto_perfil_paseador"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_centerInParent="true"
             android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/line2"
             app:srcCompat="@drawable/img_perfil1" />
 
@@ -111,14 +111,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Antonio Banderas"
+            android:text=""
             android:textSize="22dp"
             android:textStyle="bold"
-            android:layout_centerInParent="true"
-            android:layout_below="@id/foto_perfil_paseador"/>
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/foto_perfil_paseador"
+
+           />
 
         <TextView
-            android:id="@+id/titulo_experiencia"
+            android:id="@+id/titulo_mascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/nombre_paseador"
@@ -129,79 +131,38 @@
             android:textColor="@color/gray"
             android:textStyle="bold" />
 
+
+
         <View
             android:id="@+id/line3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/black"
-            android:layout_below="@id/titulo_experiencia"
+            android:layout_below="@id/titulo_mascota"
+
             android:layout_marginTop="12dp"/>
 
-        <TextView
-            android:id="@+id/descripcion1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre: Firulais"
-            android:layout_below="@id/line3"
-            android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
-            android:layout_centerInParent="true"
+        <!-- Reubicado el ListView aquí -->
+        <ListView
+            android:id="@+id/listaMascotas"
+            android:layout_above="@id/titulo_direccion"
+            android:layout_below="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_above="@id/direccion"
             android:layout_marginTop="12dp"/>
-
-        <TextView
-            android:id="@+id/descripcion2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Especie: Perro"
-            android:layout_below="@id/descripcion1"
-            android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
-
-        <TextView
-            android:id="@+id/descripcion3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Raza: Golden Retriever"
-            android:layout_below="@id/descripcion2"
-            android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
-
-        <TextView
-            android:id="@+id/descripcion4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edad: 18 meses"
-            android:layout_below="@id/descripcion3"
-            android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
-
-        <TextView
-            android:id="@+id/descripcion5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Descripcion: Travieso"
-            android:layout_below="@id/descripcion4"
-            android:layout_marginLeft="15dp"
-            android:textStyle="bold"
-            android:textColor="@color/gray"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="2dp"/>
 
         <TextView
             android:id="@+id/titulo_direccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/descripcion5"
+            android:layout_above="@id/line4"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:text="Direccion"
@@ -214,19 +175,17 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/black"
-            android:layout_below="@id/titulo_direccion"
+            android:layout_above="@id/direccion"
             android:layout_marginTop="12dp"/>
 
         <TextView
             android:id="@+id/direccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/line6"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:text="Cl. 45 #8-14"
+            android:layout_above="@id/Precio"
+            android:text=""
+            android:layout_centerHorizontal="true"
             android:textSize="17dp"
-            android:layout_centerInParent="true"
             android:textColor="@color/gray"
             />
 
@@ -234,20 +193,21 @@
             android:id="@+id/Precio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/direccion"
+            android:layout_above="@id/line5"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:text="Precio"
             android:textSize="20dp"
             android:textColor="@color/gray"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
         <View
             android:id="@+id/line5"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/black"
-            android:layout_below="@id/Precio"
+            android:layout_above="@id/etPrecio"
             android:layout_marginTop="12dp"/>
 
 
@@ -256,7 +216,7 @@
             android:id="@+id/etPrecio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/line5"
+            android:layout_alignParentBottom="true"
             android:hint="Ingrese el precio"
             android:inputType="textEmailAddress"
             android:padding="12dp"

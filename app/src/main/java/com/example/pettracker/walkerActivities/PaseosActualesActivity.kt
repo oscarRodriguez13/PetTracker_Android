@@ -46,18 +46,9 @@ class PaseosActualesActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView1)
 
-        val profiles = listOf(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Pedro Jimenez", "Duración: 30 min", "Mascotas: 1"),
-            ProgramarPaseoItem(R.drawable.img_perfil2, "Carlos Gutierrez", "Duración: 30 min", "Mascotas: 1"),
-            ProgramarPaseoItem(R.drawable.img_perfil1, "Antonio Banderas", "Duración: 60 min", "Mascotas: 1")
-        )
 
-        val adapter = ProgramarPaseoAdapter(profiles) { profile ->
-            openProfileDetail(profile)
-        }
 
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+
     }
 
     private fun openProfileDetail(profile: ProgramarPaseoItem) {

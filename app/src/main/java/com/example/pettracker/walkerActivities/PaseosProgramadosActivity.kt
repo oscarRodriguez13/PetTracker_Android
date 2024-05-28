@@ -20,21 +20,9 @@ class PaseosProgramadosActivity : AppCompatActivity() {
 
         // Configuración del RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val profiles = Arrays.asList(
-            ProgramarPaseoItem(R.drawable.img_perfil3, "Sofía Hernández", "Duración: 30 min", "Mascotas: 1"),
-            ProgramarPaseoItem(R.drawable.img_perfil2, "Marta Pérez", "Duración: 30 min", "Mascotas: 1"),
-            ProgramarPaseoItem(R.drawable.img_perfil1, "Pedro Jimenez", "Duración: 30 min", "Mascotas: 1")
-        )
 
         // Usar un adaptador personalizado con funcionalidad de clic
-        val adapter = ProgramarPaseoAdapter(profiles) { ProgramarPaseoItem ->
-            abrirDetallePerfil(ProgramarPaseoItem)
-        }
-        recyclerView.adapter = adapter
 
-        // Establecer el LinearLayoutManager para vertical
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
     }
 
 

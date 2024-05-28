@@ -107,13 +107,15 @@ class DetallesMascotaActivity : AppCompatActivity() {
     }
 
     private fun updateProfileImageUriInDatabase(imageUrl: String, userId: String) {
-        val databaseRef = FirebaseDatabase.getInstance().getReference("Mascotas/$userId")
-        databaseRef.child("$petId").setValue(imageUrl).addOnSuccessListener {
+        val databaseRef = FirebaseDatabase.getInstance().getReference("Mascotas/$userId/$petId")
+        val updates = hashMapOf<String, Any>("photoURI" to imageUrl)
+        databaseRef.updateChildren(updates).addOnSuccessListener {
             Toast.makeText(this, "Imagen de perfil actualizada", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Toast.makeText(this, "Error al actualizar la imagen de perfil en la base de datos", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun launchImagePicker() {
         imagePickerLauncher.launch("image/*")
@@ -175,20 +177,6 @@ class DetallesMascotaActivity : AppCompatActivity() {
             val database = FirebaseDatabase.getInstance()
             val ref = petId?.let { database.getReference("Mascotas").child(userId).child(it) }
 
-            val profileRef = Firebase.storage.reference.child("Mascotas").child(userId)
-
-            profileRef.downloadUrl.addOnSuccessListener { uri ->
-                val profileImageUrl = uri.toString()
-
-                // Cargar la imagen usando Glide
-                Glide.with(this@DetallesMascotaActivity) // Utiliza el contexto del itemView
-                    .load(profileImageUrl) // Utiliza la URL de la imagen
-                    .into(fotoMascota)
-
-            }.addOnFailureListener {
-                fotoMascota.setImageResource(R.drawable.icn_labrador)
-            }
-
             if (ref != null) {
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     @SuppressLint("SetTextI18n")
@@ -198,12 +186,21 @@ class DetallesMascotaActivity : AppCompatActivity() {
                         val especieMascota = dataSnapshot.child("especie").getValue(String::class.java)
                         val razaMascota = dataSnapshot.child("raza").getValue(String::class.java)
                         val descripcionMascota = dataSnapshot.child("descripcion").getValue(String::class.java)
+                        val photoURI = dataSnapshot.child("photoURI").getValue(String::class.java)
 
                         tvName.text = nombreMascota ?: "Nombre no disponible"
                         tvEdad.text = "$edadMascota meses"
                         tvEspecie.text = especieMascota
                         tvRaza.text = razaMascota
                         tvDescripcion.text = descripcionMascota
+
+                        photoURI?.let {
+                            Glide.with(this@DetallesMascotaActivity)
+                                .load(it)
+                                .into(fotoMascota)
+                        } ?: run {
+                            fotoMascota.setImageResource(R.drawable.icn_labrador)
+                        }
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
