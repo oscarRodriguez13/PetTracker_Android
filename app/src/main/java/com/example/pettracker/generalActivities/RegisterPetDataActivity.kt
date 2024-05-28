@@ -71,7 +71,6 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private var mGeocoder: Geocoder? = null
     private var geoPoint: GeoPoint? = null
-    private var direccionUsuario: String? = null
     private lateinit var locationManager: LocationManager
 
     private val TAG = "RegisterPetDataActivity"
@@ -106,7 +105,6 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun setup() {
-        // Inicializar vistas
         etPetName = findViewById(R.id.etPetName)
         etSpecies = findViewById(R.id.etSpecies)
         etBreed = findViewById(R.id.etBreed)

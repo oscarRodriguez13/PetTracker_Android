@@ -198,8 +198,6 @@ class RegisterUserActivity : AppCompatActivity(), LocationListener {
                             address?.let {
                                 userData["direccion"] = address
                                 println("direccion $address")
-
-
                                 ref.setValue(userData)
                                     .addOnSuccessListener {
                                         cargarFotoPerfil(userId)
