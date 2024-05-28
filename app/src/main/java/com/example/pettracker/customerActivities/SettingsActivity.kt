@@ -177,20 +177,45 @@ class SettingsActivity : AppCompatActivity() {
         if (userId != null) {
             val ref = database.child("Mascotas").child(userId)
 
-            ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            ref.addChildEventListener(object : ChildEventListener {
                 @SuppressLint("NotifyDataSetChanged")
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    petAdapters.clear()
-                    for (petSnapshot in dataSnapshot.children) {
-                        val petsCount = dataSnapshot.childrenCount.toInt()
-                        tvPets.text = "Mascotas: $petsCount"
-
-                        val name = petSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
-                        val breed = petSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
-                        val petAdapter = PetAdapter(userId, petSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
-                        petAdapters.add(petAdapter)
-                    }
+                override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                    // Cuando se agrega una nueva mascota
+                    val name = dataSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
+                    val breed = dataSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
+                    val petAdapter = PetAdapter(userId, dataSnapshot.key.toString(), null, name, breed) // Usa una imagen por defecto
+                    petAdapters.add(petAdapter)
                     adapter.notifyDataSetChanged()
+                    tvPets.text = "Mascotas: ${petAdapters.size}"
+                }
+
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onChildChanged(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                    // Cuando se modifica una mascota existente
+                    val key = dataSnapshot.key
+                    val index = petAdapters.indexOfFirst { it.petId == key }
+                    if (index != -1) {
+                        val name = dataSnapshot.child("nombre").getValue(String::class.java) ?: "Sin nombre"
+                        val breed = dataSnapshot.child("raza").getValue(String::class.java) ?: "Sin raza"
+                        petAdapters[index] = PetAdapter(userId, key.toString(), null, name, breed)
+                        adapter.notifyItemChanged(index)
+                    }
+                }
+
+                @SuppressLint("NotifyDataSetChanged")
+                override fun onChildRemoved(dataSnapshot: DataSnapshot) {
+                    // Cuando se elimina una mascota
+                    val key = dataSnapshot.key
+                    val index = petAdapters.indexOfFirst { it.petId == key }
+                    if (index != -1) {
+                        petAdapters.removeAt(index)
+                        adapter.notifyItemRemoved(index)
+                        tvPets.text = "Mascotas: ${petAdapters.size}"
+                    }
+                }
+
+                override fun onChildMoved(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                    // No se suele usar en la mayoría de los casos
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -199,7 +224,6 @@ class SettingsActivity : AppCompatActivity() {
             })
         }
     }
-
 
     private fun openCamera() {
         val values = ContentValues()

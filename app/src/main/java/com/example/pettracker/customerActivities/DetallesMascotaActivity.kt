@@ -2,6 +2,7 @@ package com.example.pettracker.customerActivities
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -188,6 +189,7 @@ class DetallesMascotaActivity : AppCompatActivity() {
                 // Cargar la imagen usando Glide
                 Glide.with(this@DetallesMascotaActivity) // Utiliza el contexto del itemView
                     .load(profileImageUrl) // Utiliza la URL de la imagen
+                    .fitCenter()
                     .into(fotoMascota)
 
             }.addOnFailureListener {
@@ -221,6 +223,11 @@ class DetallesMascotaActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigateToSettings() {
+        val intent = Intent(applicationContext, SettingsActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun deletePet() {
         val userId = auth.currentUser?.uid
         if (userId != null && petId != null) {
@@ -234,7 +241,8 @@ class DetallesMascotaActivity : AppCompatActivity() {
                     Toast.makeText(this, "Mascota eliminada exitosamente", Toast.LENGTH_SHORT).show()
                     finish() // Cerrar la actividad después de la eliminación
                 }.addOnFailureListener {
-                    Toast.makeText(this, "Fallo al eliminar imagen de la mascota", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Fallo al eliminar imagen de la mascota", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
             }.addOnFailureListener {
                 Toast.makeText(this, "Fallo al eliminar datos de la mascota", Toast.LENGTH_SHORT).show()

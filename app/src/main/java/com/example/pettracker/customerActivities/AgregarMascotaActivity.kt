@@ -164,14 +164,12 @@ class AgregarMascotaActivity : AppCompatActivity() {
                             }
                     }
                 }
-                .addOnFailureListener { e ->
-                    showToast("Error al subir la foto: ${e.message}")
-                }
         } else {
             petsRef.child(petId).setValue(petData)
                 .addOnSuccessListener {
                     showToast("Mascota registrada exitosamente")
                     clearFields()
+                    navigateToSettings()
                 }
                 .addOnFailureListener { e ->
                     showToast("Error al registrar mascota: ${e.message}")
