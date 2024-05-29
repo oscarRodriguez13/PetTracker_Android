@@ -12,13 +12,20 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.R
+import com.example.pettracker.adapter.HomeAdapter
+import com.example.pettracker.adapter.ProgramarPaseoAdapter
+import com.example.pettracker.domain.ProgramarPaseoItem
+import com.example.pettracker.domain.SolicitudItem
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
+import java.text.SimpleDateFormat
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
@@ -28,6 +35,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var solicitudId: String? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: HomeAdapter
+    private var paseoItems = mutableListOf<SolicitudItem>()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +48,66 @@ class HomeActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        adapter = HomeAdapter(paseoItems) { paseoItem ->
+            val intent = Intent(this, SolicitarPaseoActivity::class.java)
+            intent.putExtra("solicitudId", paseoItem.solicitudId)
+            startActivity(intent)
+        }
+        recyclerView.adapter = adapter
+
+        loadSolicitudesPaseo()
+
         setupTimePickers()
         setupSolicitudPaseo()
         setupHistorialButton()
         setupSettingsButton()
         setupSelectOptionsButton()
     }
+
+    private fun loadSolicitudesPaseo() {
+        val database = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo")
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (userId == null) {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val nuevaLista = mutableListOf<SolicitudItem>()
+
+                for (data in snapshot.children) {
+                    val solicitudId = data.key ?: continue
+                    val horaInicio = data.child("horaInicio").getValue(String::class.java)
+                    val horaFin = data.child("horaFin").getValue(String::class.java)
+                    val uidDueño = data.child("uidDueño").getValue(String::class.java)
+                    val petIds = data.child("petIds").children.map { it.getValue(String::class.java) ?: "" }
+                    val cantidad = petIds.size.toString()
+
+                    if (uidDueño == userId && horaInicio != null && horaFin != null) {
+                        val paseoItem = SolicitudItem(
+                            solicitudId,
+                            horaInicio,
+                            horaFin,
+                            cantidad
+                        )
+                        nuevaLista.add(paseoItem)
+                    }
+                }
+
+                adapter.actualizarLista(nuevaLista)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@HomeActivity, "Error al cargar datos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     private fun setupTimePickers() {
@@ -136,8 +200,9 @@ class HomeActivity : AppCompatActivity() {
                 val petIds = ArrayList<String>()
                 snapshot.children.forEach {
                     val nombre = it.child("nombre").getValue(String::class.java)
+                    val estado = it.child("estado").getValue(String::class.java)
                     val petId = it.key
-                    if (nombre != null && petId != null) {
+                    if (nombre != null && petId != null && estado == "disponible") {
                         pets.add(nombre)
                         petIds.add(petId)
                     }
@@ -227,12 +292,6 @@ class HomeActivity : AppCompatActivity() {
         database.child("ubicacion").setValue(userLocationData)
             .addOnSuccessListener {
                 crearSolicitudPaseo(userId, horaInicio, horaFin)
-                val intent = Intent(
-                    applicationContext,
-                    SolicitarPaseoActivity::class.java
-                )
-                intent.putExtra("solicitudId", solicitudId)
-                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al subir la ubicación: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -258,12 +317,28 @@ class HomeActivity : AppCompatActivity() {
 
         database.child(solicitudId!!).setValue(solicitudData)
             .addOnSuccessListener {
+                actualizarEstadoMascotas(userId)
                 Toast.makeText(this, "Solicitud creada exitosamente", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al crear solicitud: ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun actualizarEstadoMascotas(userId: String) {
+        val mascotasRef = FirebaseDatabase.getInstance().getReference("Mascotas/$userId")
+
+        for (petId in selectedPetIds) {
+            mascotasRef.child(petId).child("estado").setValue("en paseo")
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Estado de la mascota $petId actualizado a 'en paseo'", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error al actualizar estado de la mascota $petId: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
