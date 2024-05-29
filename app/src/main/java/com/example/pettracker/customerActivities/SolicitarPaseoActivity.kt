@@ -1,5 +1,6 @@
 package com.example.pettracker.customerActivities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -19,10 +20,13 @@ class SolicitarPaseoActivity : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var offersRef: DatabaseReference
     private val profiles = ArrayList<Profile>()
+    private var solicitudId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_solicitar_paseo)
+
+        solicitudId = intent.getStringExtra("solicitudId")
 
         setupBarraHerramientas()
 
@@ -36,10 +40,14 @@ class SolicitarPaseoActivity : AppCompatActivity() {
 
         // Inicializar Firebase
         database = FirebaseDatabase.getInstance()
-        offersRef = database.getReference("Ofertas")
 
-        // Cargar datos desde Firebase
-        loadOffersFromFirebase()
+        // Cargar datos desde Firebase si solicitudId no es nulo
+        if (solicitudId != null) {
+            offersRef = database.getReference("Ofertas").child(solicitudId!!)
+            loadOffersFromFirebase()
+        } else {
+            Toast.makeText(this, "Solicitud ID no proporcionada", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupBarraHerramientas() {
@@ -83,12 +91,10 @@ class SolicitarPaseoActivity : AppCompatActivity() {
         offersRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 profiles.clear()
-                for (solicitudSnapshot in snapshot.children) {
-                    for (offerSnapshot in solicitudSnapshot.children) {
-                        val precio = offerSnapshot.child("precio").getValue(String::class.java) ?: "No disponible"
-                        val userId = offerSnapshot.child("userId").getValue(String::class.java) ?: "No disponible"
-                        loadUserData(userId, precio)
-                    }
+                for (offerSnapshot in snapshot.children) {
+                    val precio = offerSnapshot.child("precio").getValue(String::class.java) ?: "No disponible"
+                    val userId = offerSnapshot.child("userId").getValue(String::class.java) ?: "No disponible"
+                    loadUserData(userId, precio)
                 }
             }
 
@@ -101,6 +107,7 @@ class SolicitarPaseoActivity : AppCompatActivity() {
     private fun loadUserData(userId: String, precio: String) {
         val userRef = database.getReference("Usuarios").child(userId)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onDataChange(snapshot: DataSnapshot) {
                 val nombre = snapshot.child("nombre").getValue(String::class.java) ?: "Nombre no disponible"
                 val profile = Profile(userId, null, nombre, precio)

@@ -26,6 +26,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var selectedPetIds: List<String>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var solicitudId: String? = null
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
     @SuppressLint("SetTextI18n")
@@ -226,7 +227,12 @@ class HomeActivity : AppCompatActivity() {
         database.child("ubicacion").setValue(userLocationData)
             .addOnSuccessListener {
                 crearSolicitudPaseo(userId, horaInicio, horaFin)
-                startActivity(Intent(applicationContext, SolicitarPaseoActivity::class.java))
+                val intent = Intent(
+                    applicationContext,
+                    SolicitarPaseoActivity::class.java
+                )
+                intent.putExtra("solicitudId", solicitudId)
+                startActivity(intent)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al subir la ubicación: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -235,7 +241,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun crearSolicitudPaseo(userId: String, horaInicio: String, horaFin: String) {
         val database = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo")
-        val solicitudId = database.push().key
+        solicitudId = database.push().key
 
         if (solicitudId == null) {
             Toast.makeText(this, "Error al generar ID de solicitud", Toast.LENGTH_SHORT).show()
@@ -247,11 +253,10 @@ class HomeActivity : AppCompatActivity() {
             "petIds" to selectedPetIds,
             "horaInicio" to horaInicio,
             "horaFin" to horaFin,
-            "estado" to "no iniciado",
-            "paseador" to {}
+            "estado" to "no iniciado"
         )
 
-        database.child(solicitudId).setValue(solicitudData)
+        database.child(solicitudId!!).setValue(solicitudData)
             .addOnSuccessListener {
                 Toast.makeText(this, "Solicitud creada exitosamente", Toast.LENGTH_SHORT).show()
             }

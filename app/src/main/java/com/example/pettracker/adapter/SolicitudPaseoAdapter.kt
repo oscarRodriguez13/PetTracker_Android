@@ -24,7 +24,7 @@ class SolicitudPaseoAdapter(
 
         fun bind(profile: Profile) {
 
-            val profileRef = Firebase.storage.reference.child("Usuarios").child(profile.uid).child("mascotas")
+            val profileRef = Firebase.storage.reference.child("Usuarios").child(profile.uid).child("profile")
 
             profileRef.downloadUrl.addOnSuccessListener { uri ->
                 val profileImageUrl = uri.toString()
