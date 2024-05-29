@@ -82,8 +82,8 @@ class SolicitarPaseoActivity : AppCompatActivity() {
 
     private fun abrirDetallePerfil(profile: Profile) {
         val intent = Intent(this, PerfilPaseadorActivity::class.java)
-        intent.putExtra("profileName", profile.name)
-        intent.putExtra("profilePrice", profile.price)
+        intent.putExtra("profileUid", profile.uid)
+        intent.putExtra("solicitudId", solicitudId)
         startActivity(intent)
     }
 

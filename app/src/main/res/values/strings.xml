@@ -55,5 +55,12 @@
     <string name="descripcion">Descripcion</string>
     <string name="continuar">Continuar</string>
     <string name="terminar">Terminar</string>
+    <string name="paseos_actuales">Solicitudes Actuales</string>
+    <string name="hora_final">Hora final</string>
+    <string name="hora_inicial">Hora inicial</string>
+    <string name="selecciona_una_mascota">Selecciona una mascota</string>
+    <string name="mascotas">Mascotas</string>
+    <string name="realizar_solicitud">Realizar solicitud</string>
+    <string name="perfil">Perfil</string>
 
 </resources>

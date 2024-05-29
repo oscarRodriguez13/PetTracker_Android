@@ -253,6 +253,7 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
             put("nombre", etPetName.text.toString().trim())
             put("especie", etSpecies.text.toString().trim())
             put("raza", etBreed.text.toString().trim())
+            put("estado", "disponible")
             put("descripcion", etDescription.text.toString().trim())
             put("edad", edad.toString().trim())
             put("photoURI", petPhotoURI)
@@ -365,6 +366,7 @@ class RegisterPetDataActivity : AppCompatActivity(), LocationListener {
                 "nombre" to pet.optString("nombre"),
                 "especie" to pet.optString("especie"),
                 "raza" to pet.optString("raza"),
+                "estado" to pet.optString("estado"),
                 "descripcion" to pet.optString("descripcion"),
                 "edad" to pet.optString("edad")
             )
