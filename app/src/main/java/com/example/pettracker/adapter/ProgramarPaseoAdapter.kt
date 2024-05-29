@@ -18,7 +18,8 @@ class ProgramarPaseoAdapter(
     inner class ProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val image: CircleImageView = itemView.findViewById(R.id.profile_image)
         val nombre: TextView = itemView.findViewById(R.id.nombre_duenho)
-        val duracion: TextView = itemView.findViewById(R.id.duracion_paseo)
+        val hora_inicial: TextView = itemView.findViewById(R.id.hora_inicial)
+        val hora_final: TextView = itemView.findViewById(R.id.hora_final)
         val cantidad: TextView = itemView.findViewById(R.id.cantidad_mascotas)
 
         fun bind(item: ProgramarPaseoItem) {
@@ -29,7 +30,8 @@ class ProgramarPaseoAdapter(
                 .into(image)
 
             nombre.text = item.nombre
-            duracion.text = item.duracion
+            hora_inicial.text = item.hora_inicial
+            hora_final.text = item.hora_final
             cantidad.text = item.cantidad
 
             // Manejar el clic en el elemento del RecyclerView

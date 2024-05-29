@@ -35,24 +35,34 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Nombre del Usuario"
+                android:text=""
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/duracion_paseo"
+                android:id="@+id/hora_inicial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Duracion: 30 min"
+                android:text=""
                 android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/hora_final"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"
+                android:text=""
+                android:textColor="@color/black" />
+
             <TextView
                 android:id="@+id/cantidad_mascotas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:layout_gravity="center_horizontal"
-                android:text="Cantidad mascotas: 1"
+                android:text=""
                 android:textColor="@color/black" />
 
         </LinearLayout>

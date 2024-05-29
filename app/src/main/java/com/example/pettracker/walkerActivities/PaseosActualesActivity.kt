@@ -54,7 +54,7 @@ class PaseosActualesActivity : AppCompatActivity() {
     private fun openProfileDetail(profile: ProgramarPaseoItem) {
         val intent = Intent(this, RutaDuenhoActivity::class.java).apply {
             putExtra("nombre", profile.nombre)
-            putExtra("duracion", profile.duracion)
+            putExtra("duracion", profile.hora_inicial)
             putExtra("cantidad", profile.cantidad)
             putExtra("direccion", "Cl. 45 #8-14")
             putExtra("estado", "en progreso")

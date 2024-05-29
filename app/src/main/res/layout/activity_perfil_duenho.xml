@@ -58,10 +58,10 @@
         <View
             android:id="@+id/line"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="2dp"
             android:background="@color/black"
             android:layout_below="@id/buttonOption2"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="0dp" />
 
 
         <ImageView
@@ -93,7 +93,7 @@
             android:layout_marginTop="4dp"
             android:text="Aceptar"
             android:textColor="@color/black"
-            android:layout_marginStart="260dp"
+            android:layout_alignParentRight="true"
             android:textSize="20sp"
             style="@style/ButtonStyle"/>
 
@@ -218,7 +218,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:hint="Ingrese el precio"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:padding="12dp"
             android:textColor="@color/black"/>
 

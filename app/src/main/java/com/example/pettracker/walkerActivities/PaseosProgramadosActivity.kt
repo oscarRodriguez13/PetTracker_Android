@@ -45,11 +45,12 @@ class PaseosProgramadosActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
     private fun abrirDetallePerfil(profile: ProgramarPaseoItem) {
         val intent = Intent(this, RutaDuenhoActivity::class.java)
         // Aquí puedes agregar datos adicionales al intent si es necesario
         intent.putExtra("nombre", profile.nombre)
-        intent.putExtra("duracion", profile.duracion)
+        intent.putExtra("duracion", profile.hora_inicial)
         intent.putExtra("cantidad", profile.cantidad)
         intent.putExtra("direccion", "Cl. 45 #8-14")
         intent.putExtra("estado", "sin empezar")

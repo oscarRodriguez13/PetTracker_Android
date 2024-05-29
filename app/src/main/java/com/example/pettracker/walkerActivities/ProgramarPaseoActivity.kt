@@ -8,21 +8,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.R
 import com.example.pettracker.adapter.ProgramarPaseoAdapter
-import com.example.pettracker.apis.NominatimService
 import com.example.pettracker.domain.ProgramarPaseoItem
-import com.example.pettracker.walkerActivities.HistorialWalkerActivity
-import com.example.pettracker.walkerActivities.PerfilDuenhoActivity
-import com.example.pettracker.walkerActivities.SettingsWalkerActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.math.abs
@@ -31,7 +22,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
-    private lateinit var uidDueño:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_programar_paseo)
@@ -63,32 +54,34 @@ class ProgramarPaseoActivity : AppCompatActivity() {
                 for (childSnapshot in snapshot.children) {
                     val estado = childSnapshot.child("estado").getValue(String::class.java)
                     if (estado == "no iniciado") {
+                        val idSolicitud = childSnapshot?.key
 
-                        var duracionHoras: Double = 0.0
                         val horaInicio = childSnapshot.child("horaInicio").getValue(String::class.java)
                         val horaFin = childSnapshot.child("horaFin").getValue(String::class.java)
-                        if (horaInicio != null && horaFin != null) {
-                            duracionHoras = calcularDuracionHora(horaInicio, horaFin)
-                        }
 
                         val petIdsSnapshot = childSnapshot.child("petIds")
                         val cantidad = petIdsSnapshot.childrenCount.toString()
 
-                        uidDueño = childSnapshot.child("uidDueño").getValue(String::class.java)!!
+                        val uidDueño = childSnapshot.child("uidDueño").getValue(String::class.java)!!
 
-                        if (uidDueño != null) {
-                            obtenerNombreYFotoPorUID(uidDueño) { nombre, fotoUrl ->
-                                val profile = ProgramarPaseoItem(fotoUrl ?: "", nombre ?: "", "Duración: $duracionHoras hrs", "Mascotas: $cantidad")
-                                profiles.add(profile)
-                                adapter.actualizarLista(profiles)
-                            }
+                        obtenerNombreYFotoPorUID(uidDueño) { nombre, fotoUrl ->
+                            val profile = ProgramarPaseoItem(
+                                idSolicitud,
+                                uidDueño,
+                                fotoUrl ?: "",
+                                nombre ?: "",
+                                "Hora inicial: $horaInicio",
+                                "Hora final: $horaFin",
+                                "Mascotas: $cantidad"
+                            )
+                            profiles.add(profile)
+                            adapter.actualizarLista(profiles)
                         }
                     }
                 }
             }
 
-            override fun onCancelled(error: DatabaseError) {
-            }
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 
@@ -110,6 +103,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun setupBarraHerramientas() {
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
@@ -132,13 +126,10 @@ class ProgramarPaseoActivity : AppCompatActivity() {
 
     private fun abrirDetallePerfil(profile: ProgramarPaseoItem) {
         val intent = Intent(this, PerfilDuenhoActivity::class.java)
-        intent.putExtra("uid", uidDueño)
-        println("UID $uidDueño")
+        intent.putExtra("usuarioUid", profile.usuarioUid)
+        intent.putExtra("solicitudId", profile.solicitudId)
         startActivity(intent)
     }
-
-
-
 
     private fun calcularDuracionHora(horaInicio: String, horaFin: String): Double {
         val formato = SimpleDateFormat("HH:mm", Locale.getDefault())
