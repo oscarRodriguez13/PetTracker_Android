@@ -152,19 +152,71 @@ class HomeActivity : AppCompatActivity() {
             val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
 
             if (verificarCamposLlenos(etHoraInicial, etHoraFinal)) {
-                // Verificar permisos y obtener ubicación
-                if (checkLocationPermission()) {
-                    getLocationAndCreateSolicitud(
-                        etHoraInicial.text.toString().substringAfter(": ").trim(),
-                        etHoraFinal.text.toString().substringAfter(": ").trim()
-                    )
+                // Verificar si hay mascotas disponibles
+                if (selectedPetIds.isEmpty()) {
+                    Toast.makeText(this, "No tienes mascotas disponibles en este momento", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val horaInicial = etHoraInicial.text.toString().substringAfter(": ").trim()
+                val horaFinal = etHoraFinal.text.toString().substringAfter(": ").trim()
+
+                // Verificar si la hora inicial no es menor que la hora actual
+                if (isHoraInicialValida(horaInicial)) {
+                    // Verificar si la hora final es mayor que la hora inicial
+                    if (isHoraFinalMayorQueInicial(horaInicial, horaFinal)) {
+                        // Verificar permisos y obtener ubicación
+                        if (checkLocationPermission()) {
+                            getLocationAndCreateSolicitud(
+                                horaInicial,
+                                horaFinal
+                            )
+                        } else {
+                            requestLocationPermission()
+                        }
+                    } else {
+                        Toast.makeText(this, "La hora final debe ser mayor que la hora inicial", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    requestLocationPermission()
+                    Toast.makeText(this, "La hora inicial no puede ser menor que la hora actual", Toast.LENGTH_SHORT).show()
                 }
             } else {
                 Toast.makeText(this, "Por favor, llena todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun isHoraInicialValida(horaInicial: String): Boolean {
+        val horaActual = Calendar.getInstance()
+        val horaActualInt = horaActual.get(Calendar.HOUR_OF_DAY)
+        val minutoActualInt = horaActual.get(Calendar.MINUTE)
+
+        val horaInicialSplit = horaInicial.split(":")
+        val horaInicialInt = horaInicialSplit[0].toInt()
+        val minutoInicialInt = horaInicialSplit[1].toInt()
+
+        if (horaInicialInt > horaActualInt) {
+            return true
+        } else if (horaInicialInt == horaActualInt && minutoInicialInt >= minutoActualInt) {
+            return true
+        }
+        return false
+    }
+
+    private fun isHoraFinalMayorQueInicial(horaInicial: String, horaFinal: String): Boolean {
+        val horaInicialSplit = horaInicial.split(":")
+        val horaFinalSplit = horaFinal.split(":")
+        val horaInicialInt = horaInicialSplit[0].toInt()
+        val minutoInicialInt = horaInicialSplit[1].toInt()
+        val horaFinalInt = horaFinalSplit[0].toInt()
+        val minutoFinalInt = horaFinalSplit[1].toInt()
+
+        if (horaFinalInt > horaInicialInt) {
+            return true
+        } else if (horaFinalInt == horaInicialInt && minutoFinalInt > minutoInicialInt) {
+            return true
+        }
+        return false
     }
 
     private fun setupHistorialButton() {
