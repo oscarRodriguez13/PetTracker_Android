@@ -3,11 +3,13 @@ package com.example.pettracker.walkerActivities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pettracker.R
 import com.example.pettracker.adapter.ProgramarPaseoAdapter
+import com.example.pettracker.domain.Datos_walker
 import com.example.pettracker.domain.ProgramarPaseoItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -48,35 +50,48 @@ class ProgramarPaseoActivity : AppCompatActivity() {
     }
 
     private fun obtenerDatosFirebase(adapter: ProgramarPaseoAdapter) {
+        val userid = auth.currentUser!!.uid
+        var cont = 0
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val profiles = mutableListOf<ProgramarPaseoItem>()
                 for (childSnapshot in snapshot.children) {
+                    cont = 0
                     val estado = childSnapshot.child("estado").getValue(String::class.java)
                     if (estado == "no iniciado") {
                         val idSolicitud = childSnapshot?.key
-
-                        val horaInicio = childSnapshot.child("horaInicio").getValue(String::class.java)
-                        val horaFin = childSnapshot.child("horaFin").getValue(String::class.java)
-
-                        val petIdsSnapshot = childSnapshot.child("petIds")
-                        val cantidad = petIdsSnapshot.childrenCount.toString()
-
-                        val uidDueño = childSnapshot.child("uidDueño").getValue(String::class.java)!!
-
-                        obtenerNombreYFotoPorUID(uidDueño) { nombre, fotoUrl ->
-                            val profile = ProgramarPaseoItem(
-                                idSolicitud,
-                                uidDueño,
-                                fotoUrl ?: "",
-                                nombre ?: "",
-                                "Hora inicial: $horaInicio",
-                                "Hora final: $horaFin",
-                                "Mascotas: $cantidad"
-                            )
-                            profiles.add(profile)
-                            adapter.actualizarLista(profiles)
+                        for ((index, oferta) in Datos_walker.ofertasID.withIndex()) {
+                            if (oferta == idSolicitud) {
+                                if(Datos_walker.userID[index] == userid){
+                                    cont++
+                                }
+                            }
                         }
+                        if (cont == 0){
+                            val horaInicio = childSnapshot.child("horaInicio").getValue(String::class.java)
+                            val horaFin = childSnapshot.child("horaFin").getValue(String::class.java)
+
+                            val petIdsSnapshot = childSnapshot.child("petIds")
+                            val cantidad = petIdsSnapshot.childrenCount.toString()
+
+                            val uidDueño = childSnapshot.child("uidDueño").getValue(String::class.java)!!
+
+                            obtenerNombreYFotoPorUID(uidDueño) { nombre, fotoUrl ->
+                                val profile = ProgramarPaseoItem(
+                                    idSolicitud,
+                                    uidDueño,
+                                    fotoUrl ?: "",
+                                    nombre ?: "",
+                                    "Hora inicial: $horaInicio",
+                                    "Hora final: $horaFin",
+                                    "Mascotas: $cantidad"
+                                )
+                                profiles.add(profile)
+                                adapter.actualizarLista(profiles)
+                            }
+                        }
+
+
                     }
                 }
             }
@@ -84,6 +99,7 @@ class ProgramarPaseoActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
 
     private fun obtenerNombreYFotoPorUID(uid: String, callback: (String?, String?) -> Unit) {
         val usersRef = FirebaseDatabase.getInstance().reference.child("Usuarios")

@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.pettracker.R
 import com.example.pettracker.customerActivities.SettingsActivity
+import com.example.pettracker.domain.Datos_walker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -162,6 +163,9 @@ class PerfilDuenhoActivity : AppCompatActivity() {
 
             newOfferRef.setValue(offerData).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    Datos_walker.ofertasID.add(solicitudId)
+                    Datos_walker.userID.add(user.uid)
+
                     navigateToHomeWalker()
                 } else {
                     Toast.makeText(this, "Error al enviar la oferta", Toast.LENGTH_SHORT).show()
