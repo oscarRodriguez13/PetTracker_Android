@@ -152,6 +152,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                 applicationContext,
                 HomeWalkerActivity::class.java
             )
+            updatePaseoRequest()
             startActivity(intent)
         }
 
@@ -307,6 +308,17 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         osmMap.onPause()
         sensorManager?.unregisterListener(this)
         locationManager.removeUpdates(this)
+    }
+
+    private fun updatePaseoRequest() {
+        val database = FirebaseDatabase.getInstance()
+        if (solicitudId != null && userId != null) {
+            val solicitudRef = database.getReference("SolicitudesPaseo").child(solicitudId!!)
+            solicitudRef.child("estado").setValue("en curso")
+            Toast.makeText(this, "Solicitud actualizada con éxito", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Error al actualizar la solicitud", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun addPaseadorMarkerFromDatabase(uidPaseador: String) {
