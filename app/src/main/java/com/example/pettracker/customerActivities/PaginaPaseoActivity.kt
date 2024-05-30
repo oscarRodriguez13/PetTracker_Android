@@ -24,6 +24,13 @@ import com.example.pettracker.R
 import com.example.pettracker.domain.Datos
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.RoadManager
@@ -47,12 +54,25 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     private lateinit var roadManager: RoadManager
     private lateinit var osmMap: MapView
     private var isFirstLocationUpdate = true
-    private var randomMarker: Marker? = null
+    private var paseadorMarker: Marker? = null
+    private var solicitudId: String? = null
+    private var uidPaseador: String? = null
+    private lateinit var databaseReference: DatabaseReference
+    private var userId: String? = null
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pagina_paseo)
+
+        solicitudId = intent.getStringExtra("solicitudId")
+        uidPaseador = intent.getStringExtra("uidPaseador")
+
+        // Obtén el userId del usuario autenticado
+        val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+        userId = user?.uid
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Usuarios")
 
         Configuration.getInstance().userAgentValue = applicationContext.packageName
 
@@ -85,6 +105,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
             centerCameraOnUser()
         }
 
+        uidPaseador?.let { addPaseadorMarkerFromDatabase(it) }
     }
 
     private fun handlePermissions() {
@@ -116,16 +137,12 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     override fun onResume() {
         sensorManager?.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10f, this)
-        val latitude = 4.62
-        val longitude = -74.07
-        val startPoint = GeoPoint(latitude, longitude)
         super.onResume()
         osmMap.onResume()
-        val mapController: IMapController = osmMap.controller
-        mapController.setZoom(20.0)
         geoPoint?.let {
-            mapController.setCenter(startPoint)
-            addRandomMarkerAroundUser(1.0)
+            val mapController: IMapController = osmMap.controller
+            mapController.setZoom(15.0)
+            mapController.setCenter(it)
         }
     }
 
@@ -134,6 +151,55 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         osmMap.onPause()
         sensorManager?.unregisterListener(this)
         locationManager.removeUpdates(this)
+    }
+
+    private fun addPaseadorMarkerFromDatabase(uidPaseador: String) {
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidPaseador")
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val latitud = (snapshot.child("latitud").getValue(String::class.java))?.toDouble()
+                val longitud = (snapshot.child("longitud").getValue(String::class.java))?.toDouble()
+
+                if (latitud != null && longitud != null) {
+                    val paseadorGeoPoint = GeoPoint(latitud, longitud)
+
+                    // Elimina el marcador anterior si existe
+                    paseadorMarker?.let { osmMap.overlays.remove(it) }
+
+                    // Crea un nuevo marcador para el paseador
+                    paseadorMarker = Marker(osmMap)
+                    paseadorMarker?.position = paseadorGeoPoint
+                    paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    paseadorMarker?.title = "Paseador(a): Sofia Perez"
+
+                    // Obtener el drawable de la imagen personalizada
+                    val customMarkerDrawable = ContextCompat.getDrawable(this@PaginaPaseoActivity, R.drawable.icn_marcador_paseador)
+
+                    // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
+                    val width = 48
+                    val height = 48
+                    val scaledDrawable = Bitmap.createScaledBitmap(
+                        (customMarkerDrawable as BitmapDrawable).bitmap,
+                        width,
+                        height,
+                        false
+                    )
+
+                    // Asignar la imagen escalada al marcador
+                    paseadorMarker?.icon = BitmapDrawable(resources, scaledDrawable)
+
+                    // Agrega el marcador del paseador al mapa
+                    osmMap.overlays.add(paseadorMarker)
+                    osmMap.invalidate()
+                } else {
+                    Toast.makeText(this@PaginaPaseoActivity, "No se pudo obtener la ubicación del paseador", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@PaginaPaseoActivity, "Error al obtener la ubicación del paseador: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onLocationChanged(location: Location) {
@@ -155,11 +221,40 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
 
         // Agregar el marcador aleatorio solo la primera vez que se obtiene la ubicación
         if (isFirstLocationUpdate) {
-            addRandomMarkerAroundUser(10.0)
+            addPaseadorMarkerFromDatabase(uidPaseador!!)
             isFirstLocationUpdate = false
+        }
+
+        // Actualiza la ubicación en Firebase
+        updateLocationInFirebase(location)
+    }
+
+    private fun updateLocationInFirebase(location: Location) {
+        userId?.let {
+            val userLocation = mapOf(
+                "latitud" to location.latitude,
+                "longitud" to location.longitude
+            )
+
+            databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
+    private fun centerCameraOnUser() {
+        marker?.let {
+            val mapController: IMapController = osmMap.controller
+            mapController.setCenter(it.position)
+            mapController.setZoom(15.0)
+        } ?: run {
+            Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
@@ -177,51 +272,4 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // No implementation needed
     }
-
-    private fun addRandomMarkerAroundUser(radiusKm: Double) {
-        val random = Math.random()
-        val randomAngle = random * 2 * Math.PI
-        val randomDistance = Math.sqrt(random) * radiusKm / RADIUS_OF_EARTH_KM
-
-        val latitude = geoPoint!!.latitude + randomDistance * Math.cos(randomAngle)
-        val longitude = geoPoint!!.longitude + randomDistance * Math.sin(randomAngle)
-
-        val randomGeoPoint = GeoPoint(latitude, longitude)
-
-        randomMarker = Marker(osmMap)
-        randomMarker?.position = randomGeoPoint
-        randomMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        randomMarker?.title = "Paseador(a): Sofia Perez"
-
-        // Obtener el drawable de la imagen personalizada
-        val customMarkerDrawable = ContextCompat.getDrawable(this, R.drawable.icn_marcador_paseador)
-
-        // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
-        val width = 48
-        val height = 48
-        val scaledDrawable = Bitmap.createScaledBitmap(
-            (customMarkerDrawable as BitmapDrawable).bitmap,
-            width,
-            height,
-            false
-        )
-
-        // Asignar la imagen escalada al marcador
-        randomMarker?.icon = BitmapDrawable(resources, scaledDrawable)
-
-        osmMap.overlays.add(randomMarker)
-        osmMap.invalidate()
-    }
-
-    private fun centerCameraOnUser() {
-        marker?.let {
-            val mapController: IMapController = osmMap.controller
-            mapController.setCenter(marker!!.position)
-            mapController.setZoom(20.0)
-        } ?: run {
-            Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
 }

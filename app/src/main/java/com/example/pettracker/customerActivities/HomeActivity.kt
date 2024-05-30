@@ -38,6 +38,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: HomeAdapter
     private var paseoItems = mutableListOf<SolicitudItem>()
+    private var etHoraInicial: EditText? = null
+    private var etHoraFinal: EditText? = null
+    private var tvOption: TextView? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +54,44 @@ class HomeActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = HomeAdapter(paseoItems) { paseoItem ->
-            val intent = Intent(this, SolicitarPaseoActivity::class.java)
-            intent.putExtra("solicitudId", paseoItem.solicitudId)
+            val intent = when (paseoItem.estado) {
+                "no iniciado" -> {
+                    val intent = Intent(this, SolicitarPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", paseoItem.solicitudId)
+                    intent
+                }
+                "asignado" -> {
+                    val intent = Intent(this, PaginaPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", paseoItem.solicitudId)
+                    intent.putExtra("uidPaseador", paseoItem.uidPaseador)
+                    intent
+                }
+                "en curso" -> {
+                    val intent = Intent(this, SeguimientoPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", paseoItem.solicitudId)
+                    intent.putExtra("uidPaseador", paseoItem.uidPaseador)
+                    intent
+                }
+                "en peligro" -> {
+                    val intent = Intent(this, SeguimientoPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", paseoItem.solicitudId)
+                    intent.putExtra("uidPaseador", paseoItem.uidPaseador)
+                    intent
+                }
+                "terminado" -> {
+                    val intent = Intent(this, FinalizarPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", paseoItem.solicitudId)
+                    intent.putExtra("uidPaseador", paseoItem.uidPaseador)
+                    intent
+                }
+                else -> {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent
+                }
+            }
             startActivity(intent)
         }
+
         recyclerView.adapter = adapter
 
         loadSolicitudesPaseo()
@@ -81,6 +118,8 @@ class HomeActivity : AppCompatActivity() {
 
                 for (data in snapshot.children) {
                     val solicitudId = data.key ?: continue
+                    val estado = data.child("estado").getValue(String::class.java)
+                    val uidPaseador = data.child("uidPaseador").getValue(String::class.java)
                     val horaInicio = data.child("horaInicio").getValue(String::class.java)
                     val horaFin = data.child("horaFin").getValue(String::class.java)
                     val uidDueño = data.child("uidDueño").getValue(String::class.java)
@@ -88,13 +127,18 @@ class HomeActivity : AppCompatActivity() {
                     val cantidad = petIds.size.toString()
 
                     if (uidDueño == userId && horaInicio != null && horaFin != null) {
-                        val paseoItem = SolicitudItem(
-                            solicitudId,
-                            horaInicio,
-                            horaFin,
-                            cantidad
-                        )
-                        nuevaLista.add(paseoItem)
+                        // Verificar si la hora inicial es válida
+                        if (isHoraInicialValida(horaInicio)) {
+                            val paseoItem = SolicitudItem(
+                                solicitudId,
+                                estado,
+                                uidPaseador,
+                                horaInicio,
+                                horaFin,
+                                cantidad
+                            )
+                            nuevaLista.add(paseoItem)
+                        }
                     }
                 }
 
@@ -107,23 +151,21 @@ class HomeActivity : AppCompatActivity() {
         })
     }
 
-
-
     @SuppressLint("SetTextI18n")
     private fun setupTimePickers() {
-        val etHoraInicial = findViewById<EditText>(R.id.etHoraInicial)
-        val etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
+        etHoraInicial = findViewById(R.id.etHoraInicial)
+        etHoraFinal = findViewById<EditText>(R.id.etHoraFinal)
 
         val now = Calendar.getInstance()
         val hour = now.get(Calendar.HOUR_OF_DAY)
         val minute = now.get(Calendar.MINUTE)
 
-        setupTimePicker(etHoraInicial, hour, minute) { selectedTime ->
-            etHoraInicial.setText("Hora inicial: $selectedTime")
+        setupTimePicker(etHoraInicial!!, hour, minute) { selectedTime ->
+            etHoraInicial!!.setText("Hora inicial: $selectedTime")
         }
 
-        setupTimePicker(etHoraFinal, hour, minute) { selectedTime ->
-            etHoraFinal.setText("Hora final: $selectedTime")
+        setupTimePicker(etHoraFinal!!, hour, minute) { selectedTime ->
+            etHoraFinal!!.setText("Hora final: $selectedTime")
         }
     }
 
@@ -232,9 +274,9 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupSelectOptionsButton() {
-        val tvOption = findViewById<TextView>(R.id.tv_option)
+        tvOption = findViewById(R.id.tv_option)
         findViewById<Button>(R.id.button_options).setOnClickListener {
-            loadPetOptions(tvOption)
+            loadPetOptions(tvOption!!)
         }
     }
 
@@ -318,7 +360,7 @@ class HomeActivity : AppCompatActivity() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
-                    uploadLocationAndCreateSolicitud(location, horaInicio, horaFin)
+                    uploadLocationAndCreateSolicitud(horaInicio, horaFin)
                 } else {
                     Toast.makeText(this, "No se pudo obtener la ubicación. Inténtalo de nuevo.", Toast.LENGTH_SHORT).show()
                 }
@@ -328,26 +370,14 @@ class HomeActivity : AppCompatActivity() {
             }
     }
 
-    private fun uploadLocationAndCreateSolicitud(location: Location, horaInicio: String, horaFin: String) {
+    private fun uploadLocationAndCreateSolicitud(horaInicio: String, horaFin: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
             Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val userLocationData = hashMapOf(
-            "latitude" to location.latitude,
-            "longitude" to location.longitude
-        )
-
-        val database = FirebaseDatabase.getInstance().getReference("Usuarios/$userId")
-        database.child("ubicacion").setValue(userLocationData)
-            .addOnSuccessListener {
-                crearSolicitudPaseo(userId, horaInicio, horaFin)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error al subir la ubicación: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+        crearSolicitudPaseo(userId, horaInicio, horaFin)
     }
 
     private fun crearSolicitudPaseo(userId: String, horaInicio: String, horaFin: String) {
@@ -371,6 +401,12 @@ class HomeActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 actualizarEstadoMascotas(userId)
                 Toast.makeText(this, "Solicitud creada exitosamente", Toast.LENGTH_SHORT).show()
+
+                // Limpiar los datos de los EditText
+                etHoraInicial!!.text.clear()
+                etHoraFinal!!.text.clear()
+
+                tvOption!!.text = "Seleccione las opciones"
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Error al crear solicitud: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -383,10 +419,10 @@ class HomeActivity : AppCompatActivity() {
         for (petId in selectedPetIds) {
             mascotasRef.child(petId).child("estado").setValue("en paseo")
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Estado de la mascota $petId actualizado a 'en paseo'", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Estado de la mascota $petId actualizado a 'en paseo'", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(this, "Error al actualizar estado de la mascota $petId: ${e.message}", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Error al actualizar estado de la mascota $petId: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
     }

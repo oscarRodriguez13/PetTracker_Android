@@ -125,7 +125,7 @@ class PerfilPaseadorActivity : AppCompatActivity() {
     }
 
     private fun navigateToPaginaPaseo() {
-        val intent = Intent(this, PaginaPaseoActivity::class.java)
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
     }
 

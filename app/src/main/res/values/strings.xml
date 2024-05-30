@@ -55,7 +55,7 @@
     <string name="descripcion">Descripcion</string>
     <string name="continuar">Continuar</string>
     <string name="terminar">Terminar</string>
-    <string name="paseos_actuales">Solicitudes Actuales</string>
+    <string name="paseos_actuales">Paseos Actuales</string>
     <string name="hora_final">Hora final</string>
     <string name="hora_inicial">Hora inicial</string>
     <string name="selecciona_una_mascota">Selecciona una mascota</string>
