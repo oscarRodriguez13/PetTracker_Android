@@ -64,6 +64,10 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     private lateinit var horaFinalTextView: TextView
     private lateinit var cantidadMascotasTextView: TextView
 
+    private var solicitudStateListener: ValueEventListener? = null
+    private var solicitudRef: DatabaseReference? = null
+
+
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -280,9 +284,9 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -316,8 +320,8 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     }
 
     private fun addSolicitudStateListener(solicitudId: String) {
-        val solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId/estado")
-        solicitudRef.addValueEventListener(object : ValueEventListener {
+        solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId/estado")
+        solicitudStateListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val estado = snapshot.getValue(String::class.java)
                 if (estado == "en curso") {
@@ -331,6 +335,16 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@PaginaPaseoActivity, "Error al obtener el estado de la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+        solicitudRef?.addValueEventListener(solicitudStateListener!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        solicitudRef?.let { ref ->
+            solicitudStateListener?.let { listener ->
+                ref.removeEventListener(listener)
+            }
+        }
     }
 }

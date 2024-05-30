@@ -51,7 +51,6 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private var marker: Marker? = null
     private var mGeocoder: Geocoder? = null
     private var geoPoint: GeoPoint? = null
-    private val RADIUS_OF_EARTH_KM = 6371
     private lateinit var roadManager: RoadManager
     private lateinit var osmMap: MapView
     private var isFirstLocationUpdate = true
@@ -63,6 +62,10 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private lateinit var nombreDuenhoTextView: TextView
     private lateinit var horaFinalTextView: TextView
     private lateinit var cantidadMascotasTextView: TextView
+
+    private var solicitudStateListener: ValueEventListener? = null
+    private var solicitudRef: DatabaseReference? = null
+
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -239,7 +242,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ubicación del paseador: ${error.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ubicación del paseador: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -274,8 +277,8 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private fun updateLocationInFirebase(location: Location) {
         userId?.let {
             val userLocation = mapOf(
-                "latitud" to location.latitude.toString(),
-                "longitud" to location.longitude.toString()
+                "latitud" to location.latitude,
+                "longitud" to location.longitude
             )
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
@@ -316,12 +319,12 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     }
 
     private fun addSolicitudStateListener(solicitudId: String) {
-        val solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId/estado")
-        solicitudRef.addValueEventListener(object : ValueEventListener {
+        solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId/estado")
+        solicitudStateListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val estado = snapshot.getValue(String::class.java)
-                if (estado == "en curso") {
-                    val intent = Intent(this@SeguimientoPaseoActivity, SeguimientoPaseoActivity::class.java)
+                if (estado == "terminado") {
+                    val intent = Intent(this@SeguimientoPaseoActivity, FinalizarPaseoActivity::class.java)
                     intent.putExtra("solicitudId", solicitudId)
                     intent.putExtra("uidPaseador", uidPaseador)
                     startActivity(intent)
@@ -331,6 +334,16 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener el estado de la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
+        solicitudRef?.addValueEventListener(solicitudStateListener!!)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        solicitudRef?.let { ref ->
+            solicitudStateListener?.let { listener ->
+                ref.removeEventListener(listener)
+            }
+        }
     }
 }
