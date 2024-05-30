@@ -432,6 +432,10 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
         // Actualiza la ubicación en Firebase
         updateLocationInFirebase(location)
         checkDistanceAndEnableButton()
+
+        paseadorMarker?.position?.let { paseadorGeoPoint ->
+            drawRoute(geoPoint!!, paseadorGeoPoint)
+        }
     }
 
     private fun updateLocationInFirebase(location: Location) {

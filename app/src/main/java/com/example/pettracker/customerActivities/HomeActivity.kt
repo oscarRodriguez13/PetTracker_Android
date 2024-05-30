@@ -126,7 +126,7 @@ class HomeActivity : AppCompatActivity() {
                     val petIds = data.child("petIds").children.map { it.getValue(String::class.java) ?: "" }
                     val cantidad = petIds.size.toString()
 
-                    if (uidDueño == userId && horaInicio != null && horaFin != null) {
+                    if (uidDueño == userId && horaInicio != null && horaFin != null && estado != "calificado") {
                         // Verificar si la hora inicial es válida
                         if (isHoraInicialValida(horaInicio)) {
                             val paseoItem = SolicitudItem(

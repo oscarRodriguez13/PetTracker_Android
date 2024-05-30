@@ -114,9 +114,6 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ruta_duenho)
 
-        btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
-        btnEmpezar.isEnabled = false
-
         profileImage = findViewById(R.id.profile_image)
         nombreUsuario = findViewById(R.id.nombre_duenho)
         hora_inicial = findViewById(R.id.hora_inicial)
@@ -169,6 +166,9 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         mGeocoder = Geocoder(baseContext)
 
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
+
+        btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+        btnEmpezar.isEnabled = false
 
         btnEmpezar.setOnClickListener {
             val intent = Intent(
@@ -524,9 +524,9 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                         osmMap.overlays.add(paseadorMarker)
                         osmMap.invalidate()
 
-                        paseadorMarker?.position?.let { paseadorGeoPoint ->
+                        /*paseadorMarker?.position?.let { paseadorGeoPoint ->
                             drawRoute(geoPoint!!, paseadorGeoPoint)
-                        }
+                        }*/
 
                         checkDistanceAndEnableButton()
                     } catch (e: NumberFormatException) {
