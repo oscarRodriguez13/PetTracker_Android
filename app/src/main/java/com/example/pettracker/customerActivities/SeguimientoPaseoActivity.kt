@@ -277,8 +277,8 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private fun updateLocationInFirebase(location: Location) {
         userId?.let {
             val userLocation = mapOf(
-                "latitud" to location.latitude,
-                "longitud" to location.longitude
+                "latitud" to location.latitude.toString(),
+                "longitud" to location.longitude.toString()
             )
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
