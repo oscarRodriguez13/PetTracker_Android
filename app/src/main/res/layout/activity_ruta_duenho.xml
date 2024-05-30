@@ -53,12 +53,20 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/duracion_paseo"
+                    android:id="@+id/hora_inicial"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="Estado: En paseo"
+                    android:text="Hora inicial"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/hora_final"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Hora final"
                     android:textColor="@color/black" />
 
                 <TextView
