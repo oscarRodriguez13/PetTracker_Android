@@ -122,11 +122,11 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         val solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId")
         solicitudRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val uidDuenho = snapshot.child("uidDueño").getValue(String::class.java)
+                val uidPaseador = snapshot.child("uidPaseador").getValue(String::class.java)
                 val horaInicio = snapshot.child("horaInicio").getValue(String::class.java)
                 val petIds = snapshot.child("petIds").children
 
-                uidDuenho?.let { loadDuenhoData(it) }
+                uidPaseador?.let { loadDuenhoData(it) }
                 horaInicio?.let { horaFinalTextView.text = "Hora inicial: " + it }
 
                 val petCount = petIds.count()
@@ -216,6 +216,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
                     paseadorMarker = Marker(osmMap)
                     paseadorMarker?.position = paseadorGeoPoint
                     paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    loadDuenhoData(uidPaseador)
                     paseadorMarker?.title = "Paseador(a): ${nombreDuenhoTextView.text}"
 
                     // Obtener el drawable de la imagen personalizada

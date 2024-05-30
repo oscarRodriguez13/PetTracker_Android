@@ -134,7 +134,7 @@ class PerfilPaseadorActivity : AppCompatActivity() {
             val solicitudRef = database.getReference("SolicitudesPaseo").child(solicitudId!!)
             solicitudRef.child("estado").setValue("asignado")
             solicitudRef.child("uidPaseador").setValue(paseadorUid)
-            Toast.makeText(this, "Solicitud actualizada con éxito", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Solicitud actualizada con éxito", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "Error al actualizar la solicitud", Toast.LENGTH_SHORT).show()
         }
