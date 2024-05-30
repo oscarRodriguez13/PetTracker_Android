@@ -16,6 +16,7 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -59,6 +60,9 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
     private var uidPaseador: String? = null
     private lateinit var databaseReference: DatabaseReference
     private var userId: String? = null
+    private lateinit var nombreDuenhoTextView: TextView
+    private lateinit var horaFinalTextView: TextView
+    private lateinit var cantidadMascotasTextView: TextView
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +78,10 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Usuarios")
 
+        nombreDuenhoTextView = findViewById(R.id.nombre_duenho)
+        horaFinalTextView = findViewById(R.id.hora_final)
+        cantidadMascotasTextView = findViewById(R.id.cantidad_mascotas)
+
         Configuration.getInstance().userAgentValue = applicationContext.packageName
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -87,26 +95,60 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
         osmMap = findViewById(R.id.osmMap)
         osmMap.setTileSource(TileSourceFactory.MAPNIK)
         osmMap.setMultiTouchControls(true)
-        val btnSeguimiento = findViewById<Button>(R.id.btn_seguimiento)
 
         mGeocoder = Geocoder(baseContext)
 
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
-
-        btnSeguimiento.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                SeguimientoPaseoActivity::class.java
-            )
-            startActivity(intent)
-        }
 
         centerButton.setOnClickListener {
             centerCameraOnUser()
         }
 
         uidPaseador?.let { addPaseadorMarkerFromDatabase(it) }
+
+        // Carga los datos de la solicitud y actualiza la UI
+        solicitudId?.let { loadSolicitudData(it) }
+
+
+        // Agrega el listener para el estado de la solicitud
+        solicitudId?.let { addSolicitudStateListener(it) }
     }
+
+    private fun loadSolicitudData(solicitudId: String) {
+        val solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId")
+        solicitudRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val uidDuenho = snapshot.child("uidDueño").getValue(String::class.java)
+                val horaInicio = snapshot.child("horaInicio").getValue(String::class.java)
+                val petIds = snapshot.child("petIds").children
+
+                uidDuenho?.let { loadDuenhoData(it) }
+                horaInicio?.let { horaFinalTextView.text = "Hora inicial: " + it }
+
+                val petCount = petIds.count()
+                cantidadMascotasTextView.text = "Cantidad mascotas: $petCount"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@PaginaPaseoActivity, "Error al cargar los datos de la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun loadDuenhoData(uidDuenho: String) {
+        val duenhoRef = FirebaseDatabase.getInstance().getReference("Usuarios/$uidDuenho")
+        duenhoRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val nombreDuenho = snapshot.child("nombre").getValue(String::class.java)
+                nombreDuenho?.let { nombreDuenhoTextView.text = it }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@PaginaPaseoActivity, "Error al cargar los datos del dueño: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
     private fun handlePermissions() {
         when {
@@ -170,7 +212,7 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
                     paseadorMarker = Marker(osmMap)
                     paseadorMarker?.position = paseadorGeoPoint
                     paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                    paseadorMarker?.title = "Paseador(a): Sofia Perez"
+                    paseadorMarker?.title = "Paseador(a): ${nombreDuenhoTextView.text}"
 
                     // Obtener el drawable de la imagen personalizada
                     val customMarkerDrawable = ContextCompat.getDrawable(this@PaginaPaseoActivity, R.drawable.icn_marcador_paseador)
@@ -271,5 +313,24 @@ class PaginaPaseoActivity : AppCompatActivity(), SensorEventListener, LocationLi
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // No implementation needed
+    }
+
+    private fun addSolicitudStateListener(solicitudId: String) {
+        val solicitudRef = FirebaseDatabase.getInstance().getReference("SolicitudesPaseo/$solicitudId/estado")
+        solicitudRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val estado = snapshot.getValue(String::class.java)
+                if (estado == "en curso") {
+                    val intent = Intent(this@PaginaPaseoActivity, SeguimientoPaseoActivity::class.java)
+                    intent.putExtra("solicitudId", solicitudId)
+                    intent.putExtra("uidPaseador", uidPaseador)
+                    startActivity(intent)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@PaginaPaseoActivity, "Error al obtener el estado de la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

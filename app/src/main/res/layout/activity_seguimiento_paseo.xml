@@ -53,12 +53,12 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/duracion_paseo"
+                    android:id="@+id/hora_final"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="Estado: En paseo"
+                    android:text="Hora final"
                     android:textColor="@color/black" />
 
                 <TextView
@@ -70,34 +70,15 @@
                     android:text="Cantidad mascotas: 1"
                     android:textColor="@color/black" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/btn_terminar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="17sp"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Terminar"
-                        style="@style/ButtonStyle" />
-
-                    <Space
-                        android:layout_width="24dp"
-                        android:layout_height="match_parent" />
-
-                    <Button
-                        android:id="@+id/buscarMascota"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="12sp"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Ir por mascota"
-                        style="@style/ButtonStyle" />
-
-                </LinearLayout>
+                <Button
+                    android:id="@+id/buscarMascota"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Ir por mascota"
+                    android:layout_marginTop="10dp"
+                    style="@style/ButtonStyle" />
 
             </LinearLayout>
 
