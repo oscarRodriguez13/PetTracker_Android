@@ -62,10 +62,8 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private lateinit var nombreDuenhoTextView: TextView
     private lateinit var horaFinalTextView: TextView
     private lateinit var cantidadMascotasTextView: TextView
-
     private var solicitudStateListener: ValueEventListener? = null
     private var solicitudRef: DatabaseReference? = null
-
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
