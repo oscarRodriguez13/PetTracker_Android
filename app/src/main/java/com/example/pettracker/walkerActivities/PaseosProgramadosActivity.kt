@@ -139,7 +139,7 @@ class PaseosProgramadosActivity : AppCompatActivity() {
         val intent = Intent(this, RutaDuenhoActivity::class.java)
         intent.putExtra("usuarioUid", profile.usuarioUid)
         intent.putExtra("solicitudId", profile.solicitudId)
-
+        intent.putExtra("cantMascotas", profile.cantidad)
         startActivity(intent)
     }
 }

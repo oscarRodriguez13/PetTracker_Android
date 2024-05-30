@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".walkerActivities.PaginaPaseoWalkerActivity">
-
+    tools:context=".customerActivities.PaginaPaseoActivity">
 
     <org.osmdroid.views.MapView
         android:layout_width="match_parent"
@@ -15,7 +14,6 @@
         android:id="@+id/osmMap">
 
     </org.osmdroid.views.MapView>
-
 
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -51,18 +49,25 @@
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="Dueño: Javier Lopez"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"/>
+                    android:text="Nombre del Usuario"
+                    android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/duracion_paseo"
+                    android:id="@+id/hora_inicial1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="Estado: En curso..."
-                    android:textColor="@color/gray" />
+                    android:text="Hora inicial"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/hora_final1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Hora final"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/cantidad_mascotas"
@@ -71,16 +76,16 @@
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
                     android:text="Cantidad mascotas: 1"
-                    android:textColor="@color/gray" />
-                <TextView
-                    android:id="@+id/metros_restantes"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btn_Empezar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17sp"
                     android:layout_gravity="center_horizontal"
-                    android:text="100 metros para finalizar"
-                    android:textColor="@color/gray" />
-
+                    android:text="Terminar"
+                    style="@style/ButtonStyle" />
 
             </LinearLayout>
 

@@ -82,9 +82,8 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private lateinit var auth: FirebaseAuth
     private lateinit var btnEmpezar:Button
 
+    private var cantMascotas: String? = null
 
-    private var duenhoLocation: Location? = null
-    private var userLocation: Location? = null
 
 
 
@@ -104,6 +103,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
 
         solicitudId = intent.getStringExtra("solicitudId")
         uidDuenho = intent.getStringExtra("usuarioUid")
+        cantMascotas = intent.getStringExtra("cantMascotas")
 
         // Obtén el userId del usuario autenticado
         val user: FirebaseUser? = FirebaseAuth.getInstance().currentUser
@@ -116,7 +116,8 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         if (uid != null) {
             loadUserData(uid)
             loadProfileImage(uid)
-            loadUserPets(uid)
+            //loadUserPets(uid)
+            cant_mascotas.text = cantMascotas
 
         }
         if (solicitudId2 != null) {
@@ -415,7 +416,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
                 }
