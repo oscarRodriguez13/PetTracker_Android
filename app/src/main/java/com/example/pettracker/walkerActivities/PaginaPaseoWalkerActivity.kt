@@ -85,6 +85,8 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
     private lateinit var btnEmpezar: Button
 
     private var cantMascotas: String? = null
+
+    private lateinit var paseadorLocationListener: ValueEventListener
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,6 +162,7 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
         }
 
         uidDuenho?.let { addPaseadorMarkerFromDatabase(it) }
+        setupPaseadorLocationListener()
 
 
 
@@ -382,7 +385,7 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
     }
 
     override fun onLocationChanged(location: Location) {
-        checkDistanceAndEnableButton()
+
         geoPoint = GeoPoint(location.latitude, location.longitude)
         val mapController: IMapController = osmMap.controller
         mapController.setCenter(geoPoint)
@@ -407,6 +410,7 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
 
         // Actualiza la ubicación en Firebase
         updateLocationInFirebase(location)
+        checkDistanceAndEnableButton()
     }
 
     private fun updateLocationInFirebase(location: Location) {
@@ -451,5 +455,73 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // No implementation needed
+    }
+
+    private fun setupPaseadorLocationListener() {
+        paseadorLocationListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val latitudString = snapshot.child("latitud").getValue(String::class.java)
+                val longitudString = snapshot.child("longitud").getValue(String::class.java)
+
+                if (latitudString != null && longitudString != null) {
+                    try {
+                        val latitud = latitudString.toDouble()
+                        val longitud = longitudString.toDouble()
+                        val paseadorGeoPoint = GeoPoint(latitud, longitud)
+
+                        // Elimina el marcador anterior si existe
+                        paseadorMarker?.let { osmMap.overlays.remove(it) }
+
+                        // Crea un nuevo marcador para el paseador
+                        paseadorMarker = Marker(osmMap)
+                        paseadorMarker?.position = paseadorGeoPoint
+                        paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                        paseadorMarker?.title = "Paseador(a): ${nombreUsuario.text}"
+
+                        // Obtener el drawable de la imagen personalizada
+                        val customMarkerDrawable = ContextCompat.getDrawable(this@PaginaPaseoWalkerActivity, R.drawable.icn_marcador_paseador)
+
+                        // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
+                        val width = 48
+                        val height = 48
+                        val scaledDrawable = Bitmap.createScaledBitmap(
+                            (customMarkerDrawable as BitmapDrawable).bitmap,
+                            width,
+                            height,
+                            false
+                        )
+
+                        // Asignar la imagen escalada al marcador
+                        paseadorMarker?.icon = BitmapDrawable(resources, scaledDrawable)
+
+                        // Agrega el marcador del paseador al mapa
+                        osmMap.overlays.add(paseadorMarker)
+                        osmMap.invalidate()
+                        checkDistanceAndEnableButton()
+                    } catch (e: NumberFormatException) {
+                        Toast.makeText(this@PaginaPaseoWalkerActivity, "Error al convertir la ubicación del paseador", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@PaginaPaseoWalkerActivity, "No se pudo obtener la ubicación del paseador", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@PaginaPaseoWalkerActivity, "Error al obtener la ubicación del paseador: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidDuenho")
+        database.addValueEventListener(paseadorLocationListener)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removePaseadorLocationListener()
+    }
+    private fun removePaseadorLocationListener() {
+        val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidDuenho")
+        database.removeEventListener(paseadorLocationListener)
     }
 }
