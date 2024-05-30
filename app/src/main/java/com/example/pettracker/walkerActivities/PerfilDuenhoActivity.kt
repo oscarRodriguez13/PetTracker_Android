@@ -46,7 +46,7 @@ class PerfilDuenhoActivity : AppCompatActivity() {
         if (uid != null) {
             loadUserData(uid)
             loadProfileImage(uid)
-            loadUserPets(uid)
+            loadUserPets(uid, solicitudId)
         }
 
         setupButtons(solicitudId)
@@ -124,22 +124,53 @@ class PerfilDuenhoActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadUserPets(uid: String) {
-        val database = FirebaseDatabase.getInstance()
-        val petsRef = database.getReference("Mascotas").child(uid)
+    private fun loadUserPets(uid: String, solicitudId: String?) {
+        println("Informacion mascotas")
+        println("Solicitud id $solicitudId")
+        if (solicitudId == null){
+            println("Solicitud invalida")
+            return
+        }
 
-        petsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        val database = FirebaseDatabase.getInstance()
+        val solicitudesRef = database.getReference("SolicitudesPaseo").child(solicitudId)
+
+        println("Haciendo referencia a sokicitar paseos con $solicitudId")
+
+        solicitudesRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val petNames = ArrayList<String>()
-                    for (petSnapshot in snapshot.children) {
-                        val petName = petSnapshot.child("nombre").getValue(String::class.java)
-                        petName?.let {
-                            petNames.add(it)
-                        }
+                    val petIds = snapshot.child("petIds").children.mapNotNull { it.getValue(String::class.java) }
+                    println("PET IDS $petIds")
+
+                    if (petIds.isNotEmpty()) {
+                        val petsRef = database.getReference("Mascotas").child(uid)
+                        petsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(petSnapshot: DataSnapshot) {
+                                if (petSnapshot.exists()) {
+                                    val petNames = ArrayList<String>()
+                                    for (petId in petIds) {
+                                        println("Pet id guardado $petId")
+                                        val petName = petSnapshot.child(petId).child("nombre").getValue(String::class.java)
+                                        petName?.let {
+                                            petNames.add(it)
+                                        }
+                                    }
+                                    val adapter = ArrayAdapter(this@PerfilDuenhoActivity, android.R.layout.simple_list_item_1, petNames)
+                                    mascotasList.adapter = adapter
+                                }
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                // Handle error
+                            }
+                        })
+                    } else {
+                        println("No hay petids")
                     }
-                    val adapter = ArrayAdapter(this@PerfilDuenhoActivity, android.R.layout.simple_list_item_1, petNames)
-                    mascotasList.adapter = adapter
+                }
+                else {
+                    println("No existe una snapshot")
                 }
             }
 

@@ -24,6 +24,7 @@ import com.example.pettracker.R
 import com.example.pettracker.adapter.SolicitudPaseoAdapter
 import com.example.pettracker.customerActivities.DetallesMascotaActivity
 import com.example.pettracker.domain.Datos
+import com.example.pettracker.domain.HistorialItem
 import com.example.pettracker.domain.Profile
 import com.example.pettracker.generalActivities.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -44,6 +45,12 @@ class SettingsWalkerActivity : AppCompatActivity() {
     private lateinit var takePictureLauncher: ActivityResultLauncher<Uri>
     private var photoURI: Uri? = null
     private lateinit var auth: FirebaseAuth
+    private val solicitudesPaseo = mutableListOf<DataSnapshot>()
+    private val database = FirebaseDatabase.getInstance()
+    private val ratings = mutableListOf<Float>()
+    private lateinit var adapter: SolicitudPaseoAdapter
+    private lateinit var ratingBar: RatingBar
+    private val profiles = mutableListOf<Profile>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,14 +73,7 @@ class SettingsWalkerActivity : AppCompatActivity() {
         val userEmail = intent.getStringExtra("EMAIL")
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        val profiles = Arrays.asList(
-            Profile("a", null, "Anónimo", "Muy buen paseador, perfecto como siempre"),
-            Profile("b", null, "Anónimo", "Paseo regular, Rocky volvió inquieto"),
-            Profile("a", null, "Anónimo", "Buen paseo, pero Toby necesitaba más agua")
-        )
-
-        val adapter = SolicitudPaseoAdapter(profiles) { profile ->
-            abrirDetallePerfil(profile)
+        adapter = SolicitudPaseoAdapter(profiles) { profile ->
         }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -94,7 +94,7 @@ class SettingsWalkerActivity : AppCompatActivity() {
             toggleNotificationIcon()
         }
 
-        val ratingBar = findViewById<RatingBar>(R.id.calificacionView)
+        ratingBar = findViewById<RatingBar>(R.id.calificacionView)
         ratingBar.isClickable = false
         ratingBar.isFocusable = false
         ratingBar.stepSize = 1f
@@ -103,6 +103,50 @@ class SettingsWalkerActivity : AppCompatActivity() {
         ratingBar.isEnabled = false
 
         userId?.let { loadUserData(it) }
+        cargarDatos()
+    }
+
+    private fun cargarDatos() {
+        val solicitudesRef = database.getReference("SolicitudesPaseo")
+        solicitudesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    solicitudesPaseo.add(snapshot)
+                }
+                procesarSolicitudes()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
+
+    private fun procesarSolicitudes() {
+        val currentUserUid = auth.currentUser?.uid ?: return
+
+        for (solicitud in solicitudesPaseo) {
+            val uidPaseador = solicitud.child("uidPaseador").getValue(String::class.java)
+            val estado = solicitud.child("estado").getValue(String::class.java)
+
+            if (currentUserUid == uidPaseador && estado == "calificado") {
+                val rating = solicitud.child("rating").getValue(Long::class.java)?.toFloat() ?: 0f
+                val comentario = solicitud.child("comentario").getValue(String::class.java) ?: "Sin comentario"
+
+                ratings.add(rating)
+                profiles.add(Profile("a", null, "Anónimo", comentario))
+            }
+        }
+
+        adapter.notifyDataSetChanged()
+        actualizarRatingBar()
+    }
+
+    private fun actualizarRatingBar() {
+        if (ratings.isNotEmpty()) {
+            val promedio = ratings.sum() / ratings.size
+            ratingBar.rating = promedio
+        }
     }
 
     private fun setupImagePickers() {
@@ -228,12 +272,5 @@ class SettingsWalkerActivity : AppCompatActivity() {
                 Toast.makeText(this@SettingsWalkerActivity, "Error al cargar datos del usuario", Toast.LENGTH_SHORT).show()
             }
         })
-    }
-
-    private fun abrirDetallePerfil(profile: Profile) {
-        val intent = Intent(this, DetallesMascotaActivity::class.java)
-        intent.putExtra("profileName", profile.name)
-        intent.putExtra("profilePrice", profile.price)
-        startActivity(intent)
     }
 }

@@ -179,38 +179,8 @@
             android:layout_centerInParent="true"
             app:srcCompat="@drawable/calificaciones" />
 
-        <TextView
-            android:id="@+id/titulo_comentarios"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/calificacion_paseador"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/titulo_comentarios_perfil_paseador"
-            android:textSize="20dp"
-            android:textColor="@color/gray"
-            android:textStyle="bold" />
 
-        <View
-            android:id="@+id/line5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_below="@id/titulo_comentarios"
-            android:layout_marginTop="12dp"/>
 
-        <TextView
-            android:id="@+id/comentarios"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/line5"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/comentarios_perfil_paseador"
-            android:textSize="17dp"
-            android:layout_centerInParent="true"
-            android:textColor="@color/gray"
-            />
 
     </RelativeLayout>
 
