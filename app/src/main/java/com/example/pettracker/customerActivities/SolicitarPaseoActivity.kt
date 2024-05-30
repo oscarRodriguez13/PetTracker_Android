@@ -41,6 +41,8 @@ class SolicitarPaseoActivity : AppCompatActivity() {
         // Inicializar Firebase
         database = FirebaseDatabase.getInstance()
 
+        println("Solicitud id $solicitudId")
+
         // Cargar datos desde Firebase si solicitudId no es nulo
         if (solicitudId != null) {
             offersRef = database.getReference("Ofertas").child(solicitudId!!)
@@ -54,32 +56,83 @@ class SolicitarPaseoActivity : AppCompatActivity() {
         // Botón para ir al historial
         val historialButton = findViewById<Button>(R.id.buttonOption2)
         historialButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HistorialActivity::class.java
-            )
+            val intent = Intent(applicationContext, HistorialActivity::class.java)
             startActivity(intent)
         }
 
         val settingsButton = findViewById<Button>(R.id.buttonOption3)
         settingsButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                SettingsActivity::class.java
-            )
+            val intent = Intent(applicationContext, SettingsActivity::class.java)
             startActivity(intent)
         }
 
         val cancelButton = findViewById<Button>(R.id.btnCancelar)
         cancelButton.setOnClickListener {
-            val intent = Intent(
-                applicationContext,
-                HomeActivity::class.java
-            )
-            startActivity(intent)
+            if (solicitudId != null) {
+                eliminarSolicitudYOfertas(solicitudId!!)
+            } else {
+                Toast.makeText(this, "Solicitud ID no proporcionada", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
+    private fun eliminarSolicitudYOfertas(solicitudId: String) {
+        val solicitudesRef = database.getReference("SolicitudesPaseo").child(solicitudId)
+        val ofertasRef = database.getReference("Ofertas").child(solicitudId)
+
+        solicitudesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val petIds = snapshot.child("petIds").children.map { it.value.toString() }
+                val uidDueño = snapshot.child("uidDueño").getValue(String::class.java) ?: ""
+
+                solicitudesRef.removeValue().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        println("Solicitud eliminada en SolicitudesPaseos")
+                        ofertasRef.removeValue().addOnCompleteListener { task2 ->
+                            if (task2.isSuccessful) {
+                                actualizarEstadoMascotas(uidDueño, petIds)
+                                Toast.makeText(this@SolicitarPaseoActivity, "Solicitud cancelada con éxito", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(applicationContext, HomeActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                Toast.makeText(this@SolicitarPaseoActivity, "Error al cancelar la solicitud en Ofertas", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this@SolicitarPaseoActivity, "Error al cancelar la solicitud en SolicitudesPaseos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@SolicitarPaseoActivity, "Error al obtener los datos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun actualizarEstadoMascotas(uidDueño: String, petIds: List<String>) {
+        println("Entre a actualizar estados")
+
+        println("UID $uidDueño")
+        println("Numero de mascotas ${petIds.size}")
+
+        val mascotasRef = database.getReference("Mascotas").child(uidDueño)
+        mascotasRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (petId in petIds) {
+                    println("Buscamos el pet id $petId")
+                    if (snapshot.hasChild(petId)) {
+                        println("Encontramos a la mascota con id $petId")
+                        mascotasRef.child(petId).child("estado").setValue("disponible")
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@SolicitarPaseoActivity, "Error al actualizar el estado de las mascotas: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     private fun abrirDetallePerfil(profile: Profile) {
         val intent = Intent(this, PerfilPaseadorActivity::class.java)
         intent.putExtra("profileUid", profile.uid)

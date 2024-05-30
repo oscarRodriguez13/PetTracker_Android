@@ -54,7 +54,6 @@ class SettingsActivity : AppCompatActivity() {
         setupButtons()
         setupRecyclerView()
 
-        // Cargar datos del usuario desde Firebase
         loadUserData()
     }
 

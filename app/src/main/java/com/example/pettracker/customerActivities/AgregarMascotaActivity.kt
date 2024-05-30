@@ -144,7 +144,8 @@ class AgregarMascotaActivity : AppCompatActivity() {
             "especie" to species,
             "raza" to breed,
             "descripcion" to description,
-            "edad" to age
+            "edad" to age,
+            "estado" to "disponible"
         )
 
         if (photoURI != null) {

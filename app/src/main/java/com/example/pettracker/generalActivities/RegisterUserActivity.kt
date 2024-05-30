@@ -72,8 +72,6 @@ class RegisterUserActivity : AppCompatActivity(), LocationListener {
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
-        handlePermissions()
-
         mGeocoder = Geocoder(baseContext)
 
         retrofit = Retrofit.Builder()
@@ -342,30 +340,6 @@ class RegisterUserActivity : AppCompatActivity(), LocationListener {
 
     }
 
-    private fun handlePermissions() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this, android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                mFusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-                    onLocationChanged(location)
-                }
-            }
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                this, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                    Datos.MY_PERMISSION_REQUEST_LOCATION
-                )
-            }
-            else -> {
-                requestPermissions(
-                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                    Datos.MY_PERMISSION_REQUEST_LOCATION
-                )
-            }
-        }
-    }
 
 
 
