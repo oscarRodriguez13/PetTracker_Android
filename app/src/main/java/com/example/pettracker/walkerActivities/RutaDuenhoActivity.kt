@@ -148,7 +148,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
             centerCameraOnUser()
         }
 
-         uidDuenho?.let { addPaseadorMarkerFromDatabase(it) }
+        uidDuenho?.let { addPaseadorMarkerFromDatabase(it) }
 
     }
 
@@ -284,23 +284,38 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidPaseador")
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val latitud = snapshot.child("latitud").getValue(Double::class.java)
-                val longitud = snapshot.child("longitud").getValue(Double::class.java)
+                val latitud = (snapshot.child("latitud").getValue(String::class.java))?.toDouble()
+                val longitud = (snapshot.child("longitud").getValue(String::class.java))?.toDouble()
 
                 if (latitud != null && longitud != null) {
                     val paseadorGeoPoint = GeoPoint(latitud, longitud)
 
+                    // Elimina el marcador anterior si existe
                     paseadorMarker?.let { osmMap.overlays.remove(it) }
 
-                    paseadorMarker = Marker(osmMap).apply {
-                        position = paseadorGeoPoint
-                        setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        title = "Paseador(a): Sofia Perez"
-                        icon = ContextCompat.getDrawable(this@RutaDuenhoActivity, R.drawable.icn_marcador_paseador)?.let { drawable ->
-                            BitmapDrawable(resources, Bitmap.createScaledBitmap((drawable as BitmapDrawable).bitmap, 48, 48, false))
-                        }
-                    }
+                    // Crea un nuevo marcador para el paseador
+                    paseadorMarker = Marker(osmMap)
+                    paseadorMarker?.position = paseadorGeoPoint
+                    paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
+
+                    // Obtener el drawable de la imagen personalizada
+                    val customMarkerDrawable = ContextCompat.getDrawable(this@RutaDuenhoActivity, R.drawable.icn_marcador_paseador)
+
+                    // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
+                    val width = 48
+                    val height = 48
+                    val scaledDrawable = Bitmap.createScaledBitmap(
+                        (customMarkerDrawable as BitmapDrawable).bitmap,
+                        width,
+                        height,
+                        false
+                    )
+
+                    // Asignar la imagen escalada al marcador
+                    paseadorMarker?.icon = BitmapDrawable(resources, scaledDrawable)
+
+                    // Agrega el marcador del paseador al mapa
                     osmMap.overlays.add(paseadorMarker)
                     osmMap.invalidate()
                 } else {
@@ -313,7 +328,6 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
             }
         })
     }
-
 
     override fun onLocationChanged(location: Location) {
         geoPoint = GeoPoint(location.latitude, location.longitude)
@@ -345,8 +359,8 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private fun updateLocationInFirebase(location: Location) {
         userId?.let {
             val userLocation = mapOf(
-                "latitud" to location.latitude,
-                "longitud" to location.longitude
+                "latitud" to location.latitude.toString(),
+                "longitud" to location.longitude.toString()
             )
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
@@ -386,10 +400,3 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         // No implementation needed
     }
 }
-
-
-
-
-
-
-
