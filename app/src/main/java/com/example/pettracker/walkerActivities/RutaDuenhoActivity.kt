@@ -49,6 +49,11 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.TilesOverlay
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
 
@@ -75,6 +80,11 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private lateinit var hora_final: TextView
     private lateinit var cant_mascotas: TextView
     private lateinit var auth: FirebaseAuth
+    private lateinit var btnEmpezar:Button
+
+
+    private var duenhoLocation: Location? = null
+    private var userLocation: Location? = null
 
 
 
@@ -134,7 +144,8 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
 
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
 
-        val btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+         btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+        btnEmpezar.isEnabled = false
 
         btnEmpezar.setOnClickListener {
             val intent = Intent(
@@ -260,6 +271,24 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         }
     }
 
+    private fun calcularDistancia(
+        lat1: Double,
+        long1: Double,
+        lat2: Double,
+        long2: Double
+    ): Double {
+        val latDistance = Math.toRadians(lat1 - lat2)
+        val lngDistance = Math.toRadians(long1 - long2)
+        val a = (sin(latDistance / 2) * sin(latDistance / 2)
+                + cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2))
+                * sin(lngDistance / 2) * sin(lngDistance / 2))
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+        val result = RADIUS_OF_EARTH_KM * c
+        return (result * 100.0).roundToInt() / 100.0
+    }
+
+
+
     @SuppressLint("MissingPermission")
     override fun onResume() {
         sensorManager?.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL)
@@ -297,6 +326,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                     paseadorMarker = Marker(osmMap)
                     paseadorMarker?.position = paseadorGeoPoint
                     paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    paseadorMarker?.title = "Paseador(a): ${nombreUsuario.text}"
 
 
                     // Obtener el drawable de la imagen personalizada
@@ -329,7 +359,15 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         })
     }
 
+    private fun checkDistanceAndEnableButton() {
+        if (marker != null && paseadorMarker != null) {
+            val distance = calcularDistancia(marker!!.position.latitude, marker!!.position.longitude,paseadorMarker!!.position.latitude, paseadorMarker!!.position.longitude)
+            btnEmpezar.isEnabled = distance <= 10
+        }
+    }
+
     override fun onLocationChanged(location: Location) {
+        checkDistanceAndEnableButton()
         geoPoint = GeoPoint(location.latitude, location.longitude)
         val mapController: IMapController = osmMap.controller
         mapController.setCenter(geoPoint)
