@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -13,7 +14,9 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -32,14 +35,17 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.collection.LLRBNode
 import org.osmdroid.api.IMapController
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
+import org.osmdroid.bonuspack.routing.Road
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
 class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, LocationListener {
@@ -62,8 +68,30 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
     private lateinit var nombreDuenhoTextView: TextView
     private lateinit var horaFinalTextView: TextView
     private lateinit var cantidadMascotasTextView: TextView
+    private lateinit var buscarMacotaButton: Button
     private var solicitudStateListener: ValueEventListener? = null
     private var solicitudRef: DatabaseReference? = null
+    private var currentRoadPolyline: Polyline? = null
+
+
+    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
+
+        override fun doInBackground(vararg params: Void?): Road? {
+            val routePoints = ArrayList<GeoPoint>()
+            routePoints.add(start)
+            routePoints.add(finish)
+            return roadManager.getRoad(routePoints)
+        }
+
+        override fun onPostExecute(result: Road?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                drawRoad(result)
+            } else {
+                Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +110,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         nombreDuenhoTextView = findViewById(R.id.nombre_duenho)
         horaFinalTextView = findViewById(R.id.hora_final)
         cantidadMascotasTextView = findViewById(R.id.cantidad_mascotas)
+        buscarMacotaButton = findViewById(R.id.buscarMascota)
 
         Configuration.getInstance().userAgentValue = applicationContext.packageName
 
@@ -90,6 +119,10 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         lightSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_LIGHT)
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         roadManager = OSRMRoadManager(this, "ANDROID")
+
+        buscarMacotaButton.setOnClickListener {
+            geoPoint?.let { it1 -> drawRoute(it1, paseadorMarker!!.position) }
+        }
 
         handlePermissions()
 
@@ -105,14 +138,21 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             centerCameraOnUser()
         }
 
+        val centerPetButton = findViewById<ImageButton>(R.id.centerPetButton)
+        centerPetButton.setOnClickListener {
+            centerCameraOnPet()
+        }
+
         uidPaseador?.let { addPaseadorMarkerFromDatabase(it) }
 
         // Carga los datos de la solicitud y actualiza la UI
         solicitudId?.let { loadSolicitudData(it) }
 
-
         // Agrega el listener para el estado de la solicitud
         solicitudId?.let { addSolicitudStateListener(it) }
+
+        uidPaseador?.let { listenToPaseadorLocationChanges(it) }
+
     }
 
     private fun loadSolicitudData(solicitudId: String) {
@@ -196,6 +236,60 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
         locationManager.removeUpdates(this)
     }
 
+    private fun listenToPaseadorLocationChanges(uidPaseador: String) {
+        val paseadorLocationRef = FirebaseDatabase.getInstance().getReference("Usuarios/$uidPaseador")
+        paseadorLocationRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val latitud = snapshot.child("latitud").getValue(String::class.java)?.toDoubleOrNull()
+                val longitud = snapshot.child("longitud").getValue(String::class.java)?.toDoubleOrNull()
+
+                if (latitud != null && longitud != null) {
+                    updatePaseadorMarker(GeoPoint(latitud, longitud))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@SeguimientoPaseoActivity, "Error al obtener la ubicación del paseador: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun updatePaseadorMarker(paseadorGeoPoint: GeoPoint) {
+        runOnUiThread {
+            // Elimina el marcador anterior si existe
+            paseadorMarker?.let { osmMap.overlays.remove(it) }
+
+            // Crea un nuevo marcador para el paseador
+            paseadorMarker = Marker(osmMap).apply {
+                position = paseadorGeoPoint
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                title = "Paseador(a): ${nombreDuenhoTextView.text}"
+
+                // Obtener el drawable de la imagen personalizada
+                val customMarkerDrawable = ContextCompat.getDrawable(this@SeguimientoPaseoActivity, R.drawable.icn_marcador_paseador)
+
+                // Escalar la imagen al tamaño predeterminado (48x48 píxeles)
+                val width = 48
+                val height = 48
+                val scaledDrawable = Bitmap.createScaledBitmap(
+                    (customMarkerDrawable as BitmapDrawable).bitmap,
+                    width,
+                    height,
+                    false
+                )
+
+                // Asignar la imagen escalada al marcador
+                icon = BitmapDrawable(resources, scaledDrawable)
+            }
+
+            // Agrega el marcador del paseador al mapa
+            osmMap.overlays.add(paseadorMarker)
+            osmMap.invalidate()
+        }
+    }
+
+
+
     private fun addPaseadorMarkerFromDatabase(uidPaseador: String) {
         val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidPaseador")
         database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -234,6 +328,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
                     // Agrega el marcador del paseador al mapa
                     osmMap.overlays.add(paseadorMarker)
                     osmMap.invalidate()
+
                 } else {
                     Toast.makeText(this@SeguimientoPaseoActivity, "No se pudo obtener la ubicación del paseador", Toast.LENGTH_SHORT).show()
                 }
@@ -270,6 +365,7 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
 
         // Actualiza la ubicación en Firebase
         updateLocationInFirebase(location)
+
     }
 
     private fun updateLocationInFirebase(location: Location) {
@@ -281,9 +377,9 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
 
             databaseReference.child(it).updateChildren(userLocation).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Ubicación actualizada en Firebase", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Error al actualizar la ubicación en Firebase", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -291,6 +387,16 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
 
     private fun centerCameraOnUser() {
         marker?.let {
+            val mapController: IMapController = osmMap.controller
+            mapController.setCenter(it.position)
+            mapController.setZoom(15.0)
+        } ?: run {
+            Toast.makeText(this, "Ubicación no disponible", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun centerCameraOnPet() {
+        paseadorMarker?.let {
             val mapController: IMapController = osmMap.controller
             mapController.setCenter(it.position)
             mapController.setZoom(15.0)
@@ -344,4 +450,34 @@ class SeguimientoPaseoActivity : AppCompatActivity(), SensorEventListener, Locat
             }
         }
     }
+
+    private fun drawRoad(road: Road) {
+        Log.i("OSM_activity", "Route length: ${road.mLength} km")
+        Log.i("OSM_activity", "Duration: ${road.mDuration / 60} min")
+
+        // Crea una nueva Polyline a partir de la ruta
+        val roadOverlay = RoadManager.buildRoadOverlay(road)
+        roadOverlay.outlinePaint.color = Color.BLUE
+        roadOverlay.outlinePaint.strokeWidth = 10f
+
+        // Elimina la Polyline anterior si existe
+        currentRoadPolyline?.let {
+            osmMap.overlays.remove(it)
+        }
+
+        // Agrega la nueva Polyline al mapa y actualiza la referencia
+        currentRoadPolyline = roadOverlay
+        osmMap.overlays.add(currentRoadPolyline)
+
+        // Invalida el mapa para forzar su redibujado
+        osmMap.invalidate()
+    }
+
+
+    private fun drawRoute(start: GeoPoint, finish: GeoPoint) {
+        FetchRouteTask(start, finish).execute()
+    }
+
+
+
 }

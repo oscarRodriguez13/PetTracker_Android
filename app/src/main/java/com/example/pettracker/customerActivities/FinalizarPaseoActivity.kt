@@ -1,5 +1,6 @@
 package com.example.pettracker.customerActivities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -121,6 +122,7 @@ class FinalizarPaseoActivity : AppCompatActivity() {
         val petNames = mutableListOf<String>()
         for (petId in petIds) {
             mascotasRef.child(petId).addListenerForSingleValueEvent(object : ValueEventListener {
+                @SuppressLint("SetTextI18n")
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val nombreMascota = dataSnapshot.child("nombre").getValue(String::class.java)
                     nombreMascota?.let {

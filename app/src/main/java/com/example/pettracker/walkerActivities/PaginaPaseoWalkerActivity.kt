@@ -87,6 +87,27 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
     private var cantMascotas: String? = null
 
     private lateinit var paseadorLocationListener: ValueEventListener
+    private var currentRoadPolyline: Polyline? = null
+
+    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
+
+        override fun doInBackground(vararg params: Void?): Road? {
+            val routePoints = ArrayList<GeoPoint>()
+            routePoints.add(start)
+            routePoints.add(finish)
+            return roadManager.getRoad(routePoints)
+        }
+
+        override fun onPostExecute(result: Road?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                drawRoad(result)
+            } else {
+                Toast.makeText(this@PaginaPaseoWalkerActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -523,5 +544,32 @@ class PaginaPaseoWalkerActivity : AppCompatActivity(), SensorEventListener, Loca
     private fun removePaseadorLocationListener() {
         val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidDuenho")
         database.removeEventListener(paseadorLocationListener)
+    }
+
+    private fun drawRoad(road: Road) {
+        Log.i("OSM_activity", "Route length: ${road.mLength} km")
+        Log.i("OSM_activity", "Duration: ${road.mDuration / 60} min")
+
+        // Crea una nueva Polyline a partir de la ruta
+        val roadOverlay = RoadManager.buildRoadOverlay(road)
+        roadOverlay.outlinePaint.color = Color.BLUE
+        roadOverlay.outlinePaint.strokeWidth = 10f
+
+        // Elimina la Polyline anterior si existe
+        currentRoadPolyline?.let {
+            osmMap.overlays.remove(it)
+        }
+
+        // Agrega la nueva Polyline al mapa y actualiza la referencia
+        currentRoadPolyline = roadOverlay
+        osmMap.overlays.add(currentRoadPolyline)
+
+        // Invalida el mapa para forzar su redibujado
+        osmMap.invalidate()
+    }
+
+
+    private fun drawRoute(start: GeoPoint, finish: GeoPoint) {
+        FetchRouteTask(start, finish).execute()
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -48,6 +49,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -83,14 +85,37 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private lateinit var btnEmpezar:Button
 
     private var cantMascotas: String? = null
+    private var currentRoadPolyline: Polyline? = null
 
     private lateinit var paseadorLocationListener: ValueEventListener
+
+    private inner class FetchRouteTask(private val start: GeoPoint, private val finish: GeoPoint) : AsyncTask<Void, Void, Road>() {
+
+        override fun doInBackground(vararg params: Void?): Road? {
+            val routePoints = ArrayList<GeoPoint>()
+            routePoints.add(start)
+            routePoints.add(finish)
+            return roadManager.getRoad(routePoints)
+        }
+
+        override fun onPostExecute(result: Road?) {
+            super.onPostExecute(result)
+            if (result != null) {
+                drawRoad(result)
+            } else {
+                Toast.makeText(this@RutaDuenhoActivity, "Error al obtener la ruta", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ruta_duenho)
+
+        btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
+        btnEmpezar.isEnabled = false
 
         profileImage = findViewById(R.id.profile_image)
         nombreUsuario = findViewById(R.id.nombre_duenho)
@@ -144,9 +169,6 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         mGeocoder = Geocoder(baseContext)
 
         val centerButton = findViewById<ImageButton>(R.id.centerButton)
-
-         btnEmpezar = findViewById<Button>(R.id.btn_Empezar)
-        btnEmpezar.isEnabled = false
 
         btnEmpezar.setOnClickListener {
             val intent = Intent(
@@ -362,6 +384,10 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                     // Agrega el marcador del paseador al mapa
                     osmMap.overlays.add(paseadorMarker)
                     osmMap.invalidate()
+
+                    /*paseadorMarker?.position?.let { paseadorGeoPoint ->
+                        drawRoute(geoPoint!!, paseadorGeoPoint)
+                    }*/
                 } else {
                     Toast.makeText(this@RutaDuenhoActivity, "No se pudo obtener la ubicación del paseador", Toast.LENGTH_SHORT).show()
                 }
@@ -376,12 +402,12 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     private fun checkDistanceAndEnableButton() {
         if (marker != null && paseadorMarker != null) {
             val distance = calcularDistancia(marker!!.position.latitude, marker!!.position.longitude,paseadorMarker!!.position.latitude, paseadorMarker!!.position.longitude)
+            println("Distancia: $distance")
             btnEmpezar.isEnabled = distance <= 10
         }
     }
 
     override fun onLocationChanged(location: Location) {
-
         geoPoint = GeoPoint(location.latitude, location.longitude)
         val mapController: IMapController = osmMap.controller
         mapController.setCenter(geoPoint)
@@ -407,6 +433,11 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
         // Actualiza la ubicación en Firebase
         updateLocationInFirebase(location)
         checkDistanceAndEnableButton()
+
+        paseadorMarker?.position?.let { paseadorGeoPoint ->
+            drawRoute(geoPoint!!, paseadorGeoPoint)
+        }
+
     }
 
     private fun updateLocationInFirebase(location: Location) {
@@ -471,7 +502,7 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                         paseadorMarker = Marker(osmMap)
                         paseadorMarker?.position = paseadorGeoPoint
                         paseadorMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-                        paseadorMarker?.title = "Paseador(a): ${nombreUsuario.text}"
+                        paseadorMarker?.title = "Dueño(a): ${nombreUsuario.text}"
 
                         // Obtener el drawable de la imagen personalizada
                         val customMarkerDrawable = ContextCompat.getDrawable(this@RutaDuenhoActivity, R.drawable.icn_marcador_paseador)
@@ -492,6 +523,11 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
                         // Agrega el marcador del paseador al mapa
                         osmMap.overlays.add(paseadorMarker)
                         osmMap.invalidate()
+
+                        paseadorMarker?.position?.let { paseadorGeoPoint ->
+                            drawRoute(geoPoint!!, paseadorGeoPoint)
+                        }
+
                         checkDistanceAndEnableButton()
                     } catch (e: NumberFormatException) {
                         Toast.makeText(this@RutaDuenhoActivity, "Error al convertir la ubicación del paseador", Toast.LENGTH_SHORT).show()
@@ -511,13 +547,42 @@ class RutaDuenhoActivity : AppCompatActivity(), SensorEventListener, LocationLis
     }
 
 
+
     override fun onDestroy() {
         super.onDestroy()
         removePaseadorLocationListener()
     }
+
     private fun removePaseadorLocationListener() {
         val database = FirebaseDatabase.getInstance().getReference("Usuarios/$uidDuenho")
         database.removeEventListener(paseadorLocationListener)
+    }
+
+    private fun drawRoad(road: Road) {
+        Log.i("OSM_activity", "Route length: ${road.mLength} km")
+        Log.i("OSM_activity", "Duration: ${road.mDuration / 60} min")
+
+        // Crea una nueva Polyline a partir de la ruta
+        val roadOverlay = RoadManager.buildRoadOverlay(road)
+        roadOverlay.outlinePaint.color = Color.BLUE
+        roadOverlay.outlinePaint.strokeWidth = 10f
+
+        // Elimina la Polyline anterior si existe
+        currentRoadPolyline?.let {
+            osmMap.overlays.remove(it)
+        }
+
+        // Agrega la nueva Polyline al mapa y actualiza la referencia
+        currentRoadPolyline = roadOverlay
+        osmMap.overlays.add(currentRoadPolyline)
+
+        // Invalida el mapa para forzar su redibujado
+        osmMap.invalidate()
+    }
+
+
+    private fun drawRoute(start: GeoPoint, finish: GeoPoint) {
+        FetchRouteTask(start, finish).execute()
     }
 
 }
