@@ -1,0 +1,62 @@
+{
+  "usuarios": [
+    {
+      "nombre": "Juan Perez",
+      "email": "juanperez@example.com",
+      "password": "123",
+      "tipoUsuario": "1",
+      "mascotas": [
+        {
+          "nombre": "Fido",
+          "especie": "Perro",
+          "raza": "Labrador",
+          "edad": 3,
+          "descripcion": "Es un perro muy activo y le encanta jugar al aire libre."
+        }
+      ]
+    },
+    {
+      "nombre": "Laura García",
+      "email": "lauragarcia@example.com",
+      "password": "123",
+      "tipoUsuario": "2",
+      "mascotas": [
+        {
+          "nombre": "Whiskers",
+          "especie": "Gato",
+          "raza": "Siames",
+          "edad": 2,
+          "descripcion": "Whiskers es un gato tranquilo que le gusta dormir la mayor parte del día."
+        },
+        {
+          "nombre": "Rex",
+          "especie": "Perro",
+          "raza": "Pastor Alemán",
+          "edad": 5,
+          "descripcion": "Rex es un perro muy leal y protector, perfecto para la familia."
+        }
+      ]
+    },
+    {
+      "nombre": "Carlos Sánchez",
+      "email": "carlossanchez@example.com",
+      "password": "passwordUltraSeguro",
+      "mascotas": [
+        {
+          "nombre": "Bella",
+          "especie": "Perro",
+          "raza": "Husky Siberiano",
+          "edad": 4,
+          "descripcion": "Bella es una perrita muy cariñosa y le encanta salir a pasear."
+        },
+        {
+          "nombre": "Shadow",
+          "especie": "Gato",
+          "raza": "Persa",
+          "edad": 3,
+          "descripcion": "Shadow es un gato elegante y adora ser el centro de atención."
+        }
+      ]
+    }
+  ]
+}

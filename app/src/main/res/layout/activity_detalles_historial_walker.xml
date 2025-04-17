@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customerActivities.DetallesHistorialActivity"
+    android:padding="16dp"
+    android:background="@color/white"
+    android:gravity="center_vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:src="@drawable/icn_labrador"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/nombreDueño"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView"
+        android:text="Nombre Dueño"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/fechaView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:layout_below="@id/nombreDueño"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/horaInicialView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hora Inicial"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:layout_below="@id/fechaView"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/horaFinalView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hora Final"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:layout_below="@id/horaInicialView"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/precioView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Precio"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:layout_below="@id/horaFinalView"
+        android:gravity="center" />
+
+
+    <TextView
+        android:id="@+id/estadoView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Estado"
+        android:textSize="16sp"
+        android:paddingBottom="8dp"
+        android:layout_below="@id/precioView"
+        android:gravity="center" />
+
+</RelativeLayout>

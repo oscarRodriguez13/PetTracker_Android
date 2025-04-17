@@ -1,0 +1,61 @@
+[
+  {
+    "nombreDuenho": "Juan Perez",
+    "hora_inicial": "08:00",
+    "hora_final": "08:30",
+    "cantidad_mascotas": "1",
+    "mascotas": [
+      {
+        "nombre": "Fido",
+        "especie": "Perro",
+        "raza": "Labrador",
+        "edad": 3,
+        "descripcion": "Es un perro muy activo y le encanta jugar al aire libre."
+      }
+    ]
+  },
+  {
+    "nombreDuenho": "María Rodríguez",
+    "hora_inicial": "10:00",
+    "hora_final": "10:30",
+    "cantidad_mascotas": "2",
+    "mascotas": [
+      {
+        "nombre": "Luna",
+        "especie": "Gato",
+        "raza": "Siamés",
+        "edad": 2,
+        "descripcion": "Es una gata muy juguetona y cariñosa."
+      },
+      {
+        "nombre": "Max",
+        "especie": "Perro",
+        "raza": "Golden Retriever",
+        "edad": 5,
+        "descripcion": "Es un perro muy amigable y le encanta dar paseos largos."
+      }
+    ]
+  },
+  {
+    "nombreDuenho": "Ana Martínez",
+    "hora_inicial": "12:00",
+    "hora_final": "12:30",
+    "cantidad_mascotas": "2",
+    "mascotas": [
+      {
+        "nombre": "Toby",
+        "especie": "Perro",
+        "raza": "Bulldog",
+        "edad": 4,
+        "descripcion": "Es un perro muy tranquilo y le gusta dormir la mayor parte del día."
+      },
+      {
+        "nombre": "Simba",
+        "especie": "Gato",
+        "raza": "Maine Coon",
+        "edad": 1,
+        "descripcion": "Es un gato muy curioso y le encanta explorar."
+      }
+    ]
+  }
+]

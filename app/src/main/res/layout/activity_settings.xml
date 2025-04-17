@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="12dp">
+
+    <!-- Header section with buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="56dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="15dp"
+            android:src="@mipmap/loguito_foreground" />
+
+        <Button
+            android:id="@+id/buttonOption1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_paseos"
+            android:layout_marginEnd="12dp"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/buttonOption2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_historial"
+            android:textColor="@color/black"
+            android:layout_marginEnd="12dp"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/buttonOption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_ajustes"
+            android:textColor="@color/black"
+            android:layout_marginEnd="12dp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:layout_marginTop="0dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icn_logout"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="30dp"
+                android:src="@drawable/icn_logout" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icn_perfil"
+                android:layout_width="200dp"
+                android:layout_height="180dp"
+                android:src="@drawable/icn_foto_perfil" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/icn_notificacion"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="30dp"
+                android:src="@drawable/icn_notificacion_inactiva" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/tomarFotoView"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                style="@style/ButtonStyle"
+                app:srcCompat="@android:drawable/ic_menu_camera" />
+
+            <Space
+                android:layout_width="24dp"
+                android:layout_height="match_parent" />
+
+            <ImageButton
+                android:id="@+id/agregarFotoView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginRight="100dp"
+                style="@style/ButtonStyle"
+                app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txt_nombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/txt_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="10dp">
+
+            <Space
+                android:layout_width="160dp"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/txt_Mascotas"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/black" />
+
+            <Space
+                android:layout_width="120dp"
+                android:layout_height="wrap_content" />
+
+            <ImageButton
+                android:id="@+id/btn_agregar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                style="@style/ButtonStyle"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/icn_agregar" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/imageView2"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

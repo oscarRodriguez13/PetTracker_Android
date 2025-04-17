@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/loguito_foreground"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+        <activity
+            android:name=".customerActivities.AgregarMascotaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.DetallesHistorialWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.HistorialWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.SettingsWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.RutaDuenhoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.PaseosActualesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.PaseosProgramadosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.PerfilDuenhoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.DetallesMascotaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.PaginaPaseoWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.SeguimientoPaseoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.DetallesHistorialActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.ProgramarPaseoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.FinalizarPaseoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".walkerActivities.HomeWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.PerfilPaseadorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.RegisterWalkerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.BuscarMascotaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.AccountTypeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.SolicitarPaseoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.HistorialActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.RegisterPetDataActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.RegisterUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.PasswordRecoveryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".customerActivities.PaginaPaseoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".generalActivities.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

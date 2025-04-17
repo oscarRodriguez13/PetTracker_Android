@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="12dp" >
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="56dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="8dp"
+            android:src="@mipmap/loguito_foreground" />
+
+        <Button
+            android:id="@+id/buttonOption1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imageView"
+            android:layout_alignBaseline="@id/imageView"
+            android:text="@string/btn_paseos"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/buttonOption2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/buttonOption1"
+            android:layout_alignBaseline="@id/buttonOption1"
+            android:text="@string/btn_historial"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
+
+        <Button
+            android:id="@+id/buttonOption3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/buttonOption2"
+            android:layout_alignBaseline="@id/buttonOption2"
+            android:text="@string/btn_ajustes"
+            android:textColor="@color/black"
+            android:background="@android:color/transparent"/>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/black"
+            android:layout_below="@id/buttonOption2"
+            android:layout_marginTop="0dp" />
+
+
+        <ImageView
+            android:id="@+id/foto_perfil_paseador"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/line2"
+            app:srcCompat="@drawable/img_perfil1" />
+
+        <TextView
+            android:id="@+id/titulo_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="17dp"
+            android:text="@string/titulo_informacion_perfil_paseador"
+            android:textColor="@color/gray"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line"
+            android:layout_marginTop="4dp"
+            android:text="Aceptar"
+            android:textColor="@color/black"
+            android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            style="@style/ButtonStyle"/>
+
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            android:layout_below="@id/titulo_info"
+            android:layout_marginTop="14dp"/>
+
+        <TextView
+            android:id="@+id/nombre_paseador"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text=""
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/foto_perfil_paseador"
+
+           />
+
+        <TextView
+            android:id="@+id/titulo_mascota"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nombre_paseador"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Mascotas"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+
+
+        <View
+            android:id="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_below="@id/titulo_mascota"
+
+            android:layout_marginTop="12dp"/>
+
+        <!-- Reubicado el ListView aquí -->
+        <ListView
+            android:id="@+id/listaMascotas"
+            android:layout_above="@id/titulo_direccion"
+            android:layout_below="@+id/line3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:id="@+id/line4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_above="@id/direccion"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/titulo_direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/line4"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Direccion"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/line6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_above="@id/direccion"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/Precio"
+            android:text=""
+            android:layout_centerHorizontal="true"
+            android:textSize="17dp"
+            android:textColor="@color/gray"
+            />
+
+        <TextView
+            android:id="@+id/Precio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/line5"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Precio"
+            android:textSize="20dp"
+            android:textColor="@color/gray"
+            android:textStyle="bold"
+            />
+
+        <View
+            android:id="@+id/line5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"
+            android:layout_above="@id/etPrecio"
+            android:layout_marginTop="12dp"/>
+
+
+
+        <EditText
+            android:id="@+id/etPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:hint="Ingrese el precio"
+            android:inputType="number"
+            android:padding="12dp"
+            android:textColor="@color/black"/>
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+[
+  {
+    "fecha": "20/02/2024",
+    "nombreDuenho": "Juan Pérez",
+    "hora_inicial": "08:00",
+    "hora_final": "08:30",
+    "estado": "Completado",
+    "precio": 25
+  },
+  {
+    "fecha": "20/04/2024",
+    "nombreDuenho": "Pedro Jimenez",
+    "hora_inicial": "09:00",
+    "hora_final": "09:30",
+    "estado": "Sin empezar",
+    "precio": 20
+  },
+  {
+    "fecha": "15/02/2024",
+    "nombreDuenho": "Pedro Jimenez",
+    "hora_inicial": "09:30",
+    "hora_final": "10:00",
+    "estado": "En proceso",
+    "precio": 15
+  },
+  {
+    "fecha": "12/02/2024",
+    "nombreDuenho": "Elena Martínez",
+    "hora_inicial": "16:00",
+    "hora_final": "16:30",
+    "estado": "Completado",
+    "precio": 25
+  },
+  {
+    "fecha": "15/02/2024",
+    "nombreDuenho": "Carlos Sánchez",
+    "hora_inicial": "9:00",
+    "hora_final": "10:00",
+    "estado": "En proceso",
+    "precio": 30
+  },
+  {
+    "fecha": "21/04/2024",
+    "nombreDuenho": "Sofía Hernández",
+    "hora_inicial": "17:30",
+    "hora_final": "18:00",
+    "estado": "Sin empezar",
+    "precio": 20
+  },
+  {
+    "fecha": "07/02/2024",
+    "nombreDuenho": "Javier González",
+    "hora_inicial": "19:00",
+    "hora_final": "19:30",
+    "estado": "Completado",
+    "precio": 25
+  },
+  {
+    "fecha": "15/02/2024",
+    "nombreDuenho": "Isabel Ramírez",
+    "hora_inicial": "8:30",
+    "hora_final": "9:30",
+    "estado": "En proceso",
+    "precio": 20
+  },
+  {
+    "fecha": "19/04/2024",
+    "nombreDuenho": "Marta Pérez",
+    "hora_inicial": "20:00",
+    "hora_final": "20:30",
+    "estado": "Sin empezar",
+    "precio": 20
+  }
+]

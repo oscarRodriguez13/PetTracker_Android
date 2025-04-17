@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.PetTracker" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Color de la barra de estado -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+
+        <!-- Color de la barra de navegación (disponible en API 21 y superiores) -->
+        <item name="android:navigationBarColor">@color/colorNavigationBar</item>
+
+        <!-- Color principal de la App (ActionBar, etc.) -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="Theme.PetTracker" parent="Base.Theme.PetTracker" />
+
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorNavigationBar">#FFFFFF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+</resources>
